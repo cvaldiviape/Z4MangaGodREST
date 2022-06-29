@@ -1,4 +1,4 @@
-package com.mangagord;
+package com.mangagod;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
