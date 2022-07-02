@@ -21,7 +21,7 @@ public class RoleEntity {
 	private Integer id;
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
-	@Column(name = "description", nullable = false)
+	@Column(name = "description")
 	private String description;
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
