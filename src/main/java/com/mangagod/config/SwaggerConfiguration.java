@@ -31,12 +31,12 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
 	private ApiInfo apiInfo() {
 	    return new ApiInfo(
 	      "MangaGOD REST API",
-	      "Api encargada de gestionar contenido de mangas.",
+	      "Gestionador de contenido de la web MangaGod.",
 	      "1.0",
-	      "Terminos y servicios",
+	      "www.terminosyservicios.com",
 	      new Contact("César Valdivia", "www.cvaldiviape.com", "cvaldiviape@gmail.com"),
 	      "Licencia API",
-	      "www-licencia.com",
+	      "www.licencia.com",
 	      Collections.emptyList());
 	}
 

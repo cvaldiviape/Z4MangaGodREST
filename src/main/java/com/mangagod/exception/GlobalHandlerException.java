@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import com.mangagod.dto.responseDto.ErrorDetailResponseDTO;
-import com.mangagod.util.AppUtil;
+import com.mangagod.util.MangaGodAppUtil;
 
 @ControllerAdvice // indico que esta clase manejara excepciones
 public class GlobalHandlerException extends ResponseEntityExceptionHandler { // que herede "ResponseEntityExceptionHandler" para el manejo de excepciones en la validacion de campos
@@ -24,21 +24,21 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 	
 	@ExceptionHandler(ResourceNotFoundException.class) // indico que esta funcion recibira excepciones de tipo "ResourceNotFoundException"
 	public ResponseEntity<ErrorDetailResponseDTO> managerResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest){
-		String dateTime = AppUtil.convertLocalDateTimeToString(LocalDateTime.now());
+		String dateTime = MangaGodAppUtil.convertLocalDateTimeToString(LocalDateTime.now());
 		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(MangaGodAppException.class) // indico que esta funcion recibira excepciones de tipo "SystemBlogAppException"
 	public ResponseEntity<ErrorDetailResponseDTO> managerSystemBlogAppException(MangaGodAppException exception, WebRequest webRequest){
-		String dateTime = AppUtil.convertLocalDateTimeToString(LocalDateTime.now());
+		String dateTime = MangaGodAppUtil.convertLocalDateTimeToString(LocalDateTime.now());
 		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(Exception.class) // indico que esta funcion recibira excepciones de tipo "Exception"
 	public ResponseEntity<ErrorDetailResponseDTO> managerException(Exception exception, WebRequest webRequest){
-		String dateTime = AppUtil.convertLocalDateTimeToString(LocalDateTime.now());
+		String dateTime = MangaGodAppUtil.convertLocalDateTimeToString(LocalDateTime.now());
 		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}

@@ -3,7 +3,7 @@ package com.mangagod.util;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class AppUtil {
+public class MangaGodAppUtil {
 
 	public static String convertLocalDateTimeToString(LocalDateTime localDateTime) {
 		// Get current date time
