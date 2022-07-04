@@ -2,14 +2,14 @@ package com.mangagod.dto.requestDto;
 
 import java.util.Set;
 
-public class UserRequestDTO {
+public class UserCreateRequestDTO {
 
 	private String username;
 	private String email;
 	private String password;
 	private Set<Integer> roleIds;
 	
-	public UserRequestDTO() {
+	public UserCreateRequestDTO() {
 		
 	}
 

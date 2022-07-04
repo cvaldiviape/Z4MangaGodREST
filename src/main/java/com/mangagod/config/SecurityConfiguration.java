@@ -18,6 +18,7 @@ import com.mangagod.security.CustomUserDetailsService;
 import com.mangagod.security.JwtAuthenticationEntryPoint;
 import com.mangagod.security.JwtAuthenticationFilter;
 
+@SuppressWarnings("deprecation")
 @Configuration // se encarga de registrar BEANs
 @EnableWebSecurity // se emplea para crear una clase de configuracion personalizada
 @EnableGlobalMethodSecurity(prePostEnabled = true)

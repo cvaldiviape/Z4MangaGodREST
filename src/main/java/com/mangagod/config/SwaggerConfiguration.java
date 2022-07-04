@@ -3,6 +3,7 @@ package com.mangagod.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import com.mangagod.util.AppConstants;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.*;
@@ -30,13 +31,13 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
 	
 	private ApiInfo apiInfo() {
 	    return new ApiInfo(
-	      "MangaGOD REST API",
-	      "Gestionador de contenido de la web MangaGod.",
-	      "1.0",
-	      "www.terminosyservicios.com",
-	      new Contact("César Valdivia", "www.cvaldiviape.com", "cvaldiviape@gmail.com"),
-	      "Licencia API",
-	      "www.licencia.com",
+	      AppConstants.API_TITLE,
+	      AppConstants.API_DESCRIPTION,
+	      AppConstants.API_VERSION,
+	      AppConstants.API_URL_TERMS_OF_SERVICES,
+	      new Contact(AppConstants.API_OWNER_NAME, AppConstants.API_OWNER_URL, AppConstants.API_OWNER_EMAIL),
+	      AppConstants.API_LICENCE,
+	      AppConstants.API_LICENCE_URL,
 	      Collections.emptyList());
 	}
 
