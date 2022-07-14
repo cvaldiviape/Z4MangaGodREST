@@ -4,8 +4,8 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: {
     responseDataListUsers: [],
-    responseDataUser: {},
-    responseDataPagination: {},
+    responseDataUser: null,
+    responseDataPagination: null,
     loading: false,
   },
   reducers: {

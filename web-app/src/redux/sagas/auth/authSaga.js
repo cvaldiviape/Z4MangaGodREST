@@ -1,10 +1,12 @@
 import { call, takeLatest, put } from "redux-saga/effects";
-import { RESPONSE_AUTH_BAD_CREDENTIALS } from "../../../util/constants/authConstans";
+import { MESSAGE_BAD_CREDENTIALS, MESSAGE_ERROR_SERVER_SPANISH } from "../../../util/constants/messageErrorConstans";
 import { apiRequestAuth } from '../../api/auth/authApi';
-import { requestAuth, setResponseDataAuth, setResponseSuccessAuth, setResponseMessageAuth, requestLogout, setLogout } from "../../slices/auth/authSlice";
+import { requestAuth, logout, changeMessageAuth, 
+         setResponseDataAuth, setResponseSuccessAuth, setResponseMessageAuth, setLogout } from "../../slices/auth/authSlice";
 
 // generators
 function* handleRequestAuth(action) {
+  yield put(setResponseMessageAuth(""));
   try {
     const { authDto } = action.payload;
     const response = yield call(apiRequestAuth, authDto);
@@ -16,10 +18,10 @@ function* handleRequestAuth(action) {
   } catch (e) {
     console.log(e);
     const messageResponse = e?.response?.data?.message;
-    if (messageResponse === RESPONSE_AUTH_BAD_CREDENTIALS) {
-      yield put(setResponseMessageAuth("Credenciales incorrectas."));
+    if (messageResponse === MESSAGE_BAD_CREDENTIALS) {
+      yield put(setResponseMessageAuth(MESSAGE_BAD_CREDENTIALS));
     } else {
-      yield put(setResponseMessageAuth("Error del servidor."));
+      yield put(setResponseMessageAuth(MESSAGE_ERROR_SERVER_SPANISH));
     }
   }
 }
@@ -31,7 +33,7 @@ export function* watchRequestAuth() {
 }
 
 // generators
-function* handleRequestLogout(action) {
+function* handleRLogout(action) {
   try {
     yield put(setLogout());
   } catch (e) {
@@ -40,8 +42,23 @@ function* handleRequestLogout(action) {
 }
 
 // watchers - se encargan de yeldear efectos
-export function* watchRequestLogout() {
+export function* watchLogout() {
   //()
-  yield takeLatest(requestLogout, handleRequestLogout);
+  yield takeLatest(logout, handleRLogout);
+}
+
+// generators
+function* handleChangeMessageAuth(action) {
+  try {
+    yield put(setResponseMessageAuth(action.payload));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+// watchers - se encargan de yeldear efectos
+export function* watchChangeMessageAuth() {
+  //()
+  yield takeLatest(changeMessageAuth, handleChangeMessageAuth);
 }
 

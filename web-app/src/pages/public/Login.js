@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { requestAuth } from '../../redux/slices/auth/authSlice';
 import AuthForm from '../../modules/auth/AuthForm';
-import { setStorageAuthData, setStorageRole, setStorageTokenAccess } from '../../storage/authStorage';
+// import { setStorageAuthData, setStorageRole, setStorageTokenAccess } from '../../storage/authStorage';
 import ModalCustom from '../../shared/components/modalCustom/ModalCustom';
 import AuthLayout from '../../modules/auth/AuthLayout';
-import { RESPONSE_AUTH_BAD_CREDENTIALS } from '../../util/constants/authConstans';
+import { MESSAGE_BAD_CREDENTIALS, MESSAGE_BAD_CREDENTIALS_SPANISH, MESSAGE_ERROR_SERVER_SPANISH } from '../../util/constants/messageErrorConstans';
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [messageModal, setMessageModal] = useState("");
-  //const [username, setUsername] = useState("");
   const [isChaning, setIsChaning] = useState(false);
   const [values, setValues] = useState({
     usernameOrEmail: '',
@@ -39,6 +38,11 @@ const Login = () => {
   }
 
   useEffect(() => {
+    // console.log("1")
+    // console.log(loading);
+    // console.log("2")
+    // console.log(openModal);
+
     if (responseData.token) {
       setLoading(false);
       setOpenModal(false);
@@ -49,11 +53,15 @@ const Login = () => {
 
       navigate("/app/home");
     } else {
-      setLoading(false);
-      if(responseMessage === RESPONSE_AUTH_BAD_CREDENTIALS){
-        setMessageModal(responseMessage)
+      // setLoading(false);
+      if(responseMessage === MESSAGE_BAD_CREDENTIALS) {
+        setMessageModal(MESSAGE_BAD_CREDENTIALS_SPANISH)
         setOpenModal(true);
-      }
+      } 
+      // else if (responseMessage === MESSAGE_ERROR_SERVER_SPANISH) {
+      //   setMessageModal(responseMessage)
+      //   setOpenModal(true);
+      // }
     }
   }, [responseData, responseMessage, navigate, isChaning]);
 
@@ -64,7 +72,7 @@ const Login = () => {
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
           values={values}
-          loading={openModal || loading ? true : false}
+          loading={loading}
         />
       </AuthLayout>
 

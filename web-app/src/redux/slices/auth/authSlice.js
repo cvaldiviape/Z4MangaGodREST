@@ -12,9 +12,9 @@ export const authSlice = createSlice({
     responseMessage: "",
   },
   reducers: {
-    requestAuth() {
-
-    },
+    requestAuth() {},
+    logout() {},
+    changeMessageAuth() {},
     setResponseDataAuth(state, action) {
       state.responseData = action.payload;
     },
@@ -23,9 +23,6 @@ export const authSlice = createSlice({
     },
     setResponseMessageAuth(state, action) {
       state.responseMessage = action.payload;
-    },
-    requestLogout() {
-
     },
     setLogout(state) {
       state.responseData = {
@@ -42,9 +39,10 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   requestAuth,
+  logout,
+  changeMessageAuth,
   setResponseDataAuth,
   setResponseSuccessAuth,
   setResponseMessageAuth,
-  requestLogout,
-  setLogout
+  setLogout,
 } = authSlice.actions;

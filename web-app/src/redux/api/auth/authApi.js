@@ -1,11 +1,9 @@
-import { instanceAxiosWithoutAuthorization, instanceAxios } from '../baseApi';
+import { instanceAxiosWithoutAuthorization } from '../baseApi';
 
 export const apiRequestAuth = async (authDto) => {
-  const response = await instanceAxios.post('auth/login', JSON.stringify(authDto));
-  return response;
+  return await instanceAxiosWithoutAuthorization.post('auth/login', JSON.stringify(authDto));
 };
 
 export const apiRequestRefreshToken = async (tokenDto) => {
-  const response = await instanceAxiosWithoutAuthorization.post('auth/refresh-token', JSON.stringify(tokenDto));
-  return response;
+  return await instanceAxiosWithoutAuthorization.post('auth/refresh-token', JSON.stringify(tokenDto));
 };
