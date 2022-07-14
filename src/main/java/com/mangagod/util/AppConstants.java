@@ -2,13 +2,13 @@ package com.mangagod.util;
 
 public class AppConstants {
 
-	// pagination
+	// setting pagination
 	public static final String NUM_PAGE_DEFAULT = "0";
 	public static final String SIZE_PAGE_DEFAULT = "10";
 	public static final String SORT_BY_DEFAULT = "id";
 	public static final String SORT_DIR_DEFAULT = "asc";
 	
-	// settring swagger
+	// setting swagger
 	public static final String API_TITLE = "MangaGOD REST API";
 	public static final String API_DESCRIPTION = "Gestionador de contenido de la web MangaGod.";
 	public static final String API_VERSION = "1.0";

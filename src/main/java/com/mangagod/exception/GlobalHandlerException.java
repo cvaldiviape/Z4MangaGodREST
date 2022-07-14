@@ -29,7 +29,7 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.NOT_FOUND);
 	}
 	
-	@ExceptionHandler(MangaGodAppException.class) // indico que esta funcion recibira excepciones de tipo "SystemBlogAppException"
+	@ExceptionHandler(MangaGodAppException.class) // indico que esta funcion recibira excepciones de tipo "MangaGodAppException"
 	public ResponseEntity<ErrorDetailResponseDTO> managerMangaGodAppException(MangaGodAppException exception, WebRequest webRequest){
 		String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
 		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
@@ -61,19 +61,3 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

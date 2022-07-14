@@ -4,6 +4,7 @@ public class AuthRequestDTO {
 
 	private String usernameOrEmail;
 	private String password;
+	private Integer roleId;
 
 	public AuthRequestDTO() {
 
@@ -23,6 +24,14 @@ public class AuthRequestDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Integer getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(Integer roleId) {
+		this.roleId = roleId;
 	}
 	
 }

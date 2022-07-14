@@ -1,0 +1,20 @@
+:root { /* custom property */
+  --clippy: polygon(0 0, 0 0, 0 100%, 0% 100%);
+  --clippy-hover: polygon(0 0, 83% 0, 100% 100%, 0 100%)
+}
+
+.btn::after {
+  content: "";
+  width: 120%;
+  height: 100%;
+  background-color: rgb(40, 5, 110);
+  position: absolute;
+  top: 0;
+  left: 0;
+  clip-path: var(--clippy);
+  transition: clip-path 0.5s ease-in-out;
+}
+
+.btn:hover:after {
+  clip-path: var(--clippy-hover);
+}

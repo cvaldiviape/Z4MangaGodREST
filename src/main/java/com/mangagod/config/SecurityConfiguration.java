@@ -3,7 +3,6 @@ package com.mangagod.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -22,8 +21,8 @@ import com.mangagod.security.JwtAuthenticationFilter;
 @Configuration // se encarga de registrar BEANs
 @EnableWebSecurity // se emplea para crear una clase de configuracion personalizada
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{ // "WebSecurityConfigurerAdapter" contiene funciones que hashean 
-																         // las contraseñas, pero en este caso vamos a sobreescribirlas
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "WebSecurityConfigurerAdapter" contiene funciones que hashean 
+																          // las contraseñas, pero en este caso vamos a sobreescribirlas
 	
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
@@ -38,7 +37,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{ // "Web
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 	 // desabilitamos por que spring ya cuenta con uno propio
-		http.csrf().disable()
+		http
+			.cors()
+			.and()
+			.csrf()
+			.disable()
 			.exceptionHandling()
 			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
 			.and()
@@ -47,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{ // "Web
 			.and()
 			.authorizeRequests()
 			.antMatchers(
-					HttpMethod.POST,
+					//HttpMethod.POST,
 					"/auth/**"
 			)
 			.permitAll()

@@ -2,6 +2,7 @@ package com.mangagod.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import com.mangagod.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
@@ -15,5 +16,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 	public Boolean existsByUsername(String username);
 	
 	public Boolean existsByEmail(String email);
+	
+	@Query("SELECT u FROM UserEntity u "
+			     + "JOIN u.roles r "
+			     + "WHERE r.id = ?1 AND (u.username = ?2 OR u.email = ?2)")
+	public Optional<UserEntity> findByUsernameOrEmailAndRoleId(Integer roleId, String userNameOrEmail);
 	
 }
