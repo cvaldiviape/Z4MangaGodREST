@@ -16,7 +16,7 @@ public class CountryAllPageableDataDTO extends PageableDataDTOImpl {
 		return countries;
 	}
 
-	public void setList(List<CountryDataDTO> countries) {
+	public void setCountries(List<CountryDataDTO> countries) {
 		this.countries = countries;
 	}
 

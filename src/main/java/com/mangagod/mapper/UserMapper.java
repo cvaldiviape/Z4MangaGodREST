@@ -15,7 +15,7 @@ public class UserMapper {
 	private ModelMapper modelMapper;
 	
 	// ---------------------------------------------------------- modelMapper --------------------------------------------------------- //
-	public UserDataDTO mapUserEntityToUserResponseDTO(UserEntity userEntity) {
+	public UserDataDTO mapUserEntityToUserDataDTO(UserEntity userEntity) {
 		UserDataDTO userResponseDTO = this.modelMapper.map(userEntity, UserDataDTO.class);
 		return userResponseDTO;
 	}

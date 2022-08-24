@@ -1,7 +1,6 @@
 package com.mangagod.dto.data;
 
 import java.util.List;
-
 import com.mangagod.dto.data.pagination.PageableDataDTOImpl;
 
 public class UserAllPageableDataDTO extends PageableDataDTOImpl{
@@ -16,7 +15,7 @@ public class UserAllPageableDataDTO extends PageableDataDTOImpl{
 		return users;
 	}
 
-	public void setList(List<UserDataDTO> users) {
+	public void setUsers(List<UserDataDTO> users) {
 		this.users = users;
 	}
 	

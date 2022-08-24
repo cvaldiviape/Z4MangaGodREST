@@ -47,7 +47,7 @@ public class CountryServiceImpl implements CountryService {
 		List<CountryDataDTO> countriesDTO = countriesEntity.stream().map(country -> this.countryMapper.mapCountryEntityToCountryResponseDTO(country)).collect(Collectors.toList());	
 		
 		CountryAllPageableDataDTO countryAllPageableDataDTO = new CountryAllPageableDataDTO();
-		countryAllPageableDataDTO.setList(countriesDTO);
+		countryAllPageableDataDTO.setCountries(countriesDTO);
 		countryAllPageableDataDTO.setNumberPage(countriesPageable.getNumber());
 		countryAllPageableDataDTO.setSizePage(countriesPageable.getSize());
 		countryAllPageableDataDTO.setTotalElements(countriesPageable.getTotalElements());
@@ -60,7 +60,8 @@ public class CountryServiceImpl implements CountryService {
 	@Override
 	public CountryDataDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		CountryEntity countryEntity = this.countryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("country", "id", id));
+		CountryEntity countryEntity = this.countryRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
 		CountryDataDTO countryResponseDTO = this.countryMapper.mapCountryEntityToCountryResponseDTO(countryEntity);
 		return countryResponseDTO;
 	}
@@ -68,9 +69,9 @@ public class CountryServiceImpl implements CountryService {
 	@Override
 	public CountryDataDTO create(CountryCreateRequestDTO createRequestDTO) {
 		// TODO Auto-generated method stub
-		Boolean existsUsername = this.countryRepository.existsByName(createRequestDTO.getName());
-		if(existsUsername) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El username " + createRequestDTO.getName() + " ya existe.");
+		Boolean existNname = this.countryRepository.existsByName(createRequestDTO.getName());
+		if(existNname) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + createRequestDTO.getName() + " ya existe.");
 		}
 		CountryEntity countryEntity = this.countryMapper.mapCountryCreateRequestToCountryEntity(createRequestDTO);
 		countryEntity.setCreatedAt(LocalDateTime.now());
@@ -88,7 +89,7 @@ public class CountryServiceImpl implements CountryService {
 		Boolean existsUsername = this.countryRepository.existsByName(updateRequestDTO.getName());
 		Boolean diferentUsernameCurrent = (!updateRequestDTO.getName().equalsIgnoreCase(countryDataCurrent.getName()));
 		if(existsUsername && diferentUsernameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El username " + updateRequestDTO.getName() + " ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + updateRequestDTO.getName() + " ya existe.");
 		}
 		countryDataCurrent.setName(updateRequestDTO.getName());
 		countryDataCurrent.setUpdatedAt(LocalDateTime.now());
@@ -101,7 +102,7 @@ public class CountryServiceImpl implements CountryService {
 	public CountryDataDTO delete(Integer id) {
 		// TODO Auto-generated method stub
 		CountryEntity countryEntity = this.countryRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
 		this.countryRepository.delete(countryEntity);
 		CountryDataDTO countryDeleted = this.countryMapper.mapCountryEntityToCountryResponseDTO(countryEntity);
 		return countryDeleted;

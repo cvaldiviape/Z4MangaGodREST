@@ -57,8 +57,8 @@ public class CountryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createCountry(@RequestBody CountryCreateRequestDTO countryCreateRequestDTO){
-		CountryDataDTO countryResponseDTO = this.countryService.create(countryCreateRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El pais ha sido creado exitosamente!", countryResponseDTO);
+		CountryDataDTO countryDataDTO = this.countryService.create(countryCreateRequestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El pais ha sido creado exitosamente!", countryDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 

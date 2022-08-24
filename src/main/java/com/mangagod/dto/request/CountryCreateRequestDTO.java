@@ -3,7 +3,7 @@ package com.mangagod.dto.request;
 public class CountryCreateRequestDTO {
 
 	private String name;
-	
+
 	public CountryCreateRequestDTO() {
 		
 	}

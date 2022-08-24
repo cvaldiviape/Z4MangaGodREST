@@ -1,15 +1,15 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.request;
 
-public class RoleDataDTO {
+public class RoleUpdateRequestDTO {
 
 	private Integer id;
 	private String name;
 	private String description;
 	
-	public RoleDataDTO() {
+	public RoleUpdateRequestDTO() {
 		
 	}
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -17,7 +17,7 @@ public class RoleDataDTO {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -33,5 +33,4 @@ public class RoleDataDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-		
 }

@@ -53,10 +53,10 @@ public class UserServiceImpl implements UserService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<UserEntity> usersPageable = this.userRepository.findAll(pageable);
 		List<UserEntity> usersEntity = usersPageable.getContent();
-		List<UserDataDTO> usersDto = usersEntity.stream().map(user -> this.userMapper.mapUserEntityToUserResponseDTO(user)).collect(Collectors.toList());	
+		List<UserDataDTO> usersDto = usersEntity.stream().map(user -> this.userMapper.mapUserEntityToUserDataDTO(user)).collect(Collectors.toList());	
 		
 		UserAllPageableDataDTO userAllPageableResponseDTO = new UserAllPageableDataDTO();
-		userAllPageableResponseDTO.setList(usersDto);
+		userAllPageableResponseDTO.setUsers(usersDto);
 		userAllPageableResponseDTO.setNumberPage(usersPageable.getNumber());
 		userAllPageableResponseDTO.setSizePage(usersPageable.getSize());
 		userAllPageableResponseDTO.setTotalElements(usersPageable.getTotalElements());
@@ -70,8 +70,8 @@ public class UserServiceImpl implements UserService {
 	public UserDataDTO getById(Integer id) {
 		// TODO Auto-generated method stub
 		UserEntity userEntity = this.userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
-		UserDataDTO userDataDTO = this.userMapper.mapUserEntityToUserResponseDTO(userEntity);
+				.orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));
+		UserDataDTO userDataDTO = this.userMapper.mapUserEntityToUserDataDTO(userEntity);
 		return userDataDTO;
 	}
 
@@ -82,9 +82,9 @@ public class UserServiceImpl implements UserService {
 		Boolean existsEmail = this.userRepository.existsByEmail(createRequestDTO.getEmail());
 		Boolean isEmptyArray = createRequestDTO.getRoleIds().isEmpty();
 		if(existsUsername) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El username " + createRequestDTO.getUsername() + " ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre de usuario " + createRequestDTO.getUsername() + " ya existe.");
 		}else if(existsEmail) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El email " + createRequestDTO.getEmail() +" ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El correo " + createRequestDTO.getEmail() +" ya existe.");
 		}else if(isEmptyArray) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El array 'roleIds' debe contener al menos 1 elemento.");
 		}
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
 		}
 		userEntity.setRoles(roles);
 		
-		UserDataDTO userCreated = this.userMapper.mapUserEntityToUserResponseDTO(this.userRepository.save(userEntity));		
+		UserDataDTO userCreated = this.userMapper.mapUserEntityToUserDataDTO(this.userRepository.save(userEntity));		
 		return userCreated;
 	}
 
@@ -115,11 +115,11 @@ public class UserServiceImpl implements UserService {
 		Boolean diferentEmailCurrent = (!updateRequestDTO.getEmail().equalsIgnoreCase(userDataCurrent.getEmail()));
 		Boolean arrayEmpty = updateRequestDTO.getRoleIds().isEmpty();
 		if(existsUsername && diferentUsernameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El username " + updateRequestDTO.getUsername() + " ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre de usuario " + updateRequestDTO.getUsername() + " ya existe.");
 		}else if(existsEmail && diferentEmailCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El email " + updateRequestDTO.getEmail() +" ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El correo " + updateRequestDTO.getEmail() +" ya existe.");
 		}else if(arrayEmpty) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El array 'roleIds' debe contener al menos 1 elemento.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "Es obligatorio asignar un Rol al usuario.");
 		}
 		userDataCurrent.setUsername(updateRequestDTO.getUsername());
 		userDataCurrent.setEmail(updateRequestDTO.getEmail());
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
 		}
 		userDataCurrent.setRoles(roles);
 		
-		UserDataDTO userUpdated = this.userMapper.mapUserEntityToUserResponseDTO(this.userRepository.save(userDataCurrent));	
+		UserDataDTO userUpdated = this.userMapper.mapUserEntityToUserDataDTO(this.userRepository.save(userDataCurrent));	
 		return userUpdated;
 	}
 
@@ -140,9 +140,9 @@ public class UserServiceImpl implements UserService {
 	public UserDataDTO delete(Integer id) {
 		// TODO Auto-generated method stub
 		UserEntity userEntity = this.userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+				.orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));
 		this.userRepository.delete(userEntity);
-		UserDataDTO userDeleted = this.userMapper.mapUserEntityToUserResponseDTO(userEntity);
+		UserDataDTO userDeleted = this.userMapper.mapUserEntityToUserDataDTO(userEntity);
 		return userDeleted;
 	}
 	
