@@ -1,18 +1,17 @@
-package com.mangagod.dto.requestDto;
+package com.mangagod.dto.request;
 
 import java.util.Set;
 
-public class UserCreateRequestDTO {
+public class UserUpdateRequestDTO {
 
 	private String username;
 	private String email;
-	private String password;
 	private Set<Integer> roleIds;
 	
-	public UserCreateRequestDTO() {
+	public UserUpdateRequestDTO() {
 		
 	}
-
+	
 	public String getUsername() {
 		return username;
 	}
@@ -27,14 +26,6 @@ public class UserCreateRequestDTO {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public Set<Integer> getRoleIds() {

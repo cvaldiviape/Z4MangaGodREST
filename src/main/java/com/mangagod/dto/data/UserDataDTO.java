@@ -1,13 +1,16 @@
-package com.mangagod.dto.responseDto;
+package com.mangagod.dto.data;
 
-public class AuthResponseDTO {
+import java.util.Set;
+
+public class UserDataDTO {
 	
 	private Integer id;
 	private String username;
 	private String email;
+	private Set<RoleDataDTO> roles;
 	
-	public AuthResponseDTO() {
-
+	public UserDataDTO() {
+		
 	}
 
 	public Integer getId() {
@@ -34,4 +37,12 @@ public class AuthResponseDTO {
 		this.email = email;
 	}
 
+	public Set<RoleDataDTO> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<RoleDataDTO> roles) {
+		this.roles = roles;
+	}
+	
 }

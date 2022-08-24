@@ -36,12 +36,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-	 // desabilitamos por que spring ya cuenta con uno propio
 		http
 			.cors()
 			.and()
 			.csrf()
-			.disable()
+			.disable() // desabilitamos por que spring ya cuenta con uno propio
 			.exceptionHandling()
 			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
 			.and()

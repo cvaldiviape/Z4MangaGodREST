@@ -1,12 +1,12 @@
-package com.mangagod.dto.responseDto;
+package com.mangagod.dto.data;
 
-public class TokenResponseDTO {
+public class TokenDataDTO {
 
 	private String tokenAccess;
 	private String tokenType;
 	private Integer tokenExpiredIn;
 	
-	public TokenResponseDTO() {
+	public TokenDataDTO() {
 		
 	}
 

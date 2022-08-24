@@ -1,20 +1,10 @@
 package com.mangagod.service;
 
-import com.mangagod.dto.requestDto.UserCreateRequestDTO;
-import com.mangagod.dto.requestDto.UserUpdateRequestDTO;
-import com.mangagod.dto.responseDto.UserAllPageableResponseDTO;
-import com.mangagod.dto.responseDto.UserResponseDTO;
+import com.mangagod.dto.data.UserAllPageableDataDTO;
+import com.mangagod.dto.data.UserDataDTO;
+import com.mangagod.dto.request.UserCreateRequestDTO;
+import com.mangagod.dto.request.UserUpdateRequestDTO;
 
-public interface UserService {
-	
-	public UserAllPageableResponseDTO getAllUsers(Integer numberPage, Integer sizePage, String sortBy, String sortDir);
-	
-	public UserResponseDTO getUserById(Integer id);
-	
-	public UserResponseDTO createUser(UserCreateRequestDTO userCreateRequestDTO);
-	
-	public UserResponseDTO updateUser(Integer id, UserUpdateRequestDTO userUpdateRequestDTO);
-	
-	public UserResponseDTO deleteUser(Integer id);
+public interface UserService extends ServiceCrud<UserAllPageableDataDTO, UserDataDTO, UserCreateRequestDTO, UserUpdateRequestDTO>{
 	
 }

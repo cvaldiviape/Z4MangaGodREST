@@ -1,14 +1,13 @@
 package com.mangagod.service;
 
-import java.text.ParseException;
-import java.util.Map;
-import com.mangagod.dto.requestDto.AuthRequestDTO;
-import com.mangagod.dto.requestDto.TokenRequestDTO;
+import com.mangagod.dto.data.AuthDataDTO;
+import com.mangagod.dto.request.AuthRequestDTO;
+import com.mangagod.dto.request.TokenRequestDTO;
 
 public interface AuthService {
 	
-	public Map<String, Object> login(AuthRequestDTO loginDTO);
+	public AuthDataDTO login(AuthRequestDTO authRequestDTO);
 	
-	public String refreshToken(TokenRequestDTO tokenRequestDTO) throws ParseException;
+	public String refreshToken(TokenRequestDTO tokenRequestDTO);
 
 }

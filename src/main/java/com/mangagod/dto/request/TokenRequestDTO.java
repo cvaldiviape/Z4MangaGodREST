@@ -1,4 +1,4 @@
-package com.mangagod.dto.requestDto;
+package com.mangagod.dto.request;
 
 public class TokenRequestDTO {
 

@@ -1,4 +1,4 @@
-package com.mangagod.dto.responseDto;
+package com.mangagod.dto.response;
 
 public class ErrorDetailResponseDTO {
 
@@ -38,4 +38,3 @@ public class ErrorDetailResponseDTO {
 	}
 	
 }
-

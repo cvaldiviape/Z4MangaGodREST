@@ -1,19 +1,12 @@
-package com.mangagod.dto.responseDto;
+package com.mangagod.dto.data.pagination;
 
-import java.util.List;
-
-public class UserAllPageableResponseDTO {
-
+public class PageableDataDTOImpl implements PageableDataDTO {
+	
 	private Integer numberPage;
 	private Integer sizePage;
 	private Integer totalPages;
 	private Boolean isLastPage;
 	private Long totalElements;
-	private List<UserResponseDTO> users;
-	
-	public UserAllPageableResponseDTO() {
-		
-	}
 
 	public Integer getNumberPage() {
 		return numberPage;
@@ -53,14 +46,6 @@ public class UserAllPageableResponseDTO {
 
 	public void setTotalElements(Long totalElements) {
 		this.totalElements = totalElements;
-	}
-
-	public List<UserResponseDTO> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<UserResponseDTO> users) {
-		this.users = users;
 	}
 	
 }
