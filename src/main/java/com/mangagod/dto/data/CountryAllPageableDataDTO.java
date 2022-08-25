@@ -1,7 +1,6 @@
 package com.mangagod.dto.data;
 
 import java.util.List;
-
 import com.mangagod.dto.data.pagination.PageableDataDTOImpl;
 
 public class CountryAllPageableDataDTO extends PageableDataDTOImpl {

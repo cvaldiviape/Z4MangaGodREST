@@ -14,13 +14,13 @@ public class CountryMapper {
 	private ModelMapper modelMapper;
 	
 	// ---------------------------------------------------------- modelMapper --------------------------------------------------------- //
-	public CountryDataDTO mapCountryEntityToCountryResponseDTO(CountryEntity countryEntity) {
+	public CountryDataDTO mapCountryEntityToCountryDataDTO(CountryEntity countryEntity) {
 		CountryDataDTO countryResponseDTO = this.modelMapper.map(countryEntity, CountryDataDTO.class);
 		return countryResponseDTO;
 	}
 	
-	public CountryEntity mapCountryCreateRequestToCountryEntity(CountryCreateRequestDTO userRequestDTO) {
-		CountryEntity countryEntity = this.modelMapper.map(userRequestDTO, CountryEntity.class);
+	public CountryEntity mapCountryCreateRequestToCountryEntity(CountryCreateRequestDTO countryCreateRequestDTO) {
+		CountryEntity countryEntity = this.modelMapper.map(countryCreateRequestDTO, CountryEntity.class);
 		return countryEntity;
 	}
 		

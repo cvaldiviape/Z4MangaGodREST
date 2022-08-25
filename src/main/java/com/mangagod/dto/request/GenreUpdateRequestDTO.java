@@ -1,11 +1,11 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.request;
 
-public class CountryDataDTO {
+public class GenreUpdateRequestDTO {
 
 	private Integer id;
 	private String name;
 	
-	public CountryDataDTO() {
+	public GenreUpdateRequestDTO() {
 		
 	}
 

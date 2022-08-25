@@ -1,11 +1,11 @@
 package com.mangagod.dto.data;
 
-public class CountryDataDTO {
+public class GenreDataDTO {
 
 	private Integer id;
 	private String name;
 	
-	public CountryDataDTO() {
+	public GenreDataDTO() {
 		
 	}
 
@@ -24,5 +24,5 @@ public class CountryDataDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }
