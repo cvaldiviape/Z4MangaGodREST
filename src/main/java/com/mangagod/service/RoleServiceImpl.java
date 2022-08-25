@@ -110,8 +110,8 @@ public class RoleServiceImpl implements RoleService{
 		if(existsName && diferentUsernameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + name + " ya existe.");
 		}
-		roleDataCurrent.setName(updateRequestDTO.getName());
-		roleDataCurrent.setDescription(updateRequestDTO.getDescription());
+		roleDataCurrent.setName(updateRequestDTO.getName().trim());
+		roleDataCurrent.setDescription(updateRequestDTO.getDescription().trim());
 		roleDataCurrent.setUpdatedAt(LocalDateTime.now());
 		
 		RoleDataDTO roleUpdated = this.roleMapper.mapRoleEntityToRoleDataDTO(this.roleRepository.save(roleDataCurrent));	

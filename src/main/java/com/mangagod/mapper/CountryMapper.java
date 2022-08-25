@@ -20,6 +20,7 @@ public class CountryMapper {
 	}
 	
 	public CountryEntity mapCountryCreateRequestToCountryEntity(CountryCreateRequestDTO countryCreateRequestDTO) {
+		countryCreateRequestDTO.setName(countryCreateRequestDTO.getName().trim());
 		CountryEntity countryEntity = this.modelMapper.map(countryCreateRequestDTO, CountryEntity.class);
 		return countryEntity;
 	}

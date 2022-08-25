@@ -1,20 +1,20 @@
 package com.mangagod.dto.request;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class GenreUpdateRequestDTO {
 
-	private Integer id;
+	@NotNull(message = "El campo 'name' es obligatorio.")
+	@NotBlank(message = "El campo 'name' es obligatorio.")
+	@Size(max = 50, message = "El campo 'name' debe contener un maximo de 50 caracteres.")
+	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras." )
 	private String name;
 	
 	public GenreUpdateRequestDTO() {
 		
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {

@@ -1,5 +1,6 @@
 package com.mangagod.controller;
 
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.mangagod.dto.data.CountryAllPageableDataDTO;
 import com.mangagod.dto.data.CountryDataDTO;
 import com.mangagod.dto.request.CountryCreateRequestDTO;
@@ -56,7 +56,7 @@ public class CountryController {
 	@ApiOperation("Esta operacion se encarga de crear un nuevo pais.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
-	public ResponseEntity<MainResponse> createCountry(@RequestBody CountryCreateRequestDTO countryCreateRequestDTO){
+	public ResponseEntity<MainResponse> createCountry(@Valid @RequestBody CountryCreateRequestDTO countryCreateRequestDTO){
 		CountryDataDTO countryDataDTO = this.countryService.create(countryCreateRequestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El pais ha sido creado exitosamente!", countryDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
@@ -66,7 +66,7 @@ public class CountryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{country_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "country_id") int countryId, 
-			                                          @RequestBody CountryUpdateRequestDTO countryUpdateRequestDTO ){
+													  @Valid @RequestBody CountryUpdateRequestDTO countryUpdateRequestDTO ){
 		CountryDataDTO countryDataDTO = this.countryService.update(countryId, countryUpdateRequestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El pais ha sido actualizado exitosamente!", countryDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);

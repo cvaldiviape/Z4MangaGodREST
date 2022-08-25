@@ -1,5 +1,7 @@
 package com.mangagod.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,7 @@ public class AuthController {
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
 	@ApiOperation("Esta operacion se encarga de la autenticación del usuario.")
 	@PostMapping("/login")
-	public ResponseEntity<MainResponse> login(@RequestBody AuthRequestDTO authRequestDTO){
+	public ResponseEntity<MainResponse> login(@Valid @RequestBody AuthRequestDTO authRequestDTO){
 		AuthDataDTO authDataDTO = this.authService.login(authRequestDTO);
 		MainResponse mainResponse = new MainResponse(true, "El usuario se ha autenticado exitosamente!", authDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
@@ -34,7 +36,7 @@ public class AuthController {
 	
 	@ApiOperation("Esta operacion se encarga de verificar que el token se encuentre vigente.")
 	@PostMapping("/refresh-token")
-	public ResponseEntity<MainResponse> refreshToken(@RequestBody TokenRequestDTO tokenRequestDTO){
+	public ResponseEntity<MainResponse> refreshToken(@Valid @RequestBody TokenRequestDTO tokenRequestDTO){
 		String tokenRefreshed = this.authService.refreshToken(tokenRequestDTO);
 		MainResponse mainResponse = new MainResponse(true, "Token refrescado exitosamente!", tokenRefreshed);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);

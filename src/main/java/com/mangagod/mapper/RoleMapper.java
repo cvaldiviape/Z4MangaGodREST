@@ -20,6 +20,8 @@ public class RoleMapper {
 	}
 	
 	public RoleEntity mapRoleCreateRequestToRoleEntity(RoleCreateRequestDTO roleCreateRequestDTO) {
+		roleCreateRequestDTO.setName(roleCreateRequestDTO.getName().trim());
+		roleCreateRequestDTO.setDescription(roleCreateRequestDTO.getDescription().trim());
 		RoleEntity roleEntity = this.modelMapper.map(roleCreateRequestDTO, RoleEntity.class);
 		return roleEntity;
 	}

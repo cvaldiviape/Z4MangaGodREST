@@ -1,5 +1,7 @@
 package com.mangagod.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +57,7 @@ public class RoleController {
 	@ApiOperation("Esta operacion se encarga de crear un nuevo rol.")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<MainResponse> createRole(@RequestBody RoleCreateRequestDTO roleCreateRequestDTO){
+	public ResponseEntity<MainResponse> createRole(@Valid @RequestBody RoleCreateRequestDTO roleCreateRequestDTO){
 		RoleDataDTO roleDataDTO = this.roleService.create(roleCreateRequestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El rol ha sido creado exitosamente!", roleDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
@@ -65,7 +67,7 @@ public class RoleController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{role_id}")
 	public ResponseEntity<MainResponse> updateRol(@PathVariable (name = "role_id") int roleId, 
-			                                      @RequestBody RoleUpdateRequestDTO roleUpdateRequestDTO ){
+			                                      @Valid @RequestBody RoleUpdateRequestDTO roleUpdateRequestDTO ){
 		RoleDataDTO roleDataDTO = this.roleService.update(roleId, roleUpdateRequestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El rol ha sido actualizado exitosamente!", roleDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);

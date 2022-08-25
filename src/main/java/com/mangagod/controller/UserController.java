@@ -1,5 +1,7 @@
 package com.mangagod.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +58,7 @@ public class UserController {
 	@ApiOperation("Esta operacion se encarga de crear un nuevo usuario.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
-	public ResponseEntity<MainResponse> createUser(@RequestBody UserCreateRequestDTO userRequestDTO){
+	public ResponseEntity<MainResponse> createUser(@Valid @RequestBody UserCreateRequestDTO userRequestDTO){
 		UserDataDTO userResponseDTO = this.userService.create(userRequestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido creado exitosamente!", userResponseDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
@@ -66,7 +68,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{user_id}")
 	public ResponseEntity<MainResponse> updateUser(@PathVariable (name = "user_id") int userId, 
-			                                       @RequestBody UserUpdateRequestDTO userUpdateRequestDTO ){
+			                                       @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO ){
 		UserDataDTO userResponseDTO = this.userService.update(userId, userUpdateRequestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido actualizado exitosamente!", userResponseDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	

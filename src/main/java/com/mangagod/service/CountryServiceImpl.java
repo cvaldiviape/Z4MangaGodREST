@@ -91,7 +91,7 @@ public class CountryServiceImpl implements CountryService {
 		if(existsName && diferentUsernameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + updateRequestDTO.getName() + " ya existe.");
 		}
-		countryDataCurrent.setName(updateRequestDTO.getName());
+		countryDataCurrent.setName(updateRequestDTO.getName().trim());
 		countryDataCurrent.setUpdatedAt(LocalDateTime.now());
 		
 		CountryDataDTO countryUpdated = this.countryMapper.mapCountryEntityToCountryDataDTO(this.countryRepository.save(countryDataCurrent));	

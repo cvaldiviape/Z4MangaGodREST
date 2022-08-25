@@ -1,5 +1,7 @@
 package com.mangagod.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +37,9 @@ public class GenreController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllGenres(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
-	      											    @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
-	      											    @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
-	      											    @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
+	      											 @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
+	      											 @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
+	      											 @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
 		GenreAllPageableDataDTO genreAllPageableDataDTO = this.genreService.getAll(numberPage, sizePage, sortBy, sortDir);
 		MainResponse mainResponse = new MainResponse(true, "Lista de géneros.", genreAllPageableDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
@@ -55,7 +57,7 @@ public class GenreController {
 	@ApiOperation("Esta operacion se encarga de crear un nuevo género.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
-	public ResponseEntity<MainResponse> createCountry(@RequestBody GenreCreateRequestDTO genreCreateRequestDTO){
+	public ResponseEntity<MainResponse> createCountry(@Valid @RequestBody GenreCreateRequestDTO genreCreateRequestDTO){
 		GenreDataDTO genreDataDTO = this.genreService.create(genreCreateRequestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El género ha sido creado exitosamente!", genreDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
@@ -65,7 +67,7 @@ public class GenreController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{genre_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "genre_id") int genreId, 
-			                                          @RequestBody GenreUpdateRequestDTO genreUpdateRequestDTO ){
+			                                          @Valid @RequestBody GenreUpdateRequestDTO genreUpdateRequestDTO ){
 		GenreDataDTO genreDataDTO = this.genreService.update(genreId, genreUpdateRequestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El género ha sido actualizado exitosamente!", genreDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);

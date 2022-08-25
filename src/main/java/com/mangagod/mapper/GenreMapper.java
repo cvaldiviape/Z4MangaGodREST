@@ -20,6 +20,7 @@ public class GenreMapper {
 	}
 	
 	public GenreEntity mapGenreCreateRequestToGenreEntity(GenreCreateRequestDTO genreCreateRequestDTO) {
+		genreCreateRequestDTO.setName(genreCreateRequestDTO.getName().trim());
 		GenreEntity genreEntity = this.modelMapper.map(genreCreateRequestDTO, GenreEntity.class);
 		return genreEntity;
 	}
