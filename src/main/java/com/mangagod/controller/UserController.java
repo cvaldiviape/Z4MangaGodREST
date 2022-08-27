@@ -74,7 +74,7 @@ public class UserController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar a un usuario en base a su ID.")
+	@ApiOperation("Esta operacion se encarga de eliminar un usuario en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{user_id}")
 	public ResponseEntity<MainResponse> deleteUser(@PathVariable (name = "user_id") int userId){

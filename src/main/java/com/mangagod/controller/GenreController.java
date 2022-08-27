@@ -73,7 +73,7 @@ public class GenreController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar a un género en base a su ID.")
+	@ApiOperation("Esta operacion se encarga de eliminar un género en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{genre_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "genre_id") int genreId){

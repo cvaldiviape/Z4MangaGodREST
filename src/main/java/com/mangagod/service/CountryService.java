@@ -5,6 +5,6 @@ import com.mangagod.dto.data.CountryDataDTO;
 import com.mangagod.dto.request.CountryCreateRequestDTO;
 import com.mangagod.dto.request.CountryUpdateRequestDTO;
 
-public interface CountryService extends ServiceCrud<CountryAllPageableDataDTO, CountryDataDTO, CountryCreateRequestDTO, CountryUpdateRequestDTO>{
+public interface CountryService extends CrudService<CountryAllPageableDataDTO, CountryDataDTO, CountryCreateRequestDTO, CountryUpdateRequestDTO>{
 
 }

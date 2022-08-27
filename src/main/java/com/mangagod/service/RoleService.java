@@ -5,6 +5,6 @@ import com.mangagod.dto.data.RoleDataDTO;
 import com.mangagod.dto.request.RoleCreateRequestDTO;
 import com.mangagod.dto.request.RoleUpdateRequestDTO;
 
-public interface RoleService extends ServiceCrud<RoleAllPageableDataDTO, RoleDataDTO, RoleCreateRequestDTO, RoleUpdateRequestDTO>{
+public interface RoleService extends CrudService<RoleAllPageableDataDTO, RoleDataDTO, RoleCreateRequestDTO, RoleUpdateRequestDTO>{
 	
 }

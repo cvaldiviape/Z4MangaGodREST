@@ -15,8 +15,8 @@ public class CountryMapper {
 	
 	// ---------------------------------------------------------- modelMapper --------------------------------------------------------- //
 	public CountryDataDTO mapCountryEntityToCountryDataDTO(CountryEntity countryEntity) {
-		CountryDataDTO countryResponseDTO = this.modelMapper.map(countryEntity, CountryDataDTO.class);
-		return countryResponseDTO;
+		CountryDataDTO countryDataDTO = this.modelMapper.map(countryEntity, CountryDataDTO.class);
+		return countryDataDTO;
 	}
 	
 	public CountryEntity mapCountryCreateRequestToCountryEntity(CountryCreateRequestDTO countryCreateRequestDTO) {

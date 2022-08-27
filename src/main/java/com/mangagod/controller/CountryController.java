@@ -72,7 +72,7 @@ public class CountryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar a un usuarios en base a su ID.")
+	@ApiOperation("Esta operacion se encarga de eliminar un pais en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{country_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "country_id") int countryId){

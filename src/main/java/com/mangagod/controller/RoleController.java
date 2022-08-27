@@ -73,7 +73,7 @@ public class RoleController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar a un rol en base a su ID.")
+	@ApiOperation("Esta operacion se encarga de eliminar un rol en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{role_id}")
 	public ResponseEntity<MainResponse> deleteRole(@PathVariable (name = "role_id") int roleId){

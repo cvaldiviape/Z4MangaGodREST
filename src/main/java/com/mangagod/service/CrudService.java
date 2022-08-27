@@ -1,6 +1,6 @@
 package com.mangagod.service;
 
-public interface ServiceCrud <T, K, U, V> {
+public interface CrudService <T, K, U, V> {
 
 	public T getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir);
 	
