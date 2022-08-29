@@ -1,4 +1,4 @@
-package com.mangagod.service;
+package com.mangagod.service.generic;
 
 public interface CrudService <T, K, U, V> {
 
