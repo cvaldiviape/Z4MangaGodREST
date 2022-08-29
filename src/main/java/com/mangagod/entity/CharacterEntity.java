@@ -5,20 +5,15 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import com.mangagod.entity.base.BaseEntity;
 
 @Entity
 @Table(name = "characters")
-public class CharacterEntity {
+public class CharacterEntity extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 	@Column(name = "name", nullable = false)
 	private String name;
 	@Column(name = "description")
@@ -38,14 +33,6 @@ public class CharacterEntity {
 	
 	public CharacterEntity() {
 		
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -104,11 +91,4 @@ public class CharacterEntity {
 		this.type = type;
 	}
 
-	@Override
-	public String toString() {
-		return "CharacterEntity [id=" + id + ", name=" + name + ", description=" + description + ", urlImage="
-				+ urlImage + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", manga=" + manga + ", type="
-				+ type + "]";
-	}
-	
 }

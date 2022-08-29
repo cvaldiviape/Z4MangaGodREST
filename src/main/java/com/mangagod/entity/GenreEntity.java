@@ -6,19 +6,15 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.mangagod.entity.base.BaseEntity;
+
 @Entity
 @Table(name = "genres") 
-public class GenreEntity {
+public class GenreEntity extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 	@Column(name = "created_at", nullable = false)
@@ -30,14 +26,6 @@ public class GenreEntity {
 		
 	public GenreEntity() {
 		
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -70,12 +58,6 @@ public class GenreEntity {
 
 	public void setMangas(Set<MangaEntity> mangas) {
 		this.mangas = mangas;
-	}
-
-	@Override
-	public String toString() {
-		return "GenreEntity [id=" + id + ", name=" + name + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ ", mangas=" + mangas + "]";
 	}
 	
 }

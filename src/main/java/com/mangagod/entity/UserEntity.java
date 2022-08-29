@@ -7,21 +7,17 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.mangagod.entity.base.BaseEntity;
+
 @Entity
 @Table(name = "users") 
-public class UserEntity {
+public class UserEntity extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 	@Column(name = "username", nullable = false, unique = true)
 	private String username;
 	@Column(name = "email", nullable = false, unique = true)
@@ -39,14 +35,6 @@ public class UserEntity {
 	
 	public UserEntity() {
 		super();
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getUsername() {
@@ -95,12 +83,6 @@ public class UserEntity {
 
 	public void setRoles(Set<RoleEntity> roles) {
 		this.roles = roles;
-	}
-
-	@Override
-	public String toString() {
-		return "UserEntity [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", roles=" + roles + "]";
 	}
 
 }

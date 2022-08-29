@@ -7,9 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -17,13 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.mangagod.entity.base.BaseEntity;
+
 @Entity
 @Table(name = "mangas") 
-public class MangaEntity {
+public class MangaEntity extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 	@Column(name = "title", nullable = false, unique = true)
 	private String title;
 	@Column(name = "year", nullable = false)
@@ -61,14 +57,6 @@ public class MangaEntity {
 	
 	public MangaEntity() {
 		
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getTitle() {
@@ -181,14 +169,6 @@ public class MangaEntity {
 
 	public void setPersons(Set<PersonEntity> persons) {
 		this.persons = persons;
-	}
-
-	@Override
-	public String toString() {
-		return "MangaEntity [id=" + id + ", title=" + title + ", year=" + year + ", synopsis=" + synopsis + ", state="
-				+ state + ", urlImage=" + urlImage + ", adaptationAnime=" + adaptationAnime + ", price=" + price
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", country=" + country + ", demographic="
-				+ demographic + ", characters=" + characters + ", genres=" + genres + ", persons=" + persons + "]";
 	}
 	
 }

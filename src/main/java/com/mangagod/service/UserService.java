@@ -4,8 +4,8 @@ import com.mangagod.dto.data.UserAllPageableDataDTO;
 import com.mangagod.dto.data.UserDataDTO;
 import com.mangagod.dto.request.UserCreateRequestDTO;
 import com.mangagod.dto.request.UserUpdateRequestDTO;
-import com.mangagod.service.generic.CrudService;
+import com.mangagod.service.base.BaseService;
 
-public interface UserService extends CrudService<UserAllPageableDataDTO, UserDataDTO, UserCreateRequestDTO, UserUpdateRequestDTO>{
+public interface UserService extends BaseService<UserAllPageableDataDTO, UserDataDTO, UserCreateRequestDTO, UserUpdateRequestDTO>{
 	
 }

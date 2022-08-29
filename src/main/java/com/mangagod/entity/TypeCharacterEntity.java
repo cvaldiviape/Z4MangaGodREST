@@ -6,19 +6,15 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.mangagod.entity.base.BaseEntity;
+
 @Entity
 @Table(name = "types_characters") 
-public class TypeCharacterEntity {
+public class TypeCharacterEntity extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 	@Column(name = "created_at", nullable = false)
@@ -31,15 +27,7 @@ public class TypeCharacterEntity {
 	public TypeCharacterEntity() {
 		
 	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -70,12 +58,6 @@ public class TypeCharacterEntity {
 
 	public void setCharacters(Set<CharacterEntity> characters) {
 		this.characters = characters;
-	}
-
-	@Override
-	public String toString() {
-		return "TypeCharacterEntity [id=" + id + ", name=" + name + ", createdAt=" + createdAt + ", updatedAt="
-				+ updatedAt + ", characters=" + characters + "]";
 	}
 	
 }

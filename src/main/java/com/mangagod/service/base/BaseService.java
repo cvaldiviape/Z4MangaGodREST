@@ -1,6 +1,6 @@
-package com.mangagod.service.generic;
+package com.mangagod.service.base;
 
-public interface CrudService <T, K, U, V> {
+public interface BaseService <T, K, U, V> {
 
 	public T getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir);
 	
