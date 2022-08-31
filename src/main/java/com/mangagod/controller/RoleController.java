@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.data.RoleAllPageableDataDTO;
 import com.mangagod.dto.data.RoleDataDTO;
+import com.mangagod.dto.pagination.RoleAllPageableDataDTO;
 import com.mangagod.dto.request.RoleRequestDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.RoleService;

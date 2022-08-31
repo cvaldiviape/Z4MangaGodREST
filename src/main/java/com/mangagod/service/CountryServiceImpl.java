@@ -11,9 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.mangagod.dto.data.CountryAllPageableDataDTO;
 import com.mangagod.dto.data.CountryDataDTO;
+import com.mangagod.dto.pagination.CountryAllPageableDataDTO;
 import com.mangagod.dto.request.CountryRequestDTO;
 import com.mangagod.entity.CountryEntity;
 import com.mangagod.exception.MangaGodAppException;

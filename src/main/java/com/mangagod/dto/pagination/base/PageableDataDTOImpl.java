@@ -1,4 +1,4 @@
-package com.mangagod.dto.data.pagination;
+package com.mangagod.dto.pagination.base;
 
 public class PageableDataDTOImpl implements PageableDataDTO {
 	

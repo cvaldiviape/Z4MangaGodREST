@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mangagod.dto.data.DemographyAllPageableDataDTO;
 import com.mangagod.dto.data.DemographyDataDTO;
+import com.mangagod.dto.pagination.DemographyAllPageableDataDTO;
 import com.mangagod.dto.request.DemographyRequestDTO;
 import com.mangagod.entity.DemographyEntity;
 import com.mangagod.exception.MangaGodAppException;

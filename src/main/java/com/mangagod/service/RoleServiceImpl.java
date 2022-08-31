@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mangagod.dto.data.RoleAllPageableDataDTO;
 import com.mangagod.dto.data.RoleDataDTO;
+import com.mangagod.dto.pagination.RoleAllPageableDataDTO;
 import com.mangagod.dto.request.RoleRequestDTO;
 import com.mangagod.entity.RoleEntity;
 import com.mangagod.exception.MangaGodAppException;

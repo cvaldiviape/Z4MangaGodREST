@@ -1,7 +1,7 @@
 package com.mangagod.service;
 
-import com.mangagod.dto.data.ProfessionAllPageableDataDTO;
 import com.mangagod.dto.data.ProfessionDataDTO;
+import com.mangagod.dto.pagination.ProfessionAllPageableDataDTO;
 import com.mangagod.dto.request.ProfessionRequestDTO;
 import com.mangagod.service.base.BaseService;
 

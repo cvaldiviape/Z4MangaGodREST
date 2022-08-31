@@ -15,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mangagod.dto.data.UserAllPageableDataDTO;
 import com.mangagod.dto.data.UserDataDTO;
+import com.mangagod.dto.pagination.UserAllPageableDataDTO;
 import com.mangagod.dto.request.UserCreateRequestDTO;
 import com.mangagod.dto.request.UserUpdateRequestDTO;
 import com.mangagod.entity.RoleEntity;

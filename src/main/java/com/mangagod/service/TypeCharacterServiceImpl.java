@@ -1,7 +1,7 @@
 package com.mangagod.service;
 
-import com.mangagod.dto.data.TypeCharacterAllPageableDataDTO;
 import com.mangagod.dto.data.TypeCharacterDataDTO;
+import com.mangagod.dto.pagination.TypeCharacterAllPageableDataDTO;
 import com.mangagod.dto.request.TypeCharacterRequestDTO;
 
 public class TypeCharacterServiceImpl implements TypeCharacterService {

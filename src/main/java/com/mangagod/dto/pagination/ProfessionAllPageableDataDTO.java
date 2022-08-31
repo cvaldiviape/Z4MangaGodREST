@@ -1,7 +1,9 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.pagination;
 
 import java.util.List;
-import com.mangagod.dto.data.pagination.PageableDataDTOImpl;
+
+import com.mangagod.dto.data.ProfessionDataDTO;
+import com.mangagod.dto.pagination.base.PageableDataDTOImpl;
 
 public class ProfessionAllPageableDataDTO extends PageableDataDTOImpl {
 

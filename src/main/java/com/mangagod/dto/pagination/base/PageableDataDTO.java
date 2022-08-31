@@ -1,4 +1,4 @@
-package com.mangagod.dto.data.pagination;
+package com.mangagod.dto.pagination.base;
 
 public interface PageableDataDTO {
 
@@ -21,5 +21,5 @@ public interface PageableDataDTO {
 	public Long getTotalElements();
 
 	public void setTotalElements(Long totalElements);
-
+	
 }

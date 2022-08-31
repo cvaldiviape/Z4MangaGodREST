@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.data.CountryAllPageableDataDTO;
 import com.mangagod.dto.data.CountryDataDTO;
+import com.mangagod.dto.pagination.CountryAllPageableDataDTO;
 import com.mangagod.dto.request.CountryRequestDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.CountryService;

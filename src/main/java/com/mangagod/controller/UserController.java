@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.data.UserAllPageableDataDTO;
 import com.mangagod.dto.data.UserDataDTO;
+import com.mangagod.dto.pagination.UserAllPageableDataDTO;
 import com.mangagod.dto.request.UserCreateRequestDTO;
 import com.mangagod.dto.request.UserUpdateRequestDTO;
 import com.mangagod.dto.response.MainResponse;
