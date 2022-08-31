@@ -1,15 +1,15 @@
 package com.mangagod.service.base;
 
-public interface BaseService <T, K, U, V> {
+public interface BaseService <PAGEABLE, DataDTO, RequestDTO, ID> {
 
-	public T getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir);
+	public PAGEABLE getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir);
 	
-	public K getById(Integer id);
+	public DataDTO getById(ID id);
 	
-	public K create(U createRequestDTO);
+	public DataDTO create(RequestDTO requestDTO);
 	
-	public K update(Integer id, V updateRequestDTO);
+	public DataDTO update(ID id, RequestDTO requestDTO);
 	
-	public K delete(Integer id);
+	public DataDTO delete(ID id);
 
 }

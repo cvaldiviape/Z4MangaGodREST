@@ -15,13 +15,13 @@ public class UserMapper {
 	private ModelMapper modelMapper;
 	
 	// ---------------------------------------------------------- modelMapper --------------------------------------------------------- //
-	public UserDataDTO mapUserEntityToUserDataDTO(UserEntity userEntity) {
+	public UserDataDTO mapEntityToDataDTO(UserEntity userEntity) {
 		UserDataDTO userResponseDTO = this.modelMapper.map(userEntity, UserDataDTO.class);
 		return userResponseDTO;
 	}
 	
-	public UserEntity mapUserCreateRequestToUserEntity(UserCreateRequestDTO userRequestDTO) {
-		UserEntity userEntity = this.modelMapper.map(userRequestDTO, UserEntity.class);
+	public UserEntity mapRequestToEntity(UserCreateRequestDTO requestDTO) {
+		UserEntity userEntity = this.modelMapper.map(requestDTO, UserEntity.class);
 		return userEntity;
 	}
 		

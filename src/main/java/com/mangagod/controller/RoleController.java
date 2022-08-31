@@ -1,7 +1,6 @@
 package com.mangagod.controller;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.mangagod.dto.data.RoleAllPageableDataDTO;
 import com.mangagod.dto.data.RoleDataDTO;
-import com.mangagod.dto.request.RoleCreateRequestDTO;
-import com.mangagod.dto.request.RoleUpdateRequestDTO;
+import com.mangagod.dto.request.RoleRequestDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.RoleService;
 import com.mangagod.util.AppConstants;
@@ -57,9 +56,9 @@ public class RoleController {
 	@ApiOperation("Esta operacion se encarga de crear un nuevo rol.")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
-	public ResponseEntity<MainResponse> createRole(@Valid @RequestBody RoleCreateRequestDTO roleCreateRequestDTO){
-		RoleDataDTO roleDataDTO = this.roleService.create(roleCreateRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El rol ha sido creado exitosamente!", roleDataDTO);
+	public ResponseEntity<MainResponse> createRole(@Valid @RequestBody RoleRequestDTO requestDTO){
+		RoleDataDTO dataDTO = this.roleService.create(requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El rol ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
@@ -67,9 +66,9 @@ public class RoleController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{role_id}")
 	public ResponseEntity<MainResponse> updateRol(@PathVariable (name = "role_id") int roleId, 
-			                                      @Valid @RequestBody RoleUpdateRequestDTO roleUpdateRequestDTO ){
-		RoleDataDTO roleDataDTO = this.roleService.update(roleId, roleUpdateRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El rol ha sido actualizado exitosamente!", roleDataDTO);
+			                                      @Valid @RequestBody RoleRequestDTO requestDTO ){
+		RoleDataDTO dataDTO = this.roleService.update(roleId, requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El rol ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
@@ -77,8 +76,8 @@ public class RoleController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{role_id}")
 	public ResponseEntity<MainResponse> deleteRole(@PathVariable (name = "role_id") int roleId){
-		RoleDataDTO roleDataDTO = this.roleService.delete(roleId);
-		MainResponse mainResponse = new MainResponse(true, "El rol ha sido eliminado exitosamente!", roleDataDTO);
+		RoleDataDTO dataDTO = this.roleService.delete(roleId);
+		MainResponse mainResponse = new MainResponse(true, "El rol ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	

@@ -1,10 +1,10 @@
 package com.mangagod.repository;
 
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.mangagod.entity.GenreEntity;
+import com.mangagod.repository.base.BaseRepository;
 
-public interface GenreRepository extends JpaRepository<GenreEntity, Integer>{
+public interface GenreRepository extends BaseRepository<GenreEntity, Integer>{
 
 	public Optional<GenreEntity> findByName(String name);
 	

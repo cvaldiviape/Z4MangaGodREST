@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<UserEntity> usersPageable = this.userRepository.findAll(pageable);
 		List<UserEntity> usersEntity = usersPageable.getContent();
-		List<UserDataDTO> usersDto = usersEntity.stream().map(user -> this.userMapper.mapUserEntityToUserDataDTO(user)).collect(Collectors.toList());	
+		List<UserDataDTO> usersDto = usersEntity.stream().map(user -> this.userMapper.mapEntityToDataDTO(user)).collect(Collectors.toList());	
 		
 		UserAllPageableDataDTO userAllPageableResponseDTO = new UserAllPageableDataDTO();
 		userAllPageableResponseDTO.setUsers(usersDto);
@@ -69,81 +69,81 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDataDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		UserEntity userEntity = this.userRepository.findById(id)
+		UserEntity entity = this.userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));
-		UserDataDTO userDataDTO = this.userMapper.mapUserEntityToUserDataDTO(userEntity);
-		return userDataDTO;
+		UserDataDTO dataDTO = this.userMapper.mapEntityToDataDTO(entity);
+		return dataDTO;
 	}
 
 	@Override
-	public UserDataDTO create(UserCreateRequestDTO createRequestDTO) {
+	public UserDataDTO create(UserCreateRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		Boolean existsUsername = this.userRepository.existsByUsername(createRequestDTO.getUsername());
-		Boolean existsEmail = this.userRepository.existsByEmail(createRequestDTO.getEmail());
-		Boolean isEmptyArray = createRequestDTO.getRoleIds().isEmpty();
+		Boolean existsUsername = this.userRepository.existsByUsername(requestDTO.getUsername());
+		Boolean existsEmail = this.userRepository.existsByEmail(requestDTO.getEmail());
+		Boolean isEmptyArray = requestDTO.getRoleIds().isEmpty();
 		if(existsUsername) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre de usuario " + createRequestDTO.getUsername() + " ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre de usuario " + requestDTO.getUsername() + " ya existe.");
 		}else if(existsEmail) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El correo " + createRequestDTO.getEmail() +" ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El correo " + requestDTO.getEmail() +" ya existe.");
 		}else if(isEmptyArray) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El array 'roleIds' debe contener al menos 1 elemento.");
 		}
-		UserEntity userEntity = this.userMapper.mapUserCreateRequestToUserEntity(createRequestDTO);
-		userEntity.setPassword(this.passwordEncoder.encode(createRequestDTO.getPassword())); // encriptando la contraseña
-		userEntity.setCreatedAt(LocalDateTime.now());
-		userEntity.setUpdatedAt(LocalDateTime.now());
+		UserEntity entity = this.userMapper.mapRequestToEntity(requestDTO);
+		entity.setPassword(this.passwordEncoder.encode(requestDTO.getPassword())); // encriptando la contraseña
+		entity.setCreatedAt(LocalDateTime.now());
+		entity.setUpdatedAt(LocalDateTime.now());
 
 		Set<RoleEntity> roles = new HashSet<>();		
-		for (Integer roleId : createRequestDTO.getRoleIds()) {
+		for (Integer roleId : requestDTO.getRoleIds()) {
 			RoleEntity roleEntity = this.roleRepository.findById(roleId).orElseThrow(() -> new MangaGodAppException(HttpStatus.BAD_REQUEST, "El rol con Id " + roleId + " no existe."));
 			roles.add(roleEntity);
 		}
-		userEntity.setRoles(roles);
+		entity.setRoles(roles);
 		
-		UserDataDTO userCreated = this.userMapper.mapUserEntityToUserDataDTO(this.userRepository.save(userEntity));		
-		return userCreated;
+		UserDataDTO dataCreated = this.userMapper.mapEntityToDataDTO(this.userRepository.save(entity));		
+		return dataCreated;
 	}
 
 	@Override
-	public UserDataDTO update(Integer userId, UserUpdateRequestDTO updateRequestDTO) {
+	public UserDataDTO update(Integer userId, UserUpdateRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		UserEntity userDataCurrent = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+		UserEntity dataCurrent = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 		
-		Boolean existsUsername = this.userRepository.existsByUsername(updateRequestDTO.getUsername());
-		Boolean existsEmail = this.userRepository.existsByEmail(updateRequestDTO.getEmail());
-		Boolean diferentUsernameCurrent = (!updateRequestDTO.getUsername().equalsIgnoreCase(userDataCurrent.getUsername()));
-		Boolean diferentEmailCurrent = (!updateRequestDTO.getEmail().equalsIgnoreCase(userDataCurrent.getEmail()));
-		Boolean arrayEmpty = updateRequestDTO.getRoleIds().isEmpty();
+		Boolean existsUsername = this.userRepository.existsByUsername(requestDTO.getUsername());
+		Boolean existsEmail = this.userRepository.existsByEmail(requestDTO.getEmail());
+		Boolean diferentUsernameCurrent = (!requestDTO.getUsername().equalsIgnoreCase(dataCurrent.getUsername()));
+		Boolean diferentEmailCurrent = (!requestDTO.getEmail().equalsIgnoreCase(dataCurrent.getEmail()));
+		Boolean arrayEmpty = requestDTO.getRoleIds().isEmpty();
 		if(existsUsername && diferentUsernameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre de usuario " + updateRequestDTO.getUsername() + " ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre de usuario " + requestDTO.getUsername() + " ya existe.");
 		}else if(existsEmail && diferentEmailCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El correo " + updateRequestDTO.getEmail() +" ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El correo " + requestDTO.getEmail() +" ya existe.");
 		}else if(arrayEmpty) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "Es obligatorio asignar un Rol al usuario.");
 		}
-		userDataCurrent.setUsername(updateRequestDTO.getUsername());
-		userDataCurrent.setEmail(updateRequestDTO.getEmail());
-		userDataCurrent.setUpdatedAt(LocalDateTime.now());
+		dataCurrent.setUsername(requestDTO.getUsername());
+		dataCurrent.setEmail(requestDTO.getEmail());
+		dataCurrent.setUpdatedAt(LocalDateTime.now());
 		
 		Set<RoleEntity> roles = new HashSet<>();
-		for (Integer roleId : updateRequestDTO.getRoleIds()) {
+		for (Integer roleId : requestDTO.getRoleIds()) {
 			RoleEntity roleEntity = this.roleRepository.findById(roleId).orElseThrow(() -> new MangaGodAppException(HttpStatus.BAD_REQUEST, "El rol con Id " + roleId + " no existe."));
 			roles.add(roleEntity);
 		}
-		userDataCurrent.setRoles(roles);
+		dataCurrent.setRoles(roles);
 		
-		UserDataDTO userUpdated = this.userMapper.mapUserEntityToUserDataDTO(this.userRepository.save(userDataCurrent));	
-		return userUpdated;
+		UserDataDTO dataUpdated = this.userMapper.mapEntityToDataDTO(this.userRepository.save(dataCurrent));	
+		return dataUpdated;
 	}
 
 	@Override
 	public UserDataDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		UserEntity userEntity = this.userRepository.findById(id)
+		UserEntity entity = this.userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));
-		this.userRepository.delete(userEntity);
-		UserDataDTO userDeleted = this.userMapper.mapUserEntityToUserDataDTO(userEntity);
-		return userDeleted;
+		this.userRepository.delete(entity);
+		UserDataDTO dataDeleted = this.userMapper.mapEntityToDataDTO(entity);
+		return dataDeleted;
 	}
 	
 }

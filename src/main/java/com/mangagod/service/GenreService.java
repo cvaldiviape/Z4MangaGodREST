@@ -2,10 +2,9 @@ package com.mangagod.service;
 
 import com.mangagod.dto.data.GenreAllPageableDataDTO;
 import com.mangagod.dto.data.GenreDataDTO;
-import com.mangagod.dto.request.GenreCreateRequestDTO;
-import com.mangagod.dto.request.GenreUpdateRequestDTO;
+import com.mangagod.dto.request.GenreRequestDTO;
 import com.mangagod.service.base.BaseService;
 
-public interface GenreService extends BaseService<GenreAllPageableDataDTO, GenreDataDTO, GenreCreateRequestDTO, GenreUpdateRequestDTO>{
+public interface GenreService extends BaseService<GenreAllPageableDataDTO, GenreDataDTO, GenreRequestDTO, Integer>{
 
 }

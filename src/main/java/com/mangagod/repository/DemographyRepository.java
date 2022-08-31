@@ -1,10 +1,10 @@
 package com.mangagod.repository;
 
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.mangagod.entity.DemographyEntity;
+import com.mangagod.repository.base.BaseRepository;
 
-public interface DemographyRepository extends JpaRepository<DemographyEntity, Integer> {
+public interface DemographyRepository extends BaseRepository<DemographyEntity, Integer> {
 
 	public Optional<DemographyEntity> findByName(String name);
 	

@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class RoleUpdateRequestDTO {
+public class RoleRequestDTO {
 
 	@NotNull(message = "El campo 'name' es obligatorio.")
 	@NotBlank(message = "El campo 'name' es obligatorio.")
@@ -13,10 +13,10 @@ public class RoleUpdateRequestDTO {
 	@Pattern(regexp= "^[a-zA-ZÀ-ÿ_]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras." )
 	private String name;
 	@Size(max = 50, message = "El campo 'description' debe contener un maximo de 50 caracteres.")
-	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras." )
+	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'description' solo admite letras." )
 	private String description;
 	
-	public RoleUpdateRequestDTO() {
+	public RoleRequestDTO() {
 		
 	}
 	
@@ -35,5 +35,5 @@ public class RoleUpdateRequestDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	
 }

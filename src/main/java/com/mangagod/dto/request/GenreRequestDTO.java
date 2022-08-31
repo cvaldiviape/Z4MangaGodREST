@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class ProfessionCreateRequestDTO {
+public class GenreRequestDTO {
 
 	@NotNull(message = "El campo 'name' es obligatorio.")
 	@NotBlank(message = "El campo 'name' es obligatorio.")
@@ -13,7 +13,7 @@ public class ProfessionCreateRequestDTO {
 	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras." )
 	private String name;
 
-	public ProfessionCreateRequestDTO() {
+	public GenreRequestDTO() {
 		
 	}
 
@@ -24,5 +24,4 @@ public class ProfessionCreateRequestDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 }

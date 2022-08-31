@@ -1,10 +1,10 @@
 package com.mangagod.repository;
 
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.mangagod.entity.RoleEntity;
+import com.mangagod.repository.base.BaseRepository;
 
-public interface RoleRepository extends JpaRepository<RoleEntity, Integer> {
+public interface RoleRepository extends BaseRepository<RoleEntity, Integer> {
 
 	public Optional<RoleEntity> findByName(String name);
 	

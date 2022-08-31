@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mangagod.dto.data.DemographyAllPageableDataDTO;
 import com.mangagod.dto.data.DemographyDataDTO;
-import com.mangagod.dto.request.DemographyCreateRequestDTO;
-import com.mangagod.dto.request.DemographyUpdateRequestDTO;
+import com.mangagod.dto.request.DemographyRequestDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.DemographyService;
 import com.mangagod.util.AppConstants;
@@ -49,17 +48,17 @@ public class DemographyController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{demography_id}")
 	public ResponseEntity<MainResponse> getDemographyById(@PathVariable (name = "demography_id") int demographyId){
-		DemographyDataDTO demographyDataDTO = this.demographyService.getById(demographyId);
-		MainResponse mainResponse = new MainResponse(true, "Obteniendo un dato demográfico por ID.", demographyDataDTO);
+		DemographyDataDTO dataDTO = this.demographyService.getById(demographyId);
+		MainResponse mainResponse = new MainResponse(true, "Obteniendo un dato demográfico por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
 	@ApiOperation("Esta operacion se encarga de crear un dato demografico.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
-	public ResponseEntity<MainResponse> createDemography(@Valid @RequestBody DemographyCreateRequestDTO demographyCreateRequestDTO){
-		DemographyDataDTO demographyDataDTO = this.demographyService.create(demographyCreateRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El dato demográfico ha sido creado exitosamente!", demographyDataDTO);
+	public ResponseEntity<MainResponse> createDemography(@Valid @RequestBody DemographyRequestDTO requestDTO){
+		DemographyDataDTO dataDTO = this.demographyService.create(requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El dato demográfico ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
@@ -67,9 +66,9 @@ public class DemographyController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{demography_id}")
 	public ResponseEntity<MainResponse> updateDemography(@PathVariable (name = "demography_id") int demographyId, 
-													     @Valid @RequestBody DemographyUpdateRequestDTO demographyUpdateRequestDTO ){
-		DemographyDataDTO demographyDataDTO = this.demographyService.update(demographyId, demographyUpdateRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El dato demográfico ha sido actualizado exitosamente!", demographyDataDTO);
+													     @Valid @RequestBody DemographyRequestDTO requestDTO ){
+		DemographyDataDTO dataDTO = this.demographyService.update(demographyId, requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El dato demográfico ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
@@ -77,8 +76,8 @@ public class DemographyController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{demography_id}")
 	public ResponseEntity<MainResponse> deleteDemography(@PathVariable (name = "demography_id") int demographyId){
-		DemographyDataDTO demographyDataDTO = this.demographyService.delete(demographyId);
-		MainResponse mainResponse = new MainResponse(true, "El dato demográfico ha sido eliminado exitosamente!", demographyDataDTO);
+		DemographyDataDTO dataDTO = this.demographyService.delete(demographyId);
+		MainResponse mainResponse = new MainResponse(true, "El dato demográfico ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	

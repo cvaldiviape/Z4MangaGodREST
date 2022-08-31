@@ -1,10 +1,10 @@
 package com.mangagod.repository;
 
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.mangagod.entity.ProfessionEntity;
+import com.mangagod.repository.base.BaseRepository;
 
-public interface ProfessionRepository extends JpaRepository<ProfessionEntity, Integer> {
+public interface ProfessionRepository extends BaseRepository<ProfessionEntity, Integer> {
 
 	public Optional<ProfessionEntity> findByName(String name);
 	

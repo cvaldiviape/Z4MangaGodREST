@@ -2,8 +2,7 @@ package com.mangagod.service;
 
 import com.mangagod.dto.data.TypeCharacterAllPageableDataDTO;
 import com.mangagod.dto.data.TypeCharacterDataDTO;
-import com.mangagod.dto.request.TypeCharacterCreateRequestDTO;
-import com.mangagod.dto.request.TypeCharacterUpdateRequestDTO;
+import com.mangagod.dto.request.TypeCharacterRequestDTO;
 
 public class TypeCharacterServiceImpl implements TypeCharacterService {
 
@@ -20,13 +19,13 @@ public class TypeCharacterServiceImpl implements TypeCharacterService {
 	}
 
 	@Override
-	public TypeCharacterDataDTO create(TypeCharacterCreateRequestDTO createRequestDTO) {
+	public TypeCharacterDataDTO create(TypeCharacterRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public TypeCharacterDataDTO update(Integer id, TypeCharacterUpdateRequestDTO updateRequestDTO) {
+	public TypeCharacterDataDTO update(Integer id, TypeCharacterRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}

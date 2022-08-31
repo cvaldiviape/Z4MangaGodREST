@@ -44,7 +44,7 @@ public class UserUpdateRequestDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
+	
 	public Set<Integer> getRoleIds() {
 		return roleIds;
 	}

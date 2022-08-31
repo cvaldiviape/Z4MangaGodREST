@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
 				.orElseThrow(() -> new ResourceNotFoundException("Role", "id", roleId));
 		
 		UserAuthDataDTO userAuthDataDTO = this.authMapper.mapUserEntityToUserAuthDataDTO(userEntity);
-		RoleDataDTO roleDataDTO = this.roleMapper.mapRoleEntityToRoleDataDTO(roleEntity);
+		RoleDataDTO roleDataDTO = this.roleMapper.mapEntityToDataDTO(roleEntity);
 		TokenDataDTO tokenDataDTO = new TokenDataDTO();
 		tokenDataDTO.setTokenAccess(token);
 		tokenDataDTO.setTokenType(this.appSettingProperties.JWT_TYPE);

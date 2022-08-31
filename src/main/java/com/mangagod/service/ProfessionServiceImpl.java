@@ -2,8 +2,7 @@ package com.mangagod.service;
 
 import com.mangagod.dto.data.ProfessionAllPageableDataDTO;
 import com.mangagod.dto.data.ProfessionDataDTO;
-import com.mangagod.dto.request.ProfessionCreateRequestDTO;
-import com.mangagod.dto.request.ProfessionUpdateRequestDTO;
+import com.mangagod.dto.request.ProfessionRequestDTO;
 
 public class ProfessionServiceImpl implements ProfessionService {
 
@@ -20,13 +19,13 @@ public class ProfessionServiceImpl implements ProfessionService {
 	}
 
 	@Override
-	public ProfessionDataDTO create(ProfessionCreateRequestDTO createRequestDTO) {
+	public ProfessionDataDTO create(ProfessionRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ProfessionDataDTO update(Integer id, ProfessionUpdateRequestDTO updateRequestDTO) {
+	public ProfessionDataDTO update(Integer id, ProfessionRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		return null;
 	}

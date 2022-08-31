@@ -1,7 +1,6 @@
 package com.mangagod.controller;
 
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,17 +49,17 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{user_id}")
 	public ResponseEntity<MainResponse> getUserById(@PathVariable (name = "user_id") int userId){
-		UserDataDTO userResponseDTO = this.userService.getById(userId);
-		MainResponse mainResponse = new MainResponse(true, "Obteniendo usuario por ID.", userResponseDTO);
+		UserDataDTO dataDTO = this.userService.getById(userId);
+		MainResponse mainResponse = new MainResponse(true, "Obteniendo usuario por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
 	@ApiOperation("Esta operacion se encarga de crear un nuevo usuario.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
-	public ResponseEntity<MainResponse> createUser(@Valid @RequestBody UserCreateRequestDTO userRequestDTO){
-		UserDataDTO userResponseDTO = this.userService.create(userRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido creado exitosamente!", userResponseDTO);
+	public ResponseEntity<MainResponse> createUser(@Valid @RequestBody UserCreateRequestDTO requestDTO){
+		UserDataDTO dataDTO = this.userService.create(requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}
 	
@@ -68,9 +67,9 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{user_id}")
 	public ResponseEntity<MainResponse> updateUser(@PathVariable (name = "user_id") int userId, 
-			                                       @Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO ){
-		UserDataDTO userResponseDTO = this.userService.update(userId, userUpdateRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido actualizado exitosamente!", userResponseDTO);
+			                                       @Valid @RequestBody UserUpdateRequestDTO requestDTO ){
+		UserDataDTO dataDTO = this.userService.update(userId, requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}
 
@@ -78,8 +77,8 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{user_id}")
 	public ResponseEntity<MainResponse> deleteUser(@PathVariable (name = "user_id") int userId){
-		UserDataDTO userResponseDTO = this.userService.delete(userId);
-		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido eliminado exitosamente!", userResponseDTO);
+		UserDataDTO dataDTO = this.userService.delete(userId);
+		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}
 	

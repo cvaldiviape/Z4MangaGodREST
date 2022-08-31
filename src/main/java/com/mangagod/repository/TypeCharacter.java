@@ -1,10 +1,10 @@
 package com.mangagod.repository;
 
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.mangagod.entity.TypeCharacterEntity;
+import com.mangagod.repository.base.BaseRepository;
 
-public interface TypeCharacter extends JpaRepository<TypeCharacterEntity, Integer> {
+public interface TypeCharacter extends BaseRepository<TypeCharacterEntity, Integer> {
 
 	public Optional<TypeCharacterEntity> findByName(String name);
 	

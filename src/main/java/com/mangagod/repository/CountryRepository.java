@@ -1,10 +1,10 @@
 package com.mangagod.repository;
 
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.mangagod.entity.CountryEntity;
+import com.mangagod.repository.base.BaseRepository;
 
-public interface CountryRepository extends JpaRepository<CountryEntity, Integer> {
+public interface CountryRepository extends BaseRepository<CountryEntity,Integer> {
 
 	public Optional<CountryEntity> findByName(String name);
 	

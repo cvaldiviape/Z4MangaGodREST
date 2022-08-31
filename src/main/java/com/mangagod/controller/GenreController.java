@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.mangagod.dto.data.GenreAllPageableDataDTO;
 import com.mangagod.dto.data.GenreDataDTO;
-import com.mangagod.dto.request.GenreCreateRequestDTO;
-import com.mangagod.dto.request.GenreUpdateRequestDTO;
+import com.mangagod.dto.request.GenreRequestDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.GenreService;
 import com.mangagod.util.AppConstants;
@@ -49,17 +49,17 @@ public class GenreController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{genre_id}")
 	public ResponseEntity<MainResponse> getGenreById(@PathVariable (name = "genre_id") int genreId){
-		GenreDataDTO genreDataDTO = this.genreService.getById(genreId);
-		MainResponse mainResponse = new MainResponse(true, "Obteniendo género por ID.", genreDataDTO);
+		GenreDataDTO dataDTO = this.genreService.getById(genreId);
+		MainResponse mainResponse = new MainResponse(true, "Obteniendo género por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
 	@ApiOperation("Esta operacion se encarga de crear un nuevo género.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
-	public ResponseEntity<MainResponse> createCountry(@Valid @RequestBody GenreCreateRequestDTO genreCreateRequestDTO){
-		GenreDataDTO genreDataDTO = this.genreService.create(genreCreateRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El género ha sido creado exitosamente!", genreDataDTO);
+	public ResponseEntity<MainResponse> createCountry(@Valid @RequestBody GenreRequestDTO requestDTO){
+		GenreDataDTO dataDTO = this.genreService.create(requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El género ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
@@ -67,9 +67,9 @@ public class GenreController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{genre_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "genre_id") int genreId, 
-			                                          @Valid @RequestBody GenreUpdateRequestDTO genreUpdateRequestDTO ){
-		GenreDataDTO genreDataDTO = this.genreService.update(genreId, genreUpdateRequestDTO); 
-		MainResponse mainResponse = new MainResponse(true, "El género ha sido actualizado exitosamente!", genreDataDTO);
+			                                          @Valid @RequestBody GenreRequestDTO requestDTO ){
+		GenreDataDTO dataDTO = this.genreService.update(genreId, requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El género ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
@@ -77,8 +77,8 @@ public class GenreController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{genre_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "genre_id") int genreId){
-		GenreDataDTO genreDataDTO = this.genreService.delete(genreId);
-		MainResponse mainResponse = new MainResponse(true, "El género ha sido eliminado exitosamente!", genreDataDTO);
+		GenreDataDTO dataDTO = this.genreService.delete(genreId);
+		MainResponse mainResponse = new MainResponse(true, "El género ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 		
