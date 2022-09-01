@@ -42,17 +42,17 @@ public class CountryServiceImpl implements CountryService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<CountryEntity> countriesPageable = this.countryRepository.findAll(pageable);	
 		List<CountryEntity> countriesEntity = countriesPageable.getContent();
-		List<CountryDataDTO> countriesDTO = countriesEntity.stream().map(country -> this.countryMapper.mapEntityToDataDTO(country)).collect(Collectors.toList());	
+		List<CountryDataDTO> countriesDTO = countriesEntity.stream().map((x) -> this.countryMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
 		
-		CountryAllPageableDataDTO countryAllPageableDataDTO = new CountryAllPageableDataDTO();
-		countryAllPageableDataDTO.setCountries(countriesDTO);
-		countryAllPageableDataDTO.setNumberPage(countriesPageable.getNumber());
-		countryAllPageableDataDTO.setSizePage(countriesPageable.getSize());
-		countryAllPageableDataDTO.setTotalElements(countriesPageable.getTotalElements());
-		countryAllPageableDataDTO.setTotalPages(countriesPageable.getTotalPages());
-		countryAllPageableDataDTO.setIsLastPage(countriesPageable.isLast());
+		CountryAllPageableDataDTO pageableDataDTO = new CountryAllPageableDataDTO();
+		pageableDataDTO.setCountries(countriesDTO);
+		pageableDataDTO.setNumberPage(countriesPageable.getNumber());
+		pageableDataDTO.setSizePage(countriesPageable.getSize());
+		pageableDataDTO.setTotalElements(countriesPageable.getTotalElements());
+		pageableDataDTO.setTotalPages(countriesPageable.getTotalPages());
+		pageableDataDTO.setIsLastPage(countriesPageable.isLast());
 		
-		return countryAllPageableDataDTO;
+		return pageableDataDTO;
 	}
 	
 	@Override
@@ -71,11 +71,11 @@ public class CountryServiceImpl implements CountryService {
 		if(existNname) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
-		CountryEntity countryEntity = this.countryMapper.mapRequestToEntity(requestDTO);
-		countryEntity.setCreatedAt(LocalDateTime.now());
-		countryEntity.setUpdatedAt(LocalDateTime.now());
+		CountryEntity entity = this.countryMapper.mapRequestToEntity(requestDTO);
+		entity.setCreatedAt(LocalDateTime.now());
+		entity.setUpdatedAt(LocalDateTime.now());
 		
-		CountryDataDTO dataCreated = this.countryMapper.mapEntityToDataDTO(this.countryRepository.save(countryEntity));			
+		CountryDataDTO dataCreated = this.countryMapper.mapEntityToDataDTO(this.countryRepository.save(entity));			
 		return dataCreated;
 	}
 

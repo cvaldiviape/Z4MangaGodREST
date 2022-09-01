@@ -43,17 +43,17 @@ public class DemographyServiceImpl implements DemographyService{
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<DemographyEntity> demographiesPageable = this.demographyRepository.findAll(pageable);	
 		List<DemographyEntity> demographiesEntity = demographiesPageable.getContent();
-		List<DemographyDataDTO> demographiesDTO = demographiesEntity.stream().map(demography -> this.demographyMapper.mapEntityToDataDTO(demography)).collect(Collectors.toList());	
+		List<DemographyDataDTO> demographiesDTO = demographiesEntity.stream().map((x) -> this.demographyMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
 		
-		DemographyAllPageableDataDTO demographyAllPageableDataDTO = new DemographyAllPageableDataDTO();
-		demographyAllPageableDataDTO.setDemogrhapies(demographiesDTO);
-		demographyAllPageableDataDTO.setNumberPage(demographiesPageable.getNumber());
-		demographyAllPageableDataDTO.setSizePage(demographiesPageable.getSize());
-		demographyAllPageableDataDTO.setTotalElements(demographiesPageable.getTotalElements());
-		demographyAllPageableDataDTO.setTotalPages(demographiesPageable.getTotalPages());
-		demographyAllPageableDataDTO.setIsLastPage(demographiesPageable.isLast());
+		DemographyAllPageableDataDTO pageableDataDTO = new DemographyAllPageableDataDTO();
+		pageableDataDTO.setDemogrhapies(demographiesDTO);
+		pageableDataDTO.setNumberPage(demographiesPageable.getNumber());
+		pageableDataDTO.setSizePage(demographiesPageable.getSize());
+		pageableDataDTO.setTotalElements(demographiesPageable.getTotalElements());
+		pageableDataDTO.setTotalPages(demographiesPageable.getTotalPages());
+		pageableDataDTO.setIsLastPage(demographiesPageable.isLast());
 		
-		return demographyAllPageableDataDTO;
+		return pageableDataDTO;
 	}
 
 	@Override
@@ -72,11 +72,11 @@ public class DemographyServiceImpl implements DemographyService{
 		if(existNname) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
-		DemographyEntity countryEntity = this.demographyMapper.mapRequestToEntity(requestDTO);
-		countryEntity.setCreatedAt(LocalDateTime.now());
-		countryEntity.setUpdatedAt(LocalDateTime.now());
+		DemographyEntity entity = this.demographyMapper.mapRequestToEntity(requestDTO);
+		entity.setCreatedAt(LocalDateTime.now());
+		entity.setUpdatedAt(LocalDateTime.now());
 		
-		DemographyDataDTO dataDTO = this.demographyMapper.mapEntityToDataDTO(this.demographyRepository.save(countryEntity));			
+		DemographyDataDTO dataDTO = this.demographyMapper.mapEntityToDataDTO(this.demographyRepository.save(entity));			
 		return dataDTO;
 	}
 

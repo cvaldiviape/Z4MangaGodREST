@@ -21,7 +21,6 @@ public class GenreMapper {
 	}
 	
 	public GenreEntity mapRequestToEntity(GenreRequestDTO requestDTO) {
-		requestDTO.setName(requestDTO.getName().trim());
 		GenreEntity entity = this.modelMapper.map(requestDTO, GenreEntity.class);
 		return entity;
 	}

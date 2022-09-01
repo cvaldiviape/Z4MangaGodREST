@@ -10,7 +10,7 @@ public class ProfessionRequestDTO {
 	@NotNull(message = "El campo 'name' es obligatorio.")
 	@NotBlank(message = "El campo 'name' es obligatorio.")
 	@Size(max = 50, message = "El campo 'name' debe contener un maximo de 50 caracteres.")
-	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras." )
+	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras.")
 	private String name;
 
 	public ProfessionRequestDTO() {

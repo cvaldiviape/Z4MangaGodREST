@@ -53,17 +53,17 @@ public class UserServiceImpl implements UserService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<UserEntity> usersPageable = this.userRepository.findAll(pageable);
 		List<UserEntity> usersEntity = usersPageable.getContent();
-		List<UserDataDTO> usersDto = usersEntity.stream().map(user -> this.userMapper.mapEntityToDataDTO(user)).collect(Collectors.toList());	
+		List<UserDataDTO> usersDto = usersEntity.stream().map((x) -> this.userMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
 		
-		UserAllPageableDataDTO userAllPageableResponseDTO = new UserAllPageableDataDTO();
-		userAllPageableResponseDTO.setUsers(usersDto);
-		userAllPageableResponseDTO.setNumberPage(usersPageable.getNumber());
-		userAllPageableResponseDTO.setSizePage(usersPageable.getSize());
-		userAllPageableResponseDTO.setTotalElements(usersPageable.getTotalElements());
-		userAllPageableResponseDTO.setTotalPages(usersPageable.getTotalPages());
-		userAllPageableResponseDTO.setIsLastPage(usersPageable.isLast());
+		UserAllPageableDataDTO pageableDataDTO = new UserAllPageableDataDTO();
+		pageableDataDTO.setUsers(usersDto);
+		pageableDataDTO.setNumberPage(usersPageable.getNumber());
+		pageableDataDTO.setSizePage(usersPageable.getSize());
+		pageableDataDTO.setTotalElements(usersPageable.getTotalElements());
+		pageableDataDTO.setTotalPages(usersPageable.getTotalPages());
+		pageableDataDTO.setIsLastPage(usersPageable.isLast());
 		
-		return userAllPageableResponseDTO;
+		return pageableDataDTO;
 	}
 	
 	@Override

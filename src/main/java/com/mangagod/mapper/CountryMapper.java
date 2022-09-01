@@ -21,7 +21,6 @@ public class CountryMapper {
 	}
 	
 	public CountryEntity mapRequestToEntity(CountryRequestDTO requestDTO) {
-		requestDTO.setName(requestDTO.getName().trim());
 		CountryEntity entity = this.modelMapper.map(requestDTO, CountryEntity.class);
 		return entity;
 	}

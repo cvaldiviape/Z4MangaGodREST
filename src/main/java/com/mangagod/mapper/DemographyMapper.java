@@ -21,7 +21,6 @@ public class DemographyMapper {
 	}
 	
 	public DemographyEntity mapRequestToEntity(DemographyRequestDTO requestDTO) {
-		requestDTO.setName(requestDTO.getName().trim());
 		DemographyEntity entity = this.modelMapper.map(requestDTO, DemographyEntity.class);
 		return entity;
 	}

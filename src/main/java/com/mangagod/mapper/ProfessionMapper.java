@@ -21,7 +21,6 @@ public class ProfessionMapper {
 	}
 	
 	public ProfessionEntity mapRequestToEntity(ProfessionRequestDTO requestDTO) {
-		requestDTO.setName(requestDTO.getName().trim());
 		ProfessionEntity entity = this.modelMapper.map(requestDTO, ProfessionEntity.class);
 		return entity;
 	}

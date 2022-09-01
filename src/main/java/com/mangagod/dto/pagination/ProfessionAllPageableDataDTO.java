@@ -13,11 +13,11 @@ public class ProfessionAllPageableDataDTO extends PageableDataDTOImpl {
 		
 	}
 
-	public List<ProfessionDataDTO> getCountries() {
+	public List<ProfessionDataDTO> getProfessions() {
 		return professions;
 	}
 
-	public void setCountries(List<ProfessionDataDTO> professions) {
+	public void setProfessions(List<ProfessionDataDTO> professions) {
 		this.professions = professions;
 	}
 

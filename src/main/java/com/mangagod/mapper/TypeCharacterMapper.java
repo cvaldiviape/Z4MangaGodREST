@@ -21,7 +21,6 @@ public class TypeCharacterMapper {
 	}
 	
 	public TypeCharacterEntity mapRequestToEntity(TypeCharacterRequestDTO requestDTO) {
-		requestDTO.setName(requestDTO.getName().trim());
 		TypeCharacterEntity entity = this.modelMapper.map(requestDTO, TypeCharacterEntity.class);
 		return entity;
 	}

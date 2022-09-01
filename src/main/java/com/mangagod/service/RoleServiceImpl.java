@@ -43,17 +43,17 @@ public class RoleServiceImpl implements RoleService{
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<RoleEntity> rolesPageable = this.roleRepository.findAll(pageable);
 		List<RoleEntity> rolesEntity = rolesPageable.getContent();
-		List<RoleDataDTO> rolesDto = rolesEntity.stream().map(role -> this.roleMapper.mapEntityToDataDTO(role)).collect(Collectors.toList());	
+		List<RoleDataDTO> rolesDto = rolesEntity.stream().map((x) -> this.roleMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
 		
-		RoleAllPageableDataDTO roleAllPageableDataDTO = new RoleAllPageableDataDTO();
-		roleAllPageableDataDTO.setRoles(rolesDto);
-		roleAllPageableDataDTO.setNumberPage(rolesPageable.getNumber());
-		roleAllPageableDataDTO.setSizePage(rolesPageable.getSize());
-		roleAllPageableDataDTO.setTotalElements(rolesPageable.getTotalElements());
-		roleAllPageableDataDTO.setTotalPages(rolesPageable.getTotalPages());
-		roleAllPageableDataDTO.setIsLastPage(rolesPageable.isLast());
+		RoleAllPageableDataDTO pageableDataDTO = new RoleAllPageableDataDTO();
+		pageableDataDTO.setRoles(rolesDto);
+		pageableDataDTO.setNumberPage(rolesPageable.getNumber());
+		pageableDataDTO.setSizePage(rolesPageable.getSize());
+		pageableDataDTO.setTotalElements(rolesPageable.getTotalElements());
+		pageableDataDTO.setTotalPages(rolesPageable.getTotalPages());
+		pageableDataDTO.setIsLastPage(rolesPageable.isLast());
 		
-		return roleAllPageableDataDTO;
+		return pageableDataDTO;
 	}
 
 	@Override

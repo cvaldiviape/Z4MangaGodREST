@@ -43,17 +43,17 @@ public class GenreServiceImpl implements GenreService{
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<GenreEntity> genresPageable = this.genreRepository.findAll(pageable);	
 		List<GenreEntity> genresEntity = genresPageable.getContent();
-		List<GenreDataDTO> genressDTO = genresEntity.stream().map(genre -> this.genreMapper.mapEntityToDataDTO(genre)).collect(Collectors.toList());	
+		List<GenreDataDTO> genressDTO = genresEntity.stream().map((x) -> this.genreMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
 		
-		GenreAllPageableDataDTO genreAllPageableDataDTO = new GenreAllPageableDataDTO();
-		genreAllPageableDataDTO.setGenres(genressDTO);
-		genreAllPageableDataDTO.setNumberPage(genresPageable.getNumber());
-		genreAllPageableDataDTO.setSizePage(genresPageable.getSize());
-		genreAllPageableDataDTO.setTotalElements(genresPageable.getTotalElements());
-		genreAllPageableDataDTO.setTotalPages(genresPageable.getTotalPages());
-		genreAllPageableDataDTO.setIsLastPage(genresPageable.isLast());
+		GenreAllPageableDataDTO pageableDataDTO = new GenreAllPageableDataDTO();
+		pageableDataDTO.setGenres(genressDTO);
+		pageableDataDTO.setNumberPage(genresPageable.getNumber());
+		pageableDataDTO.setSizePage(genresPageable.getSize());
+		pageableDataDTO.setTotalElements(genresPageable.getTotalElements());
+		pageableDataDTO.setTotalPages(genresPageable.getTotalPages());
+		pageableDataDTO.setIsLastPage(genresPageable.isLast());
 		
-		return genreAllPageableDataDTO;
+		return pageableDataDTO;
 	}
 
 	@Override
