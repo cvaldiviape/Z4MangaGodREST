@@ -25,8 +25,8 @@ public class CharacterEntity extends BaseEntity {
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "manga_id")
-	private MangaEntity manga;
+	@JoinColumn(name = "story_id")
+	private StoryEntity story;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "type_id")
 	private TypeCharacterEntity type;
@@ -75,12 +75,12 @@ public class CharacterEntity extends BaseEntity {
 		this.updatedAt = updatedAt;
 	}
 
-	public MangaEntity getManga() {
-		return manga;
+	public StoryEntity getStory() {
+		return story;
 	}
 
-	public void setManga(MangaEntity manga) {
-		this.manga = manga;
+	public void setStory(StoryEntity story) {
+		this.story = story;
 	}
 
 	public TypeCharacterEntity getType() {

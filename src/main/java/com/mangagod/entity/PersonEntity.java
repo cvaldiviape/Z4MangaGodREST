@@ -27,7 +27,7 @@ public class PersonEntity extends BaseEntity {
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "persons")
-	private Set<MangaEntity> mangas = new HashSet<>();
+	private Set<StoryEntity> stories = new HashSet<>();
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "persons_professions", joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"), 
 									         inverseJoinColumns = @JoinColumn(name = "profession_id", referencedColumnName = "id"))
@@ -69,12 +69,12 @@ public class PersonEntity extends BaseEntity {
 		this.updatedAt = updatedAt;
 	}
 	
-	public Set<MangaEntity> getMangas() {
-		return mangas;
+	public Set<StoryEntity> getStories() {
+		return stories;
 	}
 	
-	public void setMangas(Set<MangaEntity> mangas) {
-		this.mangas = mangas;
+	public void setStories(Set<StoryEntity> stories) {
+		this.stories = stories;
 	}
 	
 	public Set<ProfessionEntity> getProfessions() {

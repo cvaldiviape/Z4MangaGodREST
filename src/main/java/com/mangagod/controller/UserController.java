@@ -55,7 +55,7 @@ public class UserController {
 	}
 	
 	@ApiOperation("Esta operacion se encarga de crear un nuevo usuario.")
-	@PreAuthorize("hasRole('ADMIN')") 
+	//@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createUser(@Valid @RequestBody UserCreateRequestDTO requestDTO){
 		UserDataDTO dataDTO = this.userService.create(requestDTO); 

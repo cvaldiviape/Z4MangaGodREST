@@ -22,7 +22,7 @@ public class DemographyEntity extends BaseEntity {
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "demographic")
-	private Set<MangaEntity> mangas = new HashSet<>();
+	private Set<StoryEntity> stories = new HashSet<>();
 	
 	public DemographyEntity() {
 		
@@ -52,12 +52,12 @@ public class DemographyEntity extends BaseEntity {
 		this.updatedAt = updatedAt;
 	}
 
-	public Set<MangaEntity> getMangas() {
-		return mangas;
+	public Set<StoryEntity> getStories() {
+		return stories;
 	}
 
-	public void setMangas(Set<MangaEntity> mangas) {
-		this.mangas = mangas;
+	public void setStories(Set<StoryEntity> stories) {
+		this.stories = stories;
 	}
 	
 }

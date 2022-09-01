@@ -17,8 +17,8 @@ import javax.persistence.Table;
 import com.mangagod.entity.base.BaseEntity;
 
 @Entity
-@Table(name = "mangas") 
-public class MangaEntity extends BaseEntity {
+@Table(name = "stories") 
+public class StoryEntity extends BaseEntity {
 
 	@Column(name = "title", nullable = false, unique = true)
 	private String title;
@@ -44,18 +44,18 @@ public class MangaEntity extends BaseEntity {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "demographic_id")
 	private DemographyEntity demographic;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "manga", cascade = {CascadeType.REMOVE})
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "story", cascade = {CascadeType.REMOVE})
 	private Set<CharacterEntity> characters = new HashSet<>();
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "mangas_genres", joinColumns = @JoinColumn(name = "manga_id", referencedColumnName = "id"), 
+	@JoinTable(name = "stories_genres", joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"), 
 									   inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
 	private Set<GenreEntity> genres = new HashSet<>();
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "mangas_personss", joinColumns = @JoinColumn(name = "manga_id", referencedColumnName = "id"), 
+	@JoinTable(name = "stories_persons", joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"), 
 									   inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"))
 	private Set<PersonEntity> persons = new HashSet<>();
 	
-	public MangaEntity() {
+	public StoryEntity() {
 		
 	}
 
