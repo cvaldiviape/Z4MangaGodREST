@@ -1,6 +1,5 @@
 package com.mangagod.entity;
 
-import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,10 +19,6 @@ public class CharacterEntity extends BaseEntity {
 	private String description;
 	@Column(name = "url_image")
 	private String urlImage;
-	@Column(name = "created_at", nullable = false)
-	private LocalDateTime createdAt;
-	@Column(name = "updated_at", nullable = false)
-	private LocalDateTime updatedAt;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "story_id")
 	private StoryEntity story;
@@ -57,22 +52,6 @@ public class CharacterEntity extends BaseEntity {
 
 	public void setUrlImage(String urlImage) {
 		this.urlImage = urlImage;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 	public StoryEntity getStory() {

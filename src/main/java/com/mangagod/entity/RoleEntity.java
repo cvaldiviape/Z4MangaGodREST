@@ -1,6 +1,5 @@
 package com.mangagod.entity;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -19,10 +18,6 @@ public class RoleEntity extends BaseEntity {
 	private String name;
 	@Column(name = "description")
 	private String description;
-	@Column(name = "created_at", nullable = false)
-	private LocalDateTime createdAt;
-	@Column(name = "updated_at", nullable = false)
-	private LocalDateTime updatedAt;
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
 	private Set<UserEntity> users = new HashSet<>();
 	
@@ -44,22 +39,6 @@ public class RoleEntity extends BaseEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 
 	public Set<UserEntity> getUsers() {

@@ -1,6 +1,5 @@
 package com.mangagod.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,6 @@ public class CountryServiceImpl implements CountryService {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		CountryEntity entity = this.countryMapper.mapRequestToEntity(requestDTO);
-		entity.setCreatedAt(LocalDateTime.now());
-		entity.setUpdatedAt(LocalDateTime.now());
 		
 		CountryDataDTO dataCreated = this.countryMapper.mapEntityToDataDTO(this.countryRepository.save(entity));			
 		return dataCreated;
@@ -89,8 +86,7 @@ public class CountryServiceImpl implements CountryService {
 		if(existsName && diferentUsernameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
-		dataCurrent.setName(requestDTO.getName().trim());
-		dataCurrent.setUpdatedAt(LocalDateTime.now());
+		dataCurrent.setName(requestDTO.getName());
 		
 		CountryDataDTO dataUpdated = this.countryMapper.mapEntityToDataDTO(this.countryRepository.save(dataCurrent));	
 		return dataUpdated;

@@ -1,6 +1,5 @@
 package com.mangagod.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.data.DemographyDataDTO;
 import com.mangagod.dto.pagination.DemographyAllPageableDataDTO;
 import com.mangagod.dto.request.DemographyRequestDTO;
@@ -73,8 +71,6 @@ public class DemographyServiceImpl implements DemographyService{
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		DemographyEntity entity = this.demographyMapper.mapRequestToEntity(requestDTO);
-		entity.setCreatedAt(LocalDateTime.now());
-		entity.setUpdatedAt(LocalDateTime.now());
 		
 		DemographyDataDTO dataDTO = this.demographyMapper.mapEntityToDataDTO(this.demographyRepository.save(entity));			
 		return dataDTO;
@@ -90,8 +86,7 @@ public class DemographyServiceImpl implements DemographyService{
 		if(existsName && diferentUsernameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
-		dataCurrent.setName(requestDTO.getName().trim());
-		dataCurrent.setUpdatedAt(LocalDateTime.now());
+		dataCurrent.setName(requestDTO.getName());
 		
 		DemographyDataDTO dataUpdated = this.demographyMapper.mapEntityToDataDTO(this.demographyRepository.save(dataCurrent));	
 		return dataUpdated;

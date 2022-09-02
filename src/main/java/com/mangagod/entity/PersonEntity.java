@@ -1,6 +1,5 @@
 package com.mangagod.entity;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -11,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
 import com.mangagod.entity.base.BaseEntity;
 
 @Entity
@@ -22,10 +20,6 @@ public class PersonEntity extends BaseEntity {
 	private String name;
 	@Column(name = "last_name")
 	private String lastName;
-	@Column(name = "created_at", nullable = false)
-	private LocalDateTime createdAt;
-	@Column(name = "updated_at", nullable = false)
-	private LocalDateTime updatedAt;
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "persons")
 	private Set<StoryEntity> stories = new HashSet<>();
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -52,23 +46,7 @@ public class PersonEntity extends BaseEntity {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-	
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-	
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-	
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-	
+		
 	public Set<StoryEntity> getStories() {
 		return stories;
 	}

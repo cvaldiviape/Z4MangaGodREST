@@ -1,6 +1,5 @@
 package com.mangagod.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,6 @@ public class ProfessionServiceImpl implements ProfessionService {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		ProfessionEntity entity = this.professionMapper.mapRequestToEntity(requestDTO);
-		entity.setCreatedAt(LocalDateTime.now());
-		entity.setUpdatedAt(LocalDateTime.now());
 		
 		ProfessionDataDTO dataCreated = this.professionMapper.mapEntityToDataDTO(this.professionRepository.save(entity));			
 		return dataCreated;
@@ -90,7 +87,6 @@ public class ProfessionServiceImpl implements ProfessionService {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		dataCurrent.setName(requestDTO.getName());
-		dataCurrent.setUpdatedAt(LocalDateTime.now());
 		
 		ProfessionDataDTO dataUpdated = this.professionMapper.mapEntityToDataDTO(this.professionRepository.save(dataCurrent));	
 		return dataUpdated;

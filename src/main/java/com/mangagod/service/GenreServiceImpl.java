@@ -1,6 +1,5 @@
 package com.mangagod.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.data.GenreDataDTO;
 import com.mangagod.dto.pagination.GenreAllPageableDataDTO;
 import com.mangagod.dto.request.GenreRequestDTO;
@@ -73,8 +71,6 @@ public class GenreServiceImpl implements GenreService{
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		GenreEntity entity = this.genreMapper.mapRequestToEntity(requestDTO);
-		entity.setCreatedAt(LocalDateTime.now());
-		entity.setUpdatedAt(LocalDateTime.now());
 		
 		GenreDataDTO dataCreated = this.genreMapper.mapEntityToDataDTO(this.genreRepository.save(entity));			
 		return dataCreated;
@@ -91,7 +87,6 @@ public class GenreServiceImpl implements GenreService{
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		dataCurrent.setName(requestDTO.getName());
-		dataCurrent.setUpdatedAt(LocalDateTime.now());
 		
 		GenreDataDTO dataUpdated = this.genreMapper.mapEntityToDataDTO(this.genreRepository.save(dataCurrent));	
 		return dataUpdated;

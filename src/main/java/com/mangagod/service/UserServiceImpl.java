@@ -1,6 +1,5 @@
 package com.mangagod.service;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.data.UserDataDTO;
 import com.mangagod.dto.pagination.UserAllPageableDataDTO;
 import com.mangagod.dto.request.UserCreateRequestDTO;
@@ -90,8 +88,6 @@ public class UserServiceImpl implements UserService {
 		}
 		UserEntity entity = this.userMapper.mapRequestToEntity(requestDTO);
 		entity.setPassword(this.passwordEncoder.encode(requestDTO.getPassword())); // encriptando la contraseña
-		entity.setCreatedAt(LocalDateTime.now());
-		entity.setUpdatedAt(LocalDateTime.now());
 
 		Set<RoleEntity> roles = new HashSet<>();		
 		for (Integer roleId : requestDTO.getRoleIds()) {
@@ -123,7 +119,6 @@ public class UserServiceImpl implements UserService {
 		}
 		dataCurrent.setUsername(requestDTO.getUsername());
 		dataCurrent.setEmail(requestDTO.getEmail());
-		dataCurrent.setUpdatedAt(LocalDateTime.now());
 		
 		Set<RoleEntity> roles = new HashSet<>();
 		for (Integer roleId : requestDTO.getRoleIds()) {

@@ -1,6 +1,5 @@
 package com.mangagod.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.data.RoleDataDTO;
 import com.mangagod.dto.pagination.RoleAllPageableDataDTO;
 import com.mangagod.dto.request.RoleRequestDTO;
@@ -68,23 +66,13 @@ public class RoleServiceImpl implements RoleService{
 	@Override
 	public RoleDataDTO create(RoleRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		String name = requestDTO.getName();
-		if(requestDTO.getName().isEmpty()) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El campo nombre es obligatorio.");
-		}
-		if(requestDTO.getDescription().isEmpty()) {
-			requestDTO.setDescription(requestDTO.getName().toUpperCase());
-		}
 		requestDTO.setName("ROLE_" + requestDTO.getName().toUpperCase());
-		requestDTO.setDescription(requestDTO.getDescription().toUpperCase());
 		
 		Boolean existsName = this.roleRepository.existsByName(requestDTO.getName());
 		if(existsName) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + name + " ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		RoleEntity entity = this.roleMapper.mapRequestToEntity(requestDTO);
-		entity.setCreatedAt(LocalDateTime.now());
-		entity.setUpdatedAt(LocalDateTime.now());
 		
 		RoleDataDTO dataCreated = this.roleMapper.mapEntityToDataDTO(this.roleRepository.save(entity));			
 		return dataCreated;
@@ -93,26 +81,17 @@ public class RoleServiceImpl implements RoleService{
 	@Override
 	public RoleDataDTO update(Integer id, RoleRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		String name = requestDTO.getName();
-		if(requestDTO.getName().isEmpty()) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El campo nombre es obligatorio.");
-		}
-		if(requestDTO.getDescription().isEmpty()) {
-			requestDTO.setDescription(requestDTO.getName().toUpperCase());
-		}
 		requestDTO.setName("ROLE_" + requestDTO.getName().toUpperCase());
-		requestDTO.setDescription(requestDTO.getDescription().toUpperCase());
 		
 		RoleEntity dataCurrent = this.roleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Rol", "id", id));
 		Boolean existsName = this.roleRepository.existsByName(requestDTO.getName());
 		Boolean diferentUsernameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
 		if(existsName && diferentUsernameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + name + " ya existe.");
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
-		dataCurrent.setName(requestDTO.getName().trim());
-		dataCurrent.setDescription(requestDTO.getDescription().trim());
-		dataCurrent.setUpdatedAt(LocalDateTime.now());
+		dataCurrent.setName(requestDTO.getName());
+		dataCurrent.setDescription(requestDTO.getDescription());
 		
 		RoleDataDTO dataUpdated = this.roleMapper.mapEntityToDataDTO(this.roleRepository.save(dataCurrent));	
 		return dataUpdated;

@@ -1,6 +1,5 @@
 package com.mangagod.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,6 @@ public class TypeCharacterServiceImpl implements TypeCharacterService {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		TypeCharacterEntity entity = this.typeCharacterMapper.mapRequestToEntity(requestDTO);
-		entity.setCreatedAt(LocalDateTime.now());
-		entity.setUpdatedAt(LocalDateTime.now());
 		
 		TypeCharacterDataDTO dataCreated = this.typeCharacterMapper.mapEntityToDataDTO(this.typeCharacterRepository.save(entity));			
 		return dataCreated;
@@ -90,7 +87,6 @@ public class TypeCharacterServiceImpl implements TypeCharacterService {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		dataCurrent.setName(requestDTO.getName().trim());
-		dataCurrent.setUpdatedAt(LocalDateTime.now());
 		
 		TypeCharacterDataDTO dataUpdated = this.typeCharacterMapper.mapEntityToDataDTO(this.typeCharacterRepository.save(dataCurrent));	
 		return dataUpdated;

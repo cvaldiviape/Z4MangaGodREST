@@ -51,7 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 			.antMatchers(
 					//HttpMethod.POST,
 					"/auth/**"
-					//,"/user/**"
+					//,"/user/**", "/role/**"
 			)
 			.permitAll()
 			.antMatchers(
