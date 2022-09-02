@@ -36,8 +36,11 @@ public class StoryEntity extends BaseEntity {
 	@JoinColumn(name = "country_id")
 	private CountryEntity country;
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinColumn(name = "demographic_id")
-	private DemographyEntity demographic;
+	@JoinColumn(name = "demography_id")
+	private DemographyEntity demography;
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinColumn(name = "category_id")
+	private CategoryEntity category;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "story", cascade = {CascadeType.REMOVE})
 	private Set<CharacterEntity> characters = new HashSet<>();
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -117,12 +120,12 @@ public class StoryEntity extends BaseEntity {
 		this.country = country;
 	}
 
-	public DemographyEntity getDemographic() {
-		return demographic;
+	public DemographyEntity getDemography() {
+		return demography;
 	}
 
-	public void setDemographic(DemographyEntity demographic) {
-		this.demographic = demographic;
+	public void setDemography(DemographyEntity demography) {
+		this.demography = demography;
 	}
 
 	public Set<CharacterEntity> getCharacters() {

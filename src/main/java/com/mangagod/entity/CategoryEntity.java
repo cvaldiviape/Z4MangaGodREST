@@ -11,15 +11,15 @@ import javax.persistence.Table;
 import com.mangagod.entity.base.BaseEntity;
 
 @Entity
-@Table(name = "demographies") 
-public class DemographyEntity extends BaseEntity {
+@Table(name = "categories") 
+public class CategoryEntity extends BaseEntity {
 
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "demography")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
 	private Set<StoryEntity> stories = new HashSet<>();
 	
-	public DemographyEntity() {
+	public CategoryEntity() {
 		
 	}
 
