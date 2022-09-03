@@ -22,10 +22,10 @@ public class PersonEntity extends BaseEntity {
 	private String lastName;
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "persons")
 	private Set<StoryEntity> stories = new HashSet<>();
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "persons_professions", joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"), 
-									         inverseJoinColumns = @JoinColumn(name = "profession_id", referencedColumnName = "id"))
-	private Set<ProfessionEntity> professions = new HashSet<>();
+//	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//	@JoinTable(name = "persons_professions", joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"), 
+//									         inverseJoinColumns = @JoinColumn(name = "profession_id", referencedColumnName = "id"))
+//	private Set<ProfessionEntity> professions = new HashSet<>();
 	
 	public PersonEntity() {
 		
@@ -55,12 +55,12 @@ public class PersonEntity extends BaseEntity {
 		this.stories = stories;
 	}
 	
-	public Set<ProfessionEntity> getProfessions() {
-		return professions;
-	}
-	
-	public void setProfessions(Set<ProfessionEntity> professions) {
-		this.professions = professions;
-	}
+//	public Set<ProfessionEntity> getProfessions() {
+//		return professions;
+//	}
+//	
+//	public void setProfessions(Set<ProfessionEntity> professions) {
+//		this.professions = professions;
+//	}
 	
 }
