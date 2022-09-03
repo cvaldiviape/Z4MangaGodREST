@@ -41,16 +41,20 @@ public class StoryEntity extends BaseEntity {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "category_id")
 	private CategoryEntity category;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "story", cascade = {CascadeType.REMOVE})
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "story")
 	private Set<CharacterEntity> characters = new HashSet<>();
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "stories_genres", joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"), 
-									   inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
+									    inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
 	private Set<GenreEntity> genres = new HashSet<>();
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JoinTable(name = "stories_persons", joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"), 
-									   inverseJoinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"))
-	private Set<PersonEntity> persons = new HashSet<>();
+	@JoinTable(name = "stories_authors", joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"), 
+									     inverseJoinColumns = @JoinColumn(name = "author_id", referencedColumnName = "id"))
+	private Set<AuthorEntity> authors = new HashSet<>();
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(name = "stories_artists", joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"), 
+									     inverseJoinColumns = @JoinColumn(name = "artist_id", referencedColumnName = "id"))
+	private Set<ArtistsEntity> artists = new HashSet<>();
 	
 	public StoryEntity() {
 		
@@ -127,6 +131,14 @@ public class StoryEntity extends BaseEntity {
 	public void setDemography(DemographyEntity demography) {
 		this.demography = demography;
 	}
+	
+	public CategoryEntity getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryEntity category) {
+		this.category = category;
+	}
 
 	public Set<CharacterEntity> getCharacters() {
 		return characters;
@@ -144,12 +156,20 @@ public class StoryEntity extends BaseEntity {
 		this.genres = genres;
 	}
 
-	public Set<PersonEntity> getPersons() {
-		return persons;
+	public Set<AuthorEntity> getAuthors() {
+		return authors;
 	}
 
-	public void setPersons(Set<PersonEntity> persons) {
-		this.persons = persons;
+	public void setAuthors(Set<AuthorEntity> authors) {
+		this.authors = authors;
+	}
+
+	public Set<ArtistsEntity> getArtists() {
+		return artists;
+	}
+
+	public void setArtists(Set<ArtistsEntity> artists) {
+		this.artists = artists;
 	}
 	
 }

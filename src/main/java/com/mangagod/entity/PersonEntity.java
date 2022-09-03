@@ -1,31 +1,28 @@
 package com.mangagod.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import com.mangagod.entity.base.BaseEntity;
+import com.mangagod.util.enums.Sex;
 
 @Entity
 @Table(name = "persons")
 public class PersonEntity extends BaseEntity {
 
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", nullable = false, unique = true)
 	private String name;
-	@Column(name = "last_name")
-	private String lastName;
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "persons")
-	private Set<StoryEntity> stories = new HashSet<>();
-//	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//	@JoinTable(name = "persons_professions", joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "id"), 
-//									         inverseJoinColumns = @JoinColumn(name = "profession_id", referencedColumnName = "id"))
-//	private Set<ProfessionEntity> professions = new HashSet<>();
+	@Column(name = "sexo")
+	private Sex sex;
+	@Column(name = "birth_date")
+	private LocalDate birthDate;
+	@OneToOne(mappedBy="person", cascade = CascadeType.REMOVE, optional=true)
+	private AuthorEntity author;
+	@OneToOne(mappedBy="person", cascade = CascadeType.REMOVE, optional=true)
+	private ArtistsEntity artists;
 	
 	public PersonEntity() {
 		
@@ -39,28 +36,36 @@ public class PersonEntity extends BaseEntity {
 		this.name = name;
 	}
 	
-	public String getLastName() {
-		return lastName;
+	public Sex getSex() {
+		return sex;
 	}
-	
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+
+	public void setSex(Sex sex) {
+		this.sex = sex;
 	}
-		
-	public Set<StoryEntity> getStories() {
-		return stories;
+
+	public LocalDate getBirthDate() {
+		return birthDate;
 	}
-	
-	public void setStories(Set<StoryEntity> stories) {
-		this.stories = stories;
+
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
 	}
-	
-//	public Set<ProfessionEntity> getProfessions() {
-//		return professions;
-//	}
-//	
-//	public void setProfessions(Set<ProfessionEntity> professions) {
-//		this.professions = professions;
-//	}
+
+	public AuthorEntity getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(AuthorEntity author) {
+		this.author = author;
+	}
+
+	public ArtistsEntity getArtists() {
+		return artists;
+	}
+
+	public void setArtists(ArtistsEntity artists) {
+		this.artists = artists;
+	}
 	
 }
