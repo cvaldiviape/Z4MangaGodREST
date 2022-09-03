@@ -18,8 +18,8 @@ public class ArtistsEntity extends BaseEntity {
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "artists")
 	private Set<StoryEntity> stories = new HashSet<>();
 	@OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
-	@JoinColumn(name="person_id")
-	private PersonEntity person;
+	@JoinColumn(name="mangaka_id")
+	private MangakaEntity mangaka;
 	
 	public ArtistsEntity() {
 
@@ -33,12 +33,12 @@ public class ArtistsEntity extends BaseEntity {
 		this.stories = stories;
 	}
 
-	public PersonEntity getPerson() {
-		return person;
+	public MangakaEntity getMangaka() {
+		return mangaka;
 	}
 
-	public void setPerson(PersonEntity person) {
-		this.person = person;
+	public void setMangaka(MangakaEntity mangaka) {
+		this.mangaka = mangaka;
 	}
 	
 }

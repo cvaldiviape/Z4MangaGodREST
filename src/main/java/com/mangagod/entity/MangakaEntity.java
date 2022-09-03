@@ -10,8 +10,8 @@ import com.mangagod.entity.base.BaseEntity;
 import com.mangagod.util.enums.Sex;
 
 @Entity
-@Table(name = "persons")
-public class PersonEntity extends BaseEntity {
+@Table(name = "mangakas")
+public class MangakaEntity extends BaseEntity {
 
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
@@ -19,12 +19,12 @@ public class PersonEntity extends BaseEntity {
 	private Sex sex;
 	@Column(name = "birth_date")
 	private LocalDate birthDate;
-	@OneToOne(mappedBy="person", cascade = CascadeType.REMOVE, optional=true)
+	@OneToOne(mappedBy="mangaka", cascade = CascadeType.REMOVE, optional=true)
 	private AuthorEntity author;
-	@OneToOne(mappedBy="person", cascade = CascadeType.REMOVE, optional=true)
+	@OneToOne(mappedBy="mangaka", cascade = CascadeType.REMOVE, optional=true)
 	private ArtistsEntity artists;
 	
-	public PersonEntity() {
+	public MangakaEntity() {
 		
 	}
 	
