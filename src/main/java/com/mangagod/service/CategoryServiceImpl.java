@@ -8,6 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.mangagod.dto.data.CategoryDataDTO;
 import com.mangagod.dto.pagination.CategoryAllPageableDataDTO;
 import com.mangagod.dto.request.CategoryRequestDTO;
@@ -17,6 +20,8 @@ import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.CategoryMapper;
 import com.mangagod.repository.CategoryRepository;
 
+@Service
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
 	// ----------------------------------------------------- dependency injection  ----------------------------------------------------- //
