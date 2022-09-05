@@ -41,10 +41,10 @@ public class GenreServiceImpl implements GenreService{
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<GenreEntity> genresPageable = this.genreRepository.findAll(pageable);	
 		List<GenreEntity> genresEntity = genresPageable.getContent();
-		List<GenreDataDTO> genressDTO = genresEntity.stream().map((x) -> this.genreMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<GenreDataDTO> genresDTO = genresEntity.stream().map((x) -> this.genreMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
 		
 		GenreAllPageableDataDTO pageableDataDTO = new GenreAllPageableDataDTO();
-		pageableDataDTO.setGenres(genressDTO);
+		pageableDataDTO.setGenres(genresDTO);
 		pageableDataDTO.setNumberPage(genresPageable.getNumber());
 		pageableDataDTO.setSizePage(genresPageable.getSize());
 		pageableDataDTO.setTotalElements(genresPageable.getTotalElements());

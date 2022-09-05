@@ -1,10 +1,16 @@
 package com.mangagod.entity;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.mangagod.entity.base.BaseEntity;
 import com.mangagod.util.enums.Sex;
@@ -15,14 +21,13 @@ public class MangakaEntity extends BaseEntity {
 
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
-	@Column(name = "sexo")
+	@Enumerated(EnumType.STRING)
+	@Column(name = "sex")
 	private Sex sex;
 	@Column(name = "birth_date")
 	private LocalDate birthDate;
-	@OneToOne(mappedBy="mangaka", cascade = CascadeType.REMOVE, optional=true)
-	private AuthorEntity author;
-	@OneToOne(mappedBy="mangaka", cascade = CascadeType.REMOVE, optional=true)
-	private ArtistsEntity artists;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "mangaka", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	private Set<StoryMangaka> storiesMangakas = new HashSet<>();
 	
 	public MangakaEntity() {
 		
@@ -52,20 +57,12 @@ public class MangakaEntity extends BaseEntity {
 		this.birthDate = birthDate;
 	}
 
-	public AuthorEntity getAuthor() {
-		return author;
+	public Set<StoryMangaka> getStoriesMangakas() {
+		return storiesMangakas;
 	}
 
-	public void setAuthor(AuthorEntity author) {
-		this.author = author;
-	}
-
-	public ArtistsEntity getArtists() {
-		return artists;
-	}
-
-	public void setArtists(ArtistsEntity artists) {
-		this.artists = artists;
+	public void setStoriesMangakas(Set<StoryMangaka> storiesMangakas) {
+		this.storiesMangakas = storiesMangakas;
 	}
 	
 }

@@ -1,0 +1,66 @@
+package com.mangagod.dto.request;
+
+import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+import com.mangagod.util.enums.Sex;
+//import com.mangagod.util.validators.EnumNamePattern;
+import com.mangagod.util.validators.EnumValidator;
+
+public class MangakaRequestDTO {
+
+	@NotNull(message = "El campo 'name' es obligatorio.")
+	@NotBlank(message = "El campo 'name' es obligatorio.")
+	@Size(max = 50, message = "El campo 'name' debe contener un maximo de 50 caracteres.")
+	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras." )
+	private String name;
+	// @EnumNamePattern(regexp = "NEW|DEFAULT")
+	@EnumValidator(enumClass = Sex.class)
+	private String sex;
+	@EnumValidator(enumClass = Sex.class)
+	private String roleMangaka; 
+	@Past
+	@DateTimeFormat(pattern = "dd/mm/YYYY")
+	private LocalDate birthDate;
+
+	public MangakaRequestDTO() {
+		
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+	
+	public String getRoleMangaka() {
+		return roleMangaka;
+	}
+
+	public void setRoleMangaka(String roleMangaka) {
+		this.roleMangaka = roleMangaka;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
+	
+}
