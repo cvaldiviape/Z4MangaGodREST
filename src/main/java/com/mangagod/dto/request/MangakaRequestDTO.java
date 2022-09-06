@@ -11,6 +11,8 @@ import com.mangagod.util.enums.Sex;
 //import com.mangagod.util.validators.EnumNamePattern;
 import com.mangagod.util.validators.EnumValidator;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class MangakaRequestDTO {
 
 	@NotNull(message = "El campo 'name' es obligatorio.")
@@ -19,10 +21,11 @@ public class MangakaRequestDTO {
 	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras." )
 	private String name;
 	// @EnumNamePattern(regexp = "NEW|DEFAULT")
-	@EnumValidator(enumClass = Sex.class)
+	@ApiModelProperty("FEMENINO|MASCULINO|NO_ESPECIFICADO")
+	@EnumValidator(enumClass = Sex.class, message = "valores aceptados -> FEMENINO|MASCULINO|NO_ESPECIFICADO")
 	private String sex;
 	@Past
-	@DateTimeFormat(pattern = "dd-mm-YYYY")
+	@DateTimeFormat(pattern = "dd/MM/yyyy") // not working, REV
 	private LocalDate birthDate;
 
 	public MangakaRequestDTO() {

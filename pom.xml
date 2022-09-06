@@ -85,6 +85,12 @@
 		    <artifactId>lombok</artifactId>
 		    <scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/de.pentabyte/springfox-enum-plugin -->
+		<dependency>
+		    <groupId>de.pentabyte</groupId>
+		    <artifactId>springfox-enum-plugin</artifactId>
+		    <version>3.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

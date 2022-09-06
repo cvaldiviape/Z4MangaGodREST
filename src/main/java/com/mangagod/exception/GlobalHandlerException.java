@@ -1,6 +1,7 @@
 package com.mangagod.exception;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
 import com.mangagod.dto.response.ErrorDetailResponseDTO;
 import com.mangagod.util.AppHelpers;
 
@@ -37,6 +37,13 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(DateTimeParseException.class) // indico que esta funcion recibira excepciones de tipo "DateTimeParseException", valido en los request @@DateTimeFormat (REV)
+	public ResponseEntity<ErrorDetailResponseDTO> managerDateTimeParseException(DateTimeParseException  exception, WebRequest webRequest){
+		String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
+		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.BAD_REQUEST);
+	}
+	
 	@ExceptionHandler(Exception.class) // indico que esta funcion recibira excepciones de tipo "Exception"
 	public ResponseEntity<ErrorDetailResponseDTO> managerException(Exception exception, WebRequest webRequest){
 		String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
@@ -44,7 +51,7 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	// Metodo sobreescrito de la clase asbracta ResponseEntityExceptionHandler
+	// Metodo sobreescrito de la clase absracta ResponseEntityExceptionHandler
 	// Se va encargar de controlar los errores de validacion que definimos en el DTO, es decir de los campos
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, 

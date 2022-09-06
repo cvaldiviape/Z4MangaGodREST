@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,4 +62,24 @@ public class MangakaController {
 		MainResponse mainResponse = new MainResponse(true, "El mangaka ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
+	
+	@ApiOperation("Esta operación se encarga de actualizar los datos de un mangaka.")
+	@PreAuthorize("hasRole('ADMIN')") 
+	@PutMapping("/{mangaka_id}")
+	public ResponseEntity<MainResponse> updateMangaka(@PathVariable (name = "mangaka_id") int mangakaId, 
+			                                          @Valid @RequestBody MangakaRequestDTO requestDTO ){
+		MangakaDataDTO dataDTO = this.mangakaService.update(mangakaId, requestDTO); 
+		MainResponse mainResponse = new MainResponse(true, "El mangaka ha sido actualizada exitosamente!", dataDTO);
+		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
+	}
+
+	@ApiOperation("Esta operación se encarga de eliminar un mangaka en base a su ID.")
+	@PreAuthorize("hasRole('ADMIN')") 
+	@DeleteMapping("/{mangaka_id}")
+	public ResponseEntity<MainResponse> deleteMangaka(@PathVariable (name = "mangaka_id") int mangakaId){
+		MangakaDataDTO dataDTO = this.mangakaService.delete(mangakaId);
+		MainResponse mainResponse = new MainResponse(true, "El mangaka ha sido eliminada exitosamente!", dataDTO);
+		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
+	}
+
 }

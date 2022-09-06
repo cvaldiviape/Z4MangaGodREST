@@ -14,4 +14,5 @@ public class PersistenceConfiguration {
 	public AuditorAware<String> auditorProviver(){
 		return new AuditorAwareImpl();
 	} 
+	
 }
