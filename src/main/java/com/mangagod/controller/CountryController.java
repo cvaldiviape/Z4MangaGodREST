@@ -32,7 +32,7 @@ public class CountryController {
 	private CountryService countryService;
 	
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de listar a todos los paises.")
+	@ApiOperation("Esta operación se encarga de listar a todos los paises.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllCountries(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
@@ -44,7 +44,7 @@ public class CountryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de obtener los datos de un pais en base a su ID.")
+	@ApiOperation("Esta operación se encarga de obtener los datos de un pais en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{country_id}")
 	public ResponseEntity<MainResponse> getCountryById(@PathVariable (name = "country_id") int countryId){
@@ -53,7 +53,7 @@ public class CountryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de crear un nuevo pais.")
+	@ApiOperation("Esta operación se encarga de crear un nuevo pais.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createCountry(@Valid @RequestBody CountryRequestDTO requestDTO){
@@ -62,7 +62,7 @@ public class CountryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de actualizar los datos de un pais.")
+	@ApiOperation("Esta operación se encarga de actualizar los datos de un pais.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{country_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "country_id") int countryId, 
@@ -72,7 +72,7 @@ public class CountryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar un pais en base a su ID.")
+	@ApiOperation("Esta operación se encarga de eliminar un pais en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{country_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "country_id") int countryId){

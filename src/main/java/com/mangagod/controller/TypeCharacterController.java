@@ -31,7 +31,7 @@ public class TypeCharacterController {
 	private TypeCharacterService typeCharacterService;
 	
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de listar a todos los tipos de personajes.")
+	@ApiOperation("Esta operación se encarga de listar a todos los tipos de personajes.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllTypeCharacters(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
@@ -43,7 +43,7 @@ public class TypeCharacterController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de obtener los datos de un pais en base a su ID.")
+	@ApiOperation("Esta operación se encarga de obtener los datos de un pais en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{type_character_id}")
 	public ResponseEntity<MainResponse> getTypeCharacterById(@PathVariable (name = "type_character_id") int typeCharacterId){
@@ -52,7 +52,7 @@ public class TypeCharacterController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de crear un nuevo tipo de personaje.")
+	@ApiOperation("Esta operación se encarga de crear un nuevo tipo de personaje.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createTypeCharacter(@Valid @RequestBody TypeCharacterRequestDTO requestDTO){
@@ -61,7 +61,7 @@ public class TypeCharacterController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de actualizar los datos de un tipo de personaje.")
+	@ApiOperation("Esta operación se encarga de actualizar los datos de un tipo de personaje.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{type_character_id}")
 	public ResponseEntity<MainResponse> updateTypeCharacter(@PathVariable (name = "type_character_id") int typeCharacterId, 
@@ -71,7 +71,7 @@ public class TypeCharacterController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar un pais en base a su ID.")
+	@ApiOperation("Esta operación se encarga de eliminar un pais en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{type_character_id}")
 	public ResponseEntity<MainResponse> deleteTypeCharacter(@PathVariable (name = "type_character_id") int typeCharacterId){

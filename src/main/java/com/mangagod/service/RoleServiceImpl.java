@@ -86,8 +86,8 @@ public class RoleServiceImpl implements RoleService{
 		RoleEntity dataCurrent = this.roleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Rol", "id", id));
 		Boolean existsName = this.roleRepository.existsByName(requestDTO.getName());
-		Boolean diferentUsernameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentUsernameCurrent) {
+		Boolean diferentNnameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
+		if(existsName && diferentNnameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		dataCurrent.setName(requestDTO.getName());

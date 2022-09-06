@@ -21,10 +21,8 @@ public class MangakaRequestDTO {
 	// @EnumNamePattern(regexp = "NEW|DEFAULT")
 	@EnumValidator(enumClass = Sex.class)
 	private String sex;
-	@EnumValidator(enumClass = Sex.class)
-	private String roleMangaka; 
 	@Past
-	@DateTimeFormat(pattern = "dd/mm/YYYY")
+	@DateTimeFormat(pattern = "dd-mm-YYYY")
 	private LocalDate birthDate;
 
 	public MangakaRequestDTO() {
@@ -43,14 +41,6 @@ public class MangakaRequestDTO {
 		return sex;
 	}
 	
-	public String getRoleMangaka() {
-		return roleMangaka;
-	}
-
-	public void setRoleMangaka(String roleMangaka) {
-		this.roleMangaka = roleMangaka;
-	}
-
 	public void setSex(String sex) {
 		this.sex = sex;
 	}

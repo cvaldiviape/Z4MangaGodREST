@@ -26,7 +26,7 @@ public class AuthController {
 	private AuthService authService;
 	
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de la autenticación del usuario.")
+	@ApiOperation("Esta operación se encarga de la autenticación del usuario.")
 	@PostMapping("/login")
 	public ResponseEntity<MainResponse> login(@Valid @RequestBody AuthRequestDTO authRequestDTO){
 		AuthDataDTO authDataDTO = this.authService.login(authRequestDTO);
@@ -34,7 +34,7 @@ public class AuthController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de verificar que el token se encuentre vigente.")
+	@ApiOperation("Esta operación se encarga de verificar que el token se encuentre vigente.")
 	@PostMapping("/refresh-token")
 	public ResponseEntity<MainResponse> refreshToken(@Valid @RequestBody TokenRequestDTO tokenRequestDTO){
 		String tokenRefreshed = this.authService.refreshToken(tokenRequestDTO);

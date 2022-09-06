@@ -33,7 +33,7 @@ public class GenreController {
 	private GenreService genreService;
 	
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de listar a todos los géneros.")
+	@ApiOperation("Esta operación se encarga de listar a todos los géneros.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllGenres(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
@@ -45,7 +45,7 @@ public class GenreController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de obtener los datos de un género en base a su ID.")
+	@ApiOperation("Esta operación se encarga de obtener los datos de un género en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{genre_id}")
 	public ResponseEntity<MainResponse> getGenreById(@PathVariable (name = "genre_id") int genreId){
@@ -54,7 +54,7 @@ public class GenreController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de crear un nuevo género.")
+	@ApiOperation("Esta operación se encarga de crear un nuevo género.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createCountry(@Valid @RequestBody GenreRequestDTO requestDTO){
@@ -63,7 +63,7 @@ public class GenreController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de actualizar los datos de un género.")
+	@ApiOperation("Esta operación se encarga de actualizar los datos de un género.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{genre_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "genre_id") int genreId, 
@@ -73,7 +73,7 @@ public class GenreController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar un género en base a su ID.")
+	@ApiOperation("Esta operación se encarga de eliminar un género en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{genre_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "genre_id") int genreId){

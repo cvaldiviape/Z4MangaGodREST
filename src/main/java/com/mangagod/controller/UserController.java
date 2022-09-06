@@ -33,7 +33,7 @@ public class UserController {
 	private UserService userService;
 	
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de listar a todos los usuarios.")
+	@ApiOperation("Esta operación se encarga de listar a todos los usuarios.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllUsers(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
@@ -45,7 +45,7 @@ public class UserController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de obtener los datos de un usuario en base a su ID.")
+	@ApiOperation("Esta operación se encarga de obtener los datos de un usuario en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{user_id}")
 	public ResponseEntity<MainResponse> getUserById(@PathVariable (name = "user_id") int userId){
@@ -54,7 +54,7 @@ public class UserController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de crear un nuevo usuario.")
+	@ApiOperation("Esta operación se encarga de crear un nuevo usuario.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createUser(@Valid @RequestBody UserCreateRequestDTO requestDTO){
@@ -63,7 +63,7 @@ public class UserController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}
 	
-	@ApiOperation("Esta operacion se encarga de actualizar los datos de un usuario.")
+	@ApiOperation("Esta operación se encarga de actualizar los datos de un usuario.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{user_id}")
 	public ResponseEntity<MainResponse> updateUser(@PathVariable (name = "user_id") int userId, 
@@ -73,7 +73,7 @@ public class UserController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar un usuario en base a su ID.")
+	@ApiOperation("Esta operación se encarga de eliminar un usuario en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{user_id}")
 	public ResponseEntity<MainResponse> deleteUser(@PathVariable (name = "user_id") int userId){

@@ -32,7 +32,7 @@ public class RoleController {
 	private RoleService roleService;
 	 
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de listar a todos los roles.")
+	@ApiOperation("Esta operación se encarga de listar a todos los roles.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllRoles(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
@@ -44,7 +44,7 @@ public class RoleController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de obtener los datos de un rol en base a su ID.")
+	@ApiOperation("Esta operación se encarga de obtener los datos de un rol en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{role_id}")
 	public ResponseEntity<MainResponse> getRoleId(@PathVariable (name = "role_id") int roleId){
@@ -53,7 +53,7 @@ public class RoleController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de crear un nuevo rol.")
+	@ApiOperation("Esta operación se encarga de crear un nuevo rol.")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<MainResponse> createRole(@Valid @RequestBody RoleRequestDTO requestDTO){
@@ -62,7 +62,7 @@ public class RoleController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de actualizar los datos de un rol.")
+	@ApiOperation("Esta operación se encarga de actualizar los datos de un rol.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{role_id}")
 	public ResponseEntity<MainResponse> updateRol(@PathVariable (name = "role_id") int roleId, 
@@ -72,7 +72,7 @@ public class RoleController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar un rol en base a su ID.")
+	@ApiOperation("Esta operación se encarga de eliminar un rol en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{role_id}")
 	public ResponseEntity<MainResponse> deleteRole(@PathVariable (name = "role_id") int roleId){

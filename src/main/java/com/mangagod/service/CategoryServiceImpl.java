@@ -83,8 +83,8 @@ public class CategoryServiceImpl implements CategoryService {
 		CategoryEntity dataCurrent = this.categoryRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));
 		Boolean existsName = this.categoryRepository.existsByName(requestDTO.getName());
-		Boolean diferentUsernameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentUsernameCurrent) {
+		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
+		if(existsName && diferentNameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		dataCurrent.setName(requestDTO.getName());

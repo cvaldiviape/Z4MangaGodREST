@@ -82,8 +82,8 @@ public class DemographyServiceImpl implements DemographyService{
 		DemographyEntity dataCurrent = this.demographyRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
 		Boolean existsName = this.demographyRepository.existsByName(requestDTO.getName());
-		Boolean diferentUsernameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentUsernameCurrent) {
+		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
+		if(existsName && diferentNameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		dataCurrent.setName(requestDTO.getName());

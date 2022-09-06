@@ -31,7 +31,7 @@ public class CategoryController {
 	private CategoryService categoryService;
 	
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de listar a todos las categorias.")
+	@ApiOperation("Esta operación se encarga de listar a todos las categorias.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllCategories(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
@@ -43,7 +43,7 @@ public class CategoryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de obtener los datos de una categorias en base a su ID.")
+	@ApiOperation("Esta operación se encarga de obtener los datos de una categorias en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{category_id}")
 	public ResponseEntity<MainResponse> getCategoryById(@PathVariable (name = "category_id") int categoryId){
@@ -52,7 +52,7 @@ public class CategoryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de crear una nueva categoria.")
+	@ApiOperation("Esta operación se encarga de crear una nueva categoria.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createCategory(@Valid @RequestBody CategoryRequestDTO requestDTO){
@@ -61,7 +61,7 @@ public class CategoryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de actualizar los datos de una categoria.")
+	@ApiOperation("Esta operación se encarga de actualizar los datos de una categoria.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{category_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "category_id") int categoryId, 
@@ -71,7 +71,7 @@ public class CategoryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar una categoria en base a su ID.")
+	@ApiOperation("Esta operación se encarga de eliminar una categoria en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{category_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "category_id") int categoryId){

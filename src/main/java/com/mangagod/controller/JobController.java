@@ -31,7 +31,7 @@ public class JobController {
 	private JobService jobService;
 	
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de listar a todas las ocupaciones.")
+	@ApiOperation("Esta operación se encarga de listar a todas las ocupaciones.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllJobs(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
@@ -43,7 +43,7 @@ public class JobController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de obtener los datos de una ocupación en base a su ID.")
+	@ApiOperation("Esta operación se encarga de obtener los datos de una ocupación en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{job_id}")
 	public ResponseEntity<MainResponse> getJobById(@PathVariable (name = "job_id") int jobId){
@@ -52,7 +52,7 @@ public class JobController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de crear una nueva ocupación.")
+	@ApiOperation("Esta operación se encarga de crear una nueva ocupación.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createJob(@Valid @RequestBody JobRequestDTO requestDTO){
@@ -61,7 +61,7 @@ public class JobController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de actualizar los datos de una ocupación.")
+	@ApiOperation("Esta operación se encarga de actualizar los datos de una ocupación.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{job_id}")
 	public ResponseEntity<MainResponse> updateJob(@PathVariable (name = "job_id") int jobId, 
@@ -71,7 +71,7 @@ public class JobController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operacion se encarga de eliminar una ocupación en base a su ID.")
+	@ApiOperation("Esta operación se encarga de eliminar una ocupación en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{job_id}")
 	public ResponseEntity<MainResponse> deleteJob(@PathVariable (name = "job_id") int jobId){

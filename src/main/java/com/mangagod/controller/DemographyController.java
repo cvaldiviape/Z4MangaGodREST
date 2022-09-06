@@ -32,7 +32,7 @@ public class DemographyController {
 	private DemographyService demographyService;
 	
 	// ---------------------------------------------------------- controllers ----------------------------------------------------------- //
-	@ApiOperation("Esta operacion se encarga de listar a todos los datos demográficos.")
+	@ApiOperation("Esta operación se encarga de listar a todos los datos demográficos.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping
 	public ResponseEntity<MainResponse> getAllDemographies(@RequestParam(value = "numberPage", defaultValue = AppConstants.NUM_PAGE_DEFAULT, required = false) int numberPage,
@@ -44,7 +44,7 @@ public class DemographyController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de obtener los datos de un dato demografico en base a su ID.")
+	@ApiOperation("Esta operación se encarga de obtener los datos de un dato demografico en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{demography_id}")
 	public ResponseEntity<MainResponse> getDemographyById(@PathVariable (name = "demography_id") int demographyId){
@@ -53,7 +53,7 @@ public class DemographyController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de crear un dato demografico.")
+	@ApiOperation("Esta operación se encarga de crear un dato demografico.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createDemography(@Valid @RequestBody DemographyRequestDTO requestDTO){
@@ -62,7 +62,7 @@ public class DemographyController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de actualizar los datos de un dato demográfico.")
+	@ApiOperation("Esta operación se encarga de actualizar los datos de un dato demográfico.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PutMapping("/{demography_id}")
 	public ResponseEntity<MainResponse> updateDemography(@PathVariable (name = "demography_id") int demographyId, 
@@ -72,7 +72,7 @@ public class DemographyController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 	
-	@ApiOperation("Esta operacion se encarga de eliminar un dato demográfico en base a su ID.")
+	@ApiOperation("Esta operación se encarga de eliminar un dato demográfico en base a su ID.")
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{demography_id}")
 	public ResponseEntity<MainResponse> deleteDemography(@PathVariable (name = "demography_id") int demographyId){
