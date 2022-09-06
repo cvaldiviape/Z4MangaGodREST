@@ -81,9 +81,9 @@ public class GenreServiceImpl implements GenreService{
 		// TODO Auto-generated method stub
 		GenreEntity dataCurrent = this.genreRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Género", "id", id));
-		Boolean existsUsername = this.genreRepository.existsByName(requestDTO.getName());
-		Boolean diferentUsernameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsUsername && diferentUsernameCurrent) {
+		Boolean existsNname = this.genreRepository.existsByName(requestDTO.getName());
+		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
+		if(existsNname && diferentNameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		dataCurrent.setName(requestDTO.getName());
