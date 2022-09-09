@@ -2,7 +2,6 @@ package com.mangagod.entity;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +21,7 @@ public class UserEntity extends BaseEntity {
 	private String email;
 	@Column(name = "password", nullable = false)
 	private String password;
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
 									 inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<RoleEntity> roles = new HashSet<>();

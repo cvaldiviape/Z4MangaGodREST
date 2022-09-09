@@ -1,6 +1,5 @@
 package com.mangagod.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,24 +11,24 @@ import com.mangagod.util.ids.StoryMangakaId;
 
 @Entity
 @Table(name = "stories_mangakas") 
-public class StoryMangaka {
+public class StoryMangakaEntity {
 
 	@EmbeddedId
 	private StoryMangakaId id = new StoryMangakaId();
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@MapsId("storyId") // este es el nombre de attributo en la clase "StoryMangakaId"
 	@JoinColumn(name = "story_id")
 	private StoryEntity story;
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@MapsId("mangakaId") // este es el nombre de attributo en la clase "StoryMangakaId"
 	@JoinColumn(name = "mangaka_id")
 	private MangakaEntity mangaka;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "job_id")
 	private JobEntity job;
 	
 	
-	public StoryMangaka() {
+	public StoryMangakaEntity() {
 		
 	}
 

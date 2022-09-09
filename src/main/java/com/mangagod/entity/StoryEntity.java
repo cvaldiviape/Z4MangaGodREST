@@ -2,7 +2,6 @@ package com.mangagod.entity;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,23 +31,23 @@ public class StoryEntity extends BaseEntity {
 	private Boolean adaptationAnime;
 	@Column(name = "price")
 	private Double price;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "country_id")
 	private CountryEntity country;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "demography_id")
 	private DemographyEntity demography;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id")
 	private CategoryEntity category;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "story")
 	private Set<CharacterEntity> characters = new HashSet<>();
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "stories_genres", joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"), 
 									    inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
 	private Set<GenreEntity> genres = new HashSet<>();
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "story", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	private Set<StoryMangaka> storiesMangakas = new HashSet<>();
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "story")
+	private Set<StoryMangakaEntity> storiesMangakas = new HashSet<>();
 		
 	public StoryEntity() {
 		
@@ -150,11 +149,11 @@ public class StoryEntity extends BaseEntity {
 		this.genres = genres;
 	}
 
-	public Set<StoryMangaka> getStoriesMangakas() {
+	public Set<StoryMangakaEntity> getStoriesMangakas() {
 		return storiesMangakas;
 	}
 
-	public void setStoriesMangakas(Set<StoryMangaka> storiesMangakas) {
+	public void setStoriesMangakas(Set<StoryMangakaEntity> storiesMangakas) {
 		this.storiesMangakas = storiesMangakas;
 	}
 	

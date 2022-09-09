@@ -1,6 +1,5 @@
 package com.mangagod.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,10 +18,10 @@ public class CharacterEntity extends BaseEntity {
 	private String description;
 	@Column(name = "url_image")
 	private String urlImage;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "story_id")
 	private StoryEntity story;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "type_id")
 	private TypeCharacterEntity type;
 	

@@ -78,20 +78,18 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		Boolean existsUsername = this.userRepository.existsByUsername(requestDTO.getUsername());
 		Boolean existsEmail = this.userRepository.existsByEmail(requestDTO.getEmail());
-		Boolean isEmptyArray = requestDTO.getRoleIds().isEmpty();
 		if(existsUsername) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre de usuario " + requestDTO.getUsername() + " ya existe.");
 		}else if(existsEmail) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El correo " + requestDTO.getEmail() +" ya existe.");
-		}else if(isEmptyArray) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El array 'roleIds' debe contener al menos 1 elemento.");
 		}
 		UserEntity entity = this.userMapper.mapRequestToEntity(requestDTO);
 		entity.setPassword(this.passwordEncoder.encode(requestDTO.getPassword())); // encriptando la contraseña
 
 		Set<RoleEntity> roles = new HashSet<>();		
 		for (Integer roleId : requestDTO.getRoleIds()) {
-			RoleEntity roleEntity = this.roleRepository.findById(roleId).orElseThrow(() -> new MangaGodAppException(HttpStatus.BAD_REQUEST, "El rol con Id " + roleId + " no existe."));
+			RoleEntity roleEntity = this.roleRepository.findById(roleId)
+					.orElseThrow(() -> new ResourceNotFoundException("Rol", "id", roleId));
 			roles.add(roleEntity);
 		}
 		entity.setRoles(roles);
@@ -101,22 +99,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDataDTO update(Integer userId, UserUpdateRequestDTO requestDTO) {
+	public UserDataDTO update(Integer id, UserUpdateRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		UserEntity dataCurrent = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+		UserEntity dataCurrent = this.userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 		
 		Boolean existsUsername = this.userRepository.existsByUsername(requestDTO.getUsername());
 		Boolean existsEmail = this.userRepository.existsByEmail(requestDTO.getEmail());
 		Boolean diferentUsernameCurrent = (!requestDTO.getUsername().equalsIgnoreCase(dataCurrent.getUsername()));
 		Boolean diferentEmailCurrent = (!requestDTO.getEmail().equalsIgnoreCase(dataCurrent.getEmail()));
-		Boolean arrayEmpty = requestDTO.getRoleIds().isEmpty();
+
 		if(existsUsername && diferentUsernameCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre de usuario " + requestDTO.getUsername() + " ya existe.");
 		}else if(existsEmail && diferentEmailCurrent) {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El correo " + requestDTO.getEmail() +" ya existe.");
-		}else if(arrayEmpty) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "Es obligatorio asignar un Rol al usuario.");
 		}
+		
 		dataCurrent.setUsername(requestDTO.getUsername());
 		dataCurrent.setEmail(requestDTO.getEmail());
 		

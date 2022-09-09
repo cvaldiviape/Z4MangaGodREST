@@ -16,7 +16,7 @@ public class JobEntity  extends BaseEntity {
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "job")
-	private Set<StoryMangaka> storiesMangakas = new HashSet<>();
+	private Set<StoryMangakaEntity> storiesMangakas = new HashSet<>();
 	
 	public JobEntity() {
 		
@@ -30,11 +30,11 @@ public class JobEntity  extends BaseEntity {
 		this.name = name;
 	}
 
-	public Set<StoryMangaka> getStoriesMangakas() {
+	public Set<StoryMangakaEntity> getStoriesMangakas() {
 		return storiesMangakas;
 	}
 
-	public void setStoriesMangakas(Set<StoryMangaka> storiesMangakas) {
+	public void setStoriesMangakas(Set<StoryMangakaEntity> storiesMangakas) {
 		this.storiesMangakas = storiesMangakas;
 	}
 	

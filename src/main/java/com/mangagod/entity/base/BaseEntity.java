@@ -1,6 +1,8 @@
 package com.mangagod.entity.base;
 
 import java.time.LocalDateTime;
+
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,10 +24,12 @@ public class BaseEntity {
 	@CreatedBy
 	private String createdBy;
 	@CreatedDate
+	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime createdDate;
 	@LastModifiedBy
 	private String updatedBy;
 	@LastModifiedDate
+	@Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime updatedDate;
 	
 	public BaseEntity() {

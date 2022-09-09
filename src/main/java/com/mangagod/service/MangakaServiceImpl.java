@@ -18,6 +18,7 @@ import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.MangakaMapper;
 import com.mangagod.repository.MangakaRepository;
+import com.mangagod.util.enums.Sex;
 
 @Service
 @Transactional
@@ -26,6 +27,10 @@ public class MangakaServiceImpl implements MangakaService {
 	// ----------------------------------------------------- dependency injection  ----------------------------------------------------- //
 	@Autowired
 	private MangakaRepository mangakaRepository;
+//	@Autowired
+//	private StoryRepository storyRepository;
+//	@Autowired
+//	private StoryMangakaRepository storyMangakaRepository;
 	@Autowired
 	private MangakaMapper mangakaMapper;
 	
@@ -72,6 +77,22 @@ public class MangakaServiceImpl implements MangakaService {
 		}
 		MangakaEntity entity = this.mangakaMapper.mapRequestToEntity(requestDTO);
 		
+//		MangakaEntity mangakaCreated = this.mangakaRepository.save(this.mangakaMapper.mapRequestToEntity(requestDTO));
+//		
+//		Set<StoryEntity> stories = new HashSet<>();		
+//		for (Integer storyId : requestDTO.getStoryIds()) {
+//			StoryEntity storyEntity = this.storyRepository.findById(storyId)
+//					.orElseThrow(() -> new MangaGodAppException(HttpStatus.BAD_REQUEST, "La historieta con Id " + storyId + " no existe."));
+//			stories.add(storyEntity);
+//		}
+//		
+//		Set<StoryMangakaEntity> storiesMangakas = new HashSet<>();
+//		for (StoryEntity story : stories) {
+//			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
+//			storyMangakaEntity.setMangaka(mangakaCreated);
+//			storyMangakaEntity.setStory(story);
+//		}
+		
 		MangakaDataDTO dataCreated = this.mangakaMapper.mapEntityToDataDTO(this.mangakaRepository.save(entity));			
 		return dataCreated;
 	}
@@ -87,6 +108,8 @@ public class MangakaServiceImpl implements MangakaService {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
 		}
 		dataCurrent.setName(requestDTO.getName());
+		dataCurrent.setSex(Sex.valueOf(requestDTO.getSex()));
+		dataCurrent.setBirthDate(requestDTO.getBirthDate());
 		
 		MangakaDataDTO dataUpdated = this.mangakaMapper.mapEntityToDataDTO(this.mangakaRepository.save(dataCurrent));	
 		return dataUpdated;
