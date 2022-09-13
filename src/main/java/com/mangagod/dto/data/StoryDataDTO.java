@@ -1,7 +1,6 @@
 package com.mangagod.dto.data;
 
 import java.util.Set;
-import com.mangagod.entity.StoryMangakaEntity;
 
 public class StoryDataDTO {
 
@@ -17,7 +16,7 @@ public class StoryDataDTO {
 	private DemographyDataDTO demography;
 	private CategoryDataDTO category;
 	private Set<GenreDataDTO> genres;
-	private Set<StoryMangakaEntity> storiesMangakas;
+	private Set<MangakasJobsDataDTO> mangakasJobs;
 	
     public StoryDataDTO() {
     	
@@ -118,13 +117,13 @@ public class StoryDataDTO {
 	public void setGenres(Set<GenreDataDTO> genres) {
 		this.genres = genres;
 	}
-	
-	public Set<StoryMangakaEntity> getStoriesMangakas() {
-		return storiesMangakas;
+
+	public Set<MangakasJobsDataDTO> getMangakasJobs() {
+		return mangakasJobs;
 	}
-	
-	public void setStoriesMangakas(Set<StoryMangakaEntity> storiesMangakas) {
-		this.storiesMangakas = storiesMangakas;
+
+	public void setMangakasJobs(Set<MangakasJobsDataDTO> mangakasJobs) {
+		this.mangakasJobs = mangakasJobs;
 	}
-	
+
 }

@@ -13,14 +13,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mangagod.dto.data.MangakasJobsDataDTO;
 import com.mangagod.dto.data.StoryDataDTO;
 import com.mangagod.dto.pagination.StoryAllPageableDataDTO;
+import com.mangagod.dto.request.MangakaJobRequestDTO;
 import com.mangagod.dto.request.StoryRequestDTO;
 import com.mangagod.entity.CategoryEntity;
 import com.mangagod.entity.CountryEntity;
 import com.mangagod.entity.DemographyEntity;
 import com.mangagod.entity.GenreEntity;
+import com.mangagod.entity.JobEntity;
+import com.mangagod.entity.MangakaEntity;
 import com.mangagod.entity.StoryEntity;
+import com.mangagod.entity.StoryMangakaEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.StoryMapper;
@@ -28,6 +33,9 @@ import com.mangagod.repository.CategoryRepository;
 import com.mangagod.repository.CountryRepository;
 import com.mangagod.repository.DemographyRepository;
 import com.mangagod.repository.GenreRepository;
+import com.mangagod.repository.JobRepository;
+import com.mangagod.repository.MangakaRepository;
+import com.mangagod.repository.StoryMangakaRepository;
 import com.mangagod.repository.StoryRepository;
 
 @Service
@@ -45,6 +53,12 @@ public class StoryServiceImpl implements StoryService {
 	private CategoryRepository categoryRepository;
 	@Autowired
 	private GenreRepository genreRepository;
+	@Autowired
+	private MangakaRepository mangakaRepository;
+	@Autowired
+	private StoryMangakaRepository storyMangakaRepository;
+	@Autowired
+	private JobRepository jobRepository;
 	@Autowired
 	private StoryMapper storyMapper;
 	
@@ -75,70 +89,88 @@ public class StoryServiceImpl implements StoryService {
 	@Override
 	public StoryDataDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		StoryEntity entity = this.storyRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Historieta", "id", id));
+		StoryEntity entity = this.getStoryById(id);
 		StoryDataDTO dataDTO = this.storyMapper.mapEntityToDataDTO(entity);
+		
+		Set<MangakasJobsDataDTO> mangakasJobsDataDTOs = this.getListMangakasJobsDataDTO(entity.getStoriesMangakas());
+		dataDTO.setMangakasJobs(mangakasJobsDataDTOs);
+		
 		return dataDTO;
 	}
 
 	@Override
 	public StoryDataDTO create(StoryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		CountryEntity countryEntity = this.countryRepository.findById(requestDTO.getCountryId())
-				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", requestDTO.getCountryId()));
-		DemographyEntity demographyEntity = this.demographyRepository.findById(requestDTO.getDemographyId())
-				.orElseThrow(() -> new ResourceNotFoundException("Demografía", "id", requestDTO.getDemographyId()));
-		CategoryEntity categoryEntity = this.categoryRepository.findById(requestDTO.getCategoryId())
-				.orElseThrow(() -> new ResourceNotFoundException("Categoría", "id", requestDTO.getCategoryId()));
+		StoryEntity storyEntity = this.storyMapper.mapRequestToEntity(requestDTO);
 		
-		StoryEntity entity = this.storyMapper.mapRequestToEntity(requestDTO);
-		entity.setCountry(countryEntity);
-		entity.setDemography(demographyEntity);
-		entity.setCategory(categoryEntity);
+		// seteando "country", "demography", "category" y "genres".
+		CountryEntity countryEntity = this.getCountryById(requestDTO.getCountryId());
+		DemographyEntity demographyEntity = this.getDemographyById(requestDTO.getDemographyId());
+		CategoryEntity categoryEntity = this.getCategoryById(requestDTO.getCategoryId());
+		Set<GenreEntity> genres = this.getListGenresbYIds(requestDTO.getGenreIds());
+		storyEntity.setCountry(countryEntity);
+		storyEntity.setDemography(demographyEntity);
+		storyEntity.setCategory(categoryEntity);
+		storyEntity.setGenres(genres);
 		
-		Boolean existTitle = this.storyRepository.existsByTitle(requestDTO.getTitle());
-		if(existTitle) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El título " + requestDTO.getTitle() + " ya existe.");
+		// verificando que el campo "title" sea unico.
+		this.verifyTitleUnique(requestDTO.getTitle());
+		
+		// creando "story".
+		StoryEntity storyCreated = this.storyRepository.save(storyEntity);
+			
+		// FX-1 preparando lista para "response" de los mangakas que estan relacionados a "story".
+		Set<MangakasJobsDataDTO> mangakasJobsDataDTO = new HashSet<>();
+		Set<StoryMangakaEntity> storyMangakaEntities = new HashSet<>();
+		
+		// creando "stories_mangakas".
+		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
+			MangakaEntity mangakaEntity = this.getMangakaById(mj.getMangakaId());
+			JobEntity jobEntity = this.getJobById(mj.getJobId());
+			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
+			storyMangakaEntity.setStory(storyCreated);
+			storyMangakaEntity.setMangaka(mangakaEntity);
+			storyMangakaEntity.setJob(jobEntity);
+			this.storyMangakaRepository.save(storyMangakaEntity);
+			
+			// FX-2
+			storyMangakaEntities.add(storyMangakaEntity);
 		}
+			
+		StoryDataDTO storyDataDTO = this.storyMapper.mapEntityToDataDTO(storyCreated);
 		
-		Set<GenreEntity> genres = new HashSet<>();		
-		for (Integer genreId : requestDTO.getGenreIds()) {
-			GenreEntity genreEntity = this.genreRepository.findById(genreId)
-					.orElseThrow(() -> new ResourceNotFoundException("Género", "id", genreId));
-			genres.add(genreEntity);
+		// FX-3
+		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
+			MangakasJobsDataDTO mjDataDTO = new MangakasJobsDataDTO();
+			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
+			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
+			mjDataDTO.setJobId(smEntity.getJob().getId());
+			mjDataDTO.setNameJob(smEntity.getJob().getName());
+			mangakasJobsDataDTO.add(mjDataDTO);
 		}
-		entity.setGenres(genres);
+		storyDataDTO.setMangakasJobs(mangakasJobsDataDTO);
 		
-		StoryDataDTO dataCreated = this.storyMapper.mapEntityToDataDTO(this.storyRepository.save(entity));			
-		return dataCreated;
+		return 	storyDataDTO;
 	}
 
 	@Override
 	public StoryDataDTO update(Integer id, StoryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		StoryEntity dataCurrent = this.storyRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Historieta", "id", id));
+		StoryEntity dataCurrent = this.storyMapper.mapRequestToEntity(requestDTO);
 		
-		Boolean existTitle = this.storyRepository.existsByTitle(requestDTO.getTitle());
-		Boolean diferentTitleCurrent = (!requestDTO.getTitle().equalsIgnoreCase(dataCurrent.getTitle()));
-		if(existTitle && diferentTitleCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El título " + requestDTO.getTitle() + " ya existe.");
-		}
+		// seteando "country", "demography", "category" y "genres".
+		CountryEntity countryEntity = this.getCountryById(requestDTO.getCountryId());
+		DemographyEntity demographyEntity = this.getDemographyById(requestDTO.getDemographyId());
+		CategoryEntity categoryEntity = this.getCategoryById(requestDTO.getCategoryId());
+		Set<GenreEntity> genres = this.getListGenresbYIds(requestDTO.getGenreIds());
+		dataCurrent.setCountry(countryEntity);
+		dataCurrent.setDemography(demographyEntity);
+		dataCurrent.setCategory(categoryEntity);
+		dataCurrent.setGenres(genres);
 		
-		CountryEntity countryEntity = this.countryRepository.findById(requestDTO.getCountryId())
-				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", requestDTO.getCountryId()));
-		DemographyEntity demographyEntity = this.demographyRepository.findById(requestDTO.getDemographyId())
-				.orElseThrow(() -> new ResourceNotFoundException("Demografía", "id", requestDTO.getDemographyId()));
-		CategoryEntity categoryEntity = this.categoryRepository.findById(requestDTO.getCategoryId())
-				.orElseThrow(() -> new ResourceNotFoundException("Categoría", "id", requestDTO.getCategoryId()));
-		
-		Set<GenreEntity> genres = new HashSet<>();		
-		for (Integer genreId : requestDTO.getGenreIds()) {
-			GenreEntity genreEntity = this.genreRepository.findById(genreId)
-					.orElseThrow(() -> new ResourceNotFoundException("Género", "id", genreId));
-			genres.add(genreEntity);
-		}
-		
+		// verificando que el campo "title" sea unico.
+		this.verifyTitleUnique(requestDTO.getTitle(), dataCurrent.getTitle());
+			
 		dataCurrent.setTitle(requestDTO.getTitle());
 		dataCurrent.setYear(requestDTO.getYear());
 		dataCurrent.setSynopsis(requestDTO.getSynopsis());
@@ -146,23 +178,114 @@ public class StoryServiceImpl implements StoryService {
 		dataCurrent.setUrlImage(requestDTO.getUrlImage());
 		dataCurrent.setAdaptationAnime(requestDTO.getAdaptationAnime());
 		dataCurrent.setPrice(requestDTO.getPrice());
-		dataCurrent.setCountry(countryEntity);
-		dataCurrent.setDemography(demographyEntity);
-		dataCurrent.setCategory(categoryEntity);
-		dataCurrent.setGenres(genres);
 		
-		StoryDataDTO dataCreated = this.storyMapper.mapEntityToDataDTO(this.storyRepository.save(dataCurrent));			
-		return dataCreated;
+		// actualizando "story".			
+		StoryEntity storyUpdated = this.storyRepository.save(dataCurrent);	
+		
+//		// actualizando "stories_mangakas".
+//		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
+//			
+//			MangakaEntity mangakaEntity = this.getMangakaById(mj.getMangakaId());
+//			JobEntity jobEntity = this.getJobById(mj.getJobId());
+//			
+//			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
+//			
+//			
+//			
+//			storyMangakaEntity.setId(null); // REV
+//			
+//			storyMangakaEntity.setStory(storyUpdated);
+//			storyMangakaEntity.setMangaka(mangakaEntity);
+//			storyMangakaEntity.setJob(jobEntity);
+//			this.storyMangakaRepository.save(storyMangakaEntity);
+//			
+//		}
+		return this.storyMapper.mapEntityToDataDTO(storyUpdated);
 	}
-
+	
 	@Override
 	public StoryDataDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		StoryEntity entity = this.storyRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Historieta", "id", id));
+		StoryEntity entity = this.getStoryById(id);
 		this.storyRepository.delete(entity);
 		StoryDataDTO dataDeleted = this.storyMapper.mapEntityToDataDTO(entity);
+		
+		Set<MangakasJobsDataDTO> mangakasJobsDataDTOs = this.getListMangakasJobsDataDTO(entity.getStoriesMangakas());
+		dataDeleted.setMangakasJobs(mangakasJobsDataDTOs);
+		
 		return dataDeleted;
 	}
 
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public CountryEntity getCountryById(Integer id) {
+		return this.countryRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
+	}
+	
+	public DemographyEntity getDemographyById(Integer id) {
+		return this.demographyRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Demografía", "id", id));
+	}
+	
+	public CategoryEntity getCategoryById(Integer id) {
+		return this.categoryRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));
+	}
+	
+	public MangakaEntity getMangakaById(Integer id) {
+		return this.mangakaRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Mangaka", "id", id));
+	}
+	
+	public JobEntity getJobById(Integer id) {
+		return this.jobRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Ocupación", "id", id));
+	}
+	
+	public StoryEntity getStoryById(Integer id) {
+		return this.storyRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Historieta", "id", id));
+	}
+	
+	public Set<GenreEntity> getListGenresbYIds(Set<Integer> genresIds){
+		Set<GenreEntity> genres = new HashSet<>();		
+		for (Integer id : genresIds) {
+			GenreEntity genreEntity = this.genreRepository.findById(id)
+					.orElseThrow(() -> new ResourceNotFoundException("Género", "id", id));
+			genres.add(genreEntity);
+		}
+		return genres;
+	} 
+	
+	
+	
+	public void verifyTitleUnique(String title) {
+		Boolean existTitle = this.storyRepository.existsByTitle(title);
+		if(existTitle) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El título " + title + " ya existe.");
+		}
+	}
+	
+	public void verifyTitleUnique(String title, String titleCurrent) {
+		Boolean existTitle = this.storyRepository.existsByTitle(title);
+		Boolean diferentTitleCurrent = (!title.equalsIgnoreCase(titleCurrent));
+		if(existTitle && diferentTitleCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El título " + title + " ya existe.");
+		}
+	}
+	
+	public Set<MangakasJobsDataDTO> getListMangakasJobsDataDTO(Set<StoryMangakaEntity> storiesMangakas){
+		Set<MangakasJobsDataDTO> mangakasJobsDataDTOs = new HashSet<>();
+		
+		for (StoryMangakaEntity smEntity : storiesMangakas) {
+			MangakasJobsDataDTO  mjDataDTO = new MangakasJobsDataDTO();
+			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
+			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
+			mjDataDTO.setJobId(smEntity.getJob().getId());
+			mjDataDTO.setNameJob(smEntity.getJob().getName());
+			mangakasJobsDataDTOs.add(mjDataDTO);
+		}
+		return mangakasJobsDataDTOs;
+	}
+	
 }

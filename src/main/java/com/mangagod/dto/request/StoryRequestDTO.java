@@ -42,9 +42,9 @@ public class StoryRequestDTO {
 	@NotNull(message = "El campo 'genreIds' es obligatorio.")
 	@NotEmpty(message = "El campo 'genreIds' debe contene al menos 1 elemento.")
 	private Set<Integer> genreIds;
-	@NotNull(message = "El campo 'mangakaIds' es obligatorio.")
-	@NotEmpty(message = "El campo 'mangakaIds' debe contene al menos 1 elemento.")
-	private Set<Integer> mangakaIds;
+	@NotNull(message = "El campo 'mangakaJobIds' no debe ser nulo.")
+	@NotEmpty(message = "El campo 'mangakaJobIds' debe contene al menos 1 elemento.")
+	private Set<MangakaJobRequestDTO> mangakaJobIds;
 	
     public StoryRequestDTO() {
     	
@@ -138,12 +138,12 @@ public class StoryRequestDTO {
 		this.genreIds = genreIds;
 	}
 
-	public Set<Integer> getMangakaIds() {
-		return mangakaIds;
+	public Set<MangakaJobRequestDTO> getMangakaJobIds() {
+		return mangakaJobIds;
 	}
 
-	public void setMangakaIds(Set<Integer> mangakaIds) {
-		this.mangakaIds = mangakaIds;
+	public void setMangakaJobIds(Set<MangakaJobRequestDTO> mangakaJobIds) {
+		this.mangakaJobIds = mangakaJobIds;
 	}
-	
+
 }
