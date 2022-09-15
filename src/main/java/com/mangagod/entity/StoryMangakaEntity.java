@@ -16,17 +16,16 @@ public class StoryMangakaEntity {
 	@EmbeddedId
 	private StoryMangakaId id = new StoryMangakaId();
 	@ManyToOne(fetch = FetchType.EAGER)
-	@MapsId("storyId") // este es el nombre de attributo en la clase "StoryMangakaId"
+	@MapsId("storyId") // hace referencia al nombre de atributo en la clase "StoryMangakaId"
 	@JoinColumn(name = "story_id")
 	private StoryEntity story;
 	@ManyToOne(fetch = FetchType.EAGER)
-	@MapsId("mangakaId") // este es el nombre de attributo en la clase "StoryMangakaId"
+	@MapsId("mangakaId") // hace referencia al nombre de atributo en la clase "StoryMangakaId"
 	@JoinColumn(name = "mangaka_id")
 	private MangakaEntity mangaka;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "job_id")
 	private JobEntity job;
-	
 	
 	public StoryMangakaEntity() {
 		

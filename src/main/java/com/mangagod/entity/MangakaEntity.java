@@ -3,6 +3,7 @@ package com.mangagod.entity;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -24,7 +25,7 @@ public class MangakaEntity extends BaseEntity {
 	private Sex sex;
 	@Column(name = "birth_date")
 	private LocalDate birthDate;
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "mangaka")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "mangaka", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<StoryMangakaEntity> storiesMangakas = new HashSet<>();
 	
 	public MangakaEntity() {

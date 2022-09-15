@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.data.MangakasJobsDataDTO;
 import com.mangagod.dto.data.StoryDataDTO;
 import com.mangagod.dto.pagination.StoryAllPageableDataDTO;
@@ -115,31 +114,32 @@ public class StoryServiceImpl implements StoryService {
 		
 		// verificando que el campo "title" sea unico.
 		this.verifyTitleUnique(requestDTO.getTitle());
-		
-		// creando "story".
-		StoryEntity storyCreated = this.storyRepository.save(storyEntity);
-			
+					
 		// FX-1 preparando lista para "response" de los mangakas que estan relacionados a "story".
 		Set<MangakasJobsDataDTO> mangakasJobsDataDTO = new HashSet<>();
-		Set<StoryMangakaEntity> storyMangakaEntities = new HashSet<>();
 		
 		// creando "stories_mangakas".
+		Set<StoryMangakaEntity> storyMangakaEntities = new HashSet<>();
 		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
 			MangakaEntity mangakaEntity = this.getMangakaById(mj.getMangakaId());
 			JobEntity jobEntity = this.getJobById(mj.getJobId());
 			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
-			storyMangakaEntity.setStory(storyCreated);
+			storyMangakaEntity.setStory(storyEntity);
 			storyMangakaEntity.setMangaka(mangakaEntity);
 			storyMangakaEntity.setJob(jobEntity);
-			this.storyMangakaRepository.save(storyMangakaEntity);
-			
-			// FX-2
 			storyMangakaEntities.add(storyMangakaEntity);
 		}
-			
-		StoryDataDTO storyDataDTO = this.storyMapper.mapEntityToDataDTO(storyCreated);
 		
-		// FX-3
+		// seteando "stories_mangakas"
+		storyEntity.setStoriesMangakas(storyMangakaEntities);
+		
+		// creando "story".
+		StoryEntity storyCreated = this.storyRepository.save(storyEntity);
+		
+		// response "storyCreated"	
+		StoryDataDTO dataCreated = this.storyMapper.mapEntityToDataDTO(storyCreated);
+		
+		// FX-2
 		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
 			MangakasJobsDataDTO mjDataDTO = new MangakasJobsDataDTO();
 			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
@@ -148,15 +148,20 @@ public class StoryServiceImpl implements StoryService {
 			mjDataDTO.setNameJob(smEntity.getJob().getName());
 			mangakasJobsDataDTO.add(mjDataDTO);
 		}
-		storyDataDTO.setMangakasJobs(mangakasJobsDataDTO);
+		dataCreated.setMangakasJobs(mangakasJobsDataDTO);
 		
-		return 	storyDataDTO;
+		return 	dataCreated;
 	}
 
 	@Override
-	public StoryDataDTO update(Integer id, StoryRequestDTO requestDTO) {
+	public StoryDataDTO update(Integer id, StoryRequestDTO requestDTO) {	
 		// TODO Auto-generated method stub
-		StoryEntity dataCurrent = this.storyMapper.mapRequestToEntity(requestDTO);
+		
+		// eliminando relaciones anterioes con "mangakas"
+		this.storyMangakaRepository.deleteByStoryId(id);
+				
+		// obteniendo "storu" en base a su "Id"
+		StoryEntity dataCurrent = this.getStoryById(id);
 		
 		// seteando "country", "demography", "category" y "genres".
 		CountryEntity countryEntity = this.getCountryById(requestDTO.getCountryId());
@@ -179,41 +184,56 @@ public class StoryServiceImpl implements StoryService {
 		dataCurrent.setAdaptationAnime(requestDTO.getAdaptationAnime());
 		dataCurrent.setPrice(requestDTO.getPrice());
 		
+		// FX-1 preparando lista para "response" de los mangakas que estan relacionados a "story".
+		Set<MangakasJobsDataDTO> mangakasJobsDataDTO = new HashSet<>();
+				
+		// actualizando "stories_mangakas".
+		Set<StoryMangakaEntity> storyMangakaEntities = new HashSet<>();
+		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
+			MangakaEntity mangakaEntity = this.getMangakaById(mj.getMangakaId());
+			JobEntity jobEntity = this.getJobById(mj.getJobId());
+			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
+			storyMangakaEntity.setStory(dataCurrent);
+			storyMangakaEntity.setMangaka(mangakaEntity);
+			storyMangakaEntity.setJob(jobEntity);
+			storyMangakaEntities.add(storyMangakaEntity);
+		}
+		
+		// seteando "stories_mangakas"
+		dataCurrent.setStoriesMangakas(storyMangakaEntities);
+			
 		// actualizando "story".			
 		StoryEntity storyUpdated = this.storyRepository.save(dataCurrent);	
 		
-//		// actualizando "stories_mangakas".
-//		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
-//			
-//			MangakaEntity mangakaEntity = this.getMangakaById(mj.getMangakaId());
-//			JobEntity jobEntity = this.getJobById(mj.getJobId());
-//			
-//			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
-//			
-//			
-//			
-//			storyMangakaEntity.setId(null); // REV
-//			
-//			storyMangakaEntity.setStory(storyUpdated);
-//			storyMangakaEntity.setMangaka(mangakaEntity);
-//			storyMangakaEntity.setJob(jobEntity);
-//			this.storyMangakaRepository.save(storyMangakaEntity);
-//			
-//		}
-		return this.storyMapper.mapEntityToDataDTO(storyUpdated);
+		// response "storyUpdate"	
+		StoryDataDTO dataUpdated = this.storyMapper.mapEntityToDataDTO(storyUpdated);
+		
+		// FX-2
+		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
+			MangakasJobsDataDTO mjDataDTO = new MangakasJobsDataDTO();
+			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
+			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
+			mjDataDTO.setJobId(smEntity.getJob().getId());
+			mjDataDTO.setNameJob(smEntity.getJob().getName());
+			mangakasJobsDataDTO.add(mjDataDTO);
+		}
+		dataUpdated.setMangakasJobs(mangakasJobsDataDTO);
+		
+		return dataUpdated;
 	}
 	
 	@Override
 	public StoryDataDTO delete(Integer id) {
 		// TODO Auto-generated method stub
+		
+		// eliminando relaciones con "stories_mangakas"
+		this.storyMangakaRepository.deleteByStoryId(id);
+		// obteniendo "story" para eliminarlo
 		StoryEntity entity = this.getStoryById(id);
+		// eliminando "story"
 		this.storyRepository.delete(entity);
-		StoryDataDTO dataDeleted = this.storyMapper.mapEntityToDataDTO(entity);
-		
-		Set<MangakasJobsDataDTO> mangakasJobsDataDTOs = this.getListMangakasJobsDataDTO(entity.getStoriesMangakas());
-		dataDeleted.setMangakasJobs(mangakasJobsDataDTOs);
-		
-		return dataDeleted;
+		// response
+		return this.storyMapper.mapEntityToDataDTO(entity);
 	}
 
 	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
@@ -256,8 +276,6 @@ public class StoryServiceImpl implements StoryService {
 		}
 		return genres;
 	} 
-	
-	
 	
 	public void verifyTitleUnique(String title) {
 		Boolean existTitle = this.storyRepository.existsByTitle(title);

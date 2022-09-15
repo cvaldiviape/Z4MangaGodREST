@@ -1,7 +1,7 @@
 package com.mangagod.util.ids;
 
 import java.io.Serializable;
-//import java.util.Objects;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -39,24 +39,25 @@ public class StoryMangakaId implements Serializable {
 		this.mangakaId = mangakaId;
 	}
 	
-//	@Override
-//    public int hashCode() {
-//        final int prime = 31;
-//        int result = 1;
-//        result = prime * result + ((storyId == null) ? 0 : storyId.hashCode());
-//        result = prime * result + ((mangakaId == null) ? 0 : mangakaId.hashCode());
-//        return result;
-//    }
-//	
-//	@Override
-//    public boolean equals(Object obj) {
-//        if (this == obj)
-//            return true;
-//        if (obj == null)
-//            return false;
-//        if (getClass() != obj.getClass())
-//            return false;
-//        StoryMangakaId other = (StoryMangakaId) obj;
-//        return Objects.equals(getStoryId(), other.getStoryId()) && Objects.equals(getMangakaId(), other.getMangakaId());
-//    }
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((storyId == null) ? 0 : storyId.hashCode());
+        result = prime * result + ((mangakaId == null) ? 0 : mangakaId.hashCode());
+        return result;
+    }
+	
+	@Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        StoryMangakaId other = (StoryMangakaId) obj;
+        return Objects.equals(getStoryId(), other.getStoryId()) && Objects.equals(getMangakaId(), other.getMangakaId());
+    }
+
 }

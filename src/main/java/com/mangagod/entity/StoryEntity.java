@@ -2,6 +2,7 @@ package com.mangagod.entity;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,7 +47,7 @@ public class StoryEntity extends BaseEntity {
 	@JoinTable(name = "stories_genres", joinColumns = @JoinColumn(name = "story_id", referencedColumnName = "id"), 
 									    inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
 	private Set<GenreEntity> genres = new HashSet<>();
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "story")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "story", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<StoryMangakaEntity> storiesMangakas = new HashSet<>();
 		
 	public StoryEntity() {
