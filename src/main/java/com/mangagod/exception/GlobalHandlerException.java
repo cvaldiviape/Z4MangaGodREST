@@ -37,13 +37,6 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(DateTimeParseException.class) // indico que esta funcion recibira excepciones de tipo "DateTimeParseException", valido en los request @@DateTimeFormat (REV)
-	public ResponseEntity<ErrorDetailResponseDTO> managerDateTimeParseException(DateTimeParseException  exception, WebRequest webRequest){
-		String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
-		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
-		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.BAD_REQUEST);
-	}
-	
 	@ExceptionHandler(Exception.class) // indico que esta funcion recibira excepciones de tipo "Exception"
 	public ResponseEntity<ErrorDetailResponseDTO> managerException(Exception exception, WebRequest webRequest){
 		String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
