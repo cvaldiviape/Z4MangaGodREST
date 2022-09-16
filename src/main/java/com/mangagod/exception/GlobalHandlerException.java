@@ -1,16 +1,17 @@
 package com.mangagod.exception;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import com.mangagod.dto.response.ErrorDetailResponseDTO;
@@ -44,8 +45,16 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	// Metodo sobreescrito de la clase absracta ResponseEntityExceptionHandler
-	// Se va encargar de controlar los errores de validacion que definimos en el DTO, es decir de los campos
+	@ExceptionHandler({ AuthenticationException.class })
+    @ResponseBody
+    public ResponseEntity<ErrorDetailResponseDTO> managerAuthenticationException(AuthenticationException exception, WebRequest webRequest) {
+        String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
+		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
+		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.UNAUTHORIZED);
+		// https://www.baeldung.com/spring-security-exceptionhandler
+		// https://github.com/eugenp/tutorials/blob/master/spring-security-modules/spring-security-core-2/src/main/java/com/baeldung/global/exceptionhandler/handler/DefaultExceptionHandler.java
+	}
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, 
 			                                                      HttpStatus status, WebRequest request) {
@@ -60,5 +69,8 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 		});
 		
 		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+		// Metodo sobreescrito de la clase absracta ResponseEntityExceptionHandler
+		// Se va encargar de controlar los errores de validacion que definimos en el DTO, es decir de los campos
 	}
+
 }

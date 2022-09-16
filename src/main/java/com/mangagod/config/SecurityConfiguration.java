@@ -1,6 +1,7 @@
 package com.mangagod.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,14 +26,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 																          // las contraseñas, pero en este caso vamos a sobreescribirlas
 	
 	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
-	@Autowired
+    @Qualifier("delegatedAuthenticationEntryPoint")
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-	
-	@Bean 
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -41,12 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 			.and()
 			.csrf()
 			.disable() // desabilitamos por que spring ya cuenta con uno propio
-			.exceptionHandling()
-			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // "STATELESS = sin estado"
-			.and()
+			//.requestMatchers()
 			.authorizeRequests()
 			.antMatchers(
 					//HttpMethod.POST,
@@ -54,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 					//,"/user/**", "/role/**"
 			)
 			.permitAll()
+			//.and()
 			.antMatchers(
 					"/v2/api-docs/**",
 					"/swagger-ui/**",
@@ -62,7 +55,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 			)
 			.permitAll()
 			.anyRequest()
-			.authenticated();
+			.authenticated()
+			.and()
+            .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 			
 		http.addFilterBefore(this.jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
@@ -70,6 +67,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(this.customUserDetailsService).passwordEncoder(this.passwordEncoder());
+	}
+	
+	@Bean 
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 	
 	@Override

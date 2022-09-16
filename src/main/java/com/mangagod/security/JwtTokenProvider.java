@@ -78,7 +78,6 @@ public class JwtTokenProvider {
 		}
 	}
 	
-	
 	public Optional<String> getToken(AuthRequestDTO authRequestDTO) {
 		Authentication authentication = this.authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(authRequestDTO.getUsernameOrEmail(), authRequestDTO.getPassword()));
@@ -109,6 +108,4 @@ public class JwtTokenProvider {
        
 	}
 	
-	
-
 }

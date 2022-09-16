@@ -27,6 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		
 		// validamos el token
 		if(StringUtils.hasText(token) && this.jwtTokenProvider.validateToken(token)) {
+			
 			//obtenemos el username del token
 			String username = this.jwtTokenProvider.getUsernameOfToken(token);
 			
@@ -55,6 +56,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 			// EJM: token: "Bearer sljk4kljklj4kjlkjl2kjnb4mnmm3bm444jk3"
 			// enconres recortamos el token, es decirm que este sin la palabra "Bearer" al inicio, solo queremos el conjunto de caracteres
 			return bearerToken.substring(7, bearerToken.length());
+			// https://www.youtube.com/watch?v=lA7DORzdp98
+			// https://www.programiz.com/java-programming/online-compiler/
 		}
 		
 		return null;
