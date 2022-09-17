@@ -91,8 +91,8 @@ public class StoryServiceImpl implements StoryService {
 		StoryEntity entity = this.getStoryById(id);
 		StoryDataDTO dataDTO = this.storyMapper.mapEntityToDataDTO(entity);
 		
-		Set<MangakasJobsDataDTO> mangakasJobsDataDTOs = this.getListMangakasJobsDataDTO(entity.getStoriesMangakas());
-		dataDTO.setMangakasJobs(mangakasJobsDataDTOs);
+		Set<MangakasJobsDataDTO> listMangakasJobsDataDTO = this.getListMangakasJobsDataDTO(entity.getStoriesMangakas());
+		dataDTO.setMangakasJobs(listMangakasJobsDataDTO);
 		
 		return dataDTO;
 	}
@@ -115,9 +115,6 @@ public class StoryServiceImpl implements StoryService {
 		// verificando que el campo "title" sea unico.
 		this.verifyTitleUnique(requestDTO.getTitle());
 					
-		// FX-1 preparando lista para "response" de los mangakas que estan relacionados a "story".
-		Set<MangakasJobsDataDTO> mangakasJobsDataDTO = new HashSet<>();
-		
 		// creando "stories_mangakas".
 		Set<StoryMangakaEntity> storyMangakaEntities = new HashSet<>();
 		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
@@ -136,10 +133,11 @@ public class StoryServiceImpl implements StoryService {
 		// creando "story".
 		StoryEntity storyCreated = this.storyRepository.save(storyEntity);
 		
-		// response "storyCreated"	
+		// seteando response "storyCreated"	
 		StoryDataDTO dataCreated = this.storyMapper.mapEntityToDataDTO(storyCreated);
 		
-		// FX-2
+		// seteando responte lista "mangakas_jobs"
+		Set<MangakasJobsDataDTO> mangakasJobsDataDTO = new HashSet<>();
 		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
 			MangakasJobsDataDTO mjDataDTO = new MangakasJobsDataDTO();
 			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
@@ -160,7 +158,7 @@ public class StoryServiceImpl implements StoryService {
 		// eliminando relaciones anterioes con "mangakas"
 		this.storyMangakaRepository.deleteByStoryId(id);
 				
-		// obteniendo "storu" en base a su "Id"
+		// obteniendo "story" en base a su "Id"
 		StoryEntity dataCurrent = this.getStoryById(id);
 		
 		// seteando "country", "demography", "category" y "genres".
@@ -175,7 +173,8 @@ public class StoryServiceImpl implements StoryService {
 		
 		// verificando que el campo "title" sea unico.
 		this.verifyTitleUnique(requestDTO.getTitle(), dataCurrent.getTitle());
-			
+		
+		// seteando valores actualizados
 		dataCurrent.setTitle(requestDTO.getTitle());
 		dataCurrent.setYear(requestDTO.getYear());
 		dataCurrent.setSynopsis(requestDTO.getSynopsis());
@@ -184,14 +183,13 @@ public class StoryServiceImpl implements StoryService {
 		dataCurrent.setAdaptationAnime(requestDTO.getAdaptationAnime());
 		dataCurrent.setPrice(requestDTO.getPrice());
 		
-		// FX-1 preparando lista para "response" de los mangakas que estan relacionados a "story".
-		Set<MangakasJobsDataDTO> mangakasJobsDataDTO = new HashSet<>();
-				
 		// actualizando "stories_mangakas".
 		Set<StoryMangakaEntity> storyMangakaEntities = new HashSet<>();
 		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
+			
 			MangakaEntity mangakaEntity = this.getMangakaById(mj.getMangakaId());
 			JobEntity jobEntity = this.getJobById(mj.getJobId());
+			
 			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
 			storyMangakaEntity.setStory(dataCurrent);
 			storyMangakaEntity.setMangaka(mangakaEntity);
@@ -208,16 +206,17 @@ public class StoryServiceImpl implements StoryService {
 		// response "storyUpdate"	
 		StoryDataDTO dataUpdated = this.storyMapper.mapEntityToDataDTO(storyUpdated);
 		
-		// FX-2
+		// seteando responte lista "mangakas_jobs".
+		Set<MangakasJobsDataDTO> listMangakasJobsDataDTO = new HashSet<>();
 		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
 			MangakasJobsDataDTO mjDataDTO = new MangakasJobsDataDTO();
 			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
 			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
 			mjDataDTO.setJobId(smEntity.getJob().getId());
 			mjDataDTO.setNameJob(smEntity.getJob().getName());
-			mangakasJobsDataDTO.add(mjDataDTO);
+			listMangakasJobsDataDTO.add(mjDataDTO);
 		}
-		dataUpdated.setMangakasJobs(mangakasJobsDataDTO);
+		dataUpdated.setMangakasJobs(listMangakasJobsDataDTO);
 		
 		return dataUpdated;
 	}
