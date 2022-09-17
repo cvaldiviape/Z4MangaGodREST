@@ -1,8 +1,0 @@
-.cinco:hover span {
-  left: 10px
-}
-
-.cinco:hover .icono {
-  left: calc(100% - 1.6875rem);
-  opacity: 1;
-}
