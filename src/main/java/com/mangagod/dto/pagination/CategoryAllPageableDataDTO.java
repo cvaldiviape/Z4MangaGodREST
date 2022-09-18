@@ -1,22 +1,23 @@
 package com.mangagod.dto.pagination;
 
 import java.util.List;
-import com.mangagod.dto.data.CategoryDataDTO;
+
 import com.mangagod.dto.pagination.base.PageableDataDTOImpl;
+import com.mangagod.dto.response.CategoryResponseDTO;
 
 public class CategoryAllPageableDataDTO extends PageableDataDTOImpl {
 
-	private List<CategoryDataDTO> categories;
+	private List<CategoryResponseDTO> categories;
 	
 	public CategoryAllPageableDataDTO() {
 		
 	}
 
-	public List<CategoryDataDTO> getCategories() {
+	public List<CategoryResponseDTO> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<CategoryDataDTO> categories) {
+	public void setCategories(List<CategoryResponseDTO> categories) {
 		this.categories = categories;
 	}
 	

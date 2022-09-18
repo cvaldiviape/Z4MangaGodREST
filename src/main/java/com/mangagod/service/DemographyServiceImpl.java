@@ -10,9 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.DemographyDataDTO;
+
 import com.mangagod.dto.pagination.DemographyAllPageableDataDTO;
 import com.mangagod.dto.request.DemographyRequestDTO;
+import com.mangagod.dto.response.DemographyResponseDTO;
 import com.mangagod.entity.DemographyEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -41,7 +42,7 @@ public class DemographyServiceImpl implements DemographyService{
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<DemographyEntity> demographiesPageable = this.demographyRepository.findAll(pageable);	
 		List<DemographyEntity> demographiesEntity = demographiesPageable.getContent();
-		List<DemographyDataDTO> demographiesDTO = demographiesEntity.stream().map((x) -> this.demographyMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<DemographyResponseDTO> demographiesDTO = demographiesEntity.stream().map((x) -> this.demographyMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		DemographyAllPageableDataDTO pageableDataDTO = new DemographyAllPageableDataDTO();
 		pageableDataDTO.setDemogrhapies(demographiesDTO);
@@ -55,51 +56,56 @@ public class DemographyServiceImpl implements DemographyService{
 	}
 
 	@Override
-	public DemographyDataDTO getById(Integer id) {
+	public DemographyResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		DemographyEntity entity = this.demographyRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Demogragía", "id", id));
-		DemographyDataDTO dataCreated = this.demographyMapper.mapEntityToDataDTO(entity);
-		return dataCreated;
+		DemographyEntity entity = this.getDemographyById(id);
+		return this.demographyMapper.mapEntityToResponseDTO(entity);
 	}
 
 	@Override
-	public DemographyDataDTO create(DemographyRequestDTO requestDTO) {
+	public DemographyResponseDTO create(DemographyRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		Boolean existNname = this.demographyRepository.existsByName(requestDTO.getName());
-		if(existNname) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName());
 		DemographyEntity entity = this.demographyMapper.mapRequestToEntity(requestDTO);
-		
-		DemographyDataDTO dataDTO = this.demographyMapper.mapEntityToDataDTO(this.demographyRepository.save(entity));			
-		return dataDTO;
+		return this.demographyMapper.mapEntityToResponseDTO(this.demographyRepository.save(entity));			
 	}
 
 	@Override
-	public DemographyDataDTO update(Integer id, DemographyRequestDTO requestDTO) {
+	public DemographyResponseDTO update(Integer id, DemographyRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		DemographyEntity dataCurrent = this.demographyRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
-		Boolean existsName = this.demographyRepository.existsByName(requestDTO.getName());
-		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentNameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		DemographyEntity dataCurrent = this.getDemographyById(id);
+		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName());
-		
-		DemographyDataDTO dataUpdated = this.demographyMapper.mapEntityToDataDTO(this.demographyRepository.save(dataCurrent));	
-		return dataUpdated;
+		return this.demographyMapper.mapEntityToResponseDTO(this.demographyRepository.save(dataCurrent));	
 	}
 
 	@Override
-	public DemographyDataDTO delete(Integer id) {
+	public DemographyResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		DemographyEntity entity = this.demographyRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
+		DemographyEntity entity = this.getDemographyById(id);
 		this.demographyRepository.delete(entity);
-		DemographyDataDTO dataDeleted = this.demographyMapper.mapEntityToDataDTO(entity);
-		return dataDeleted;
+		return this.demographyMapper.mapEntityToResponseDTO(entity);
 	}
-
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public DemographyEntity getDemographyById(Integer id) {
+		return this.demographyRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Demogragía", "id", id));
+	}
+	
+	public void verifyNameUnique(String name) {
+		Boolean existName = this.demographyRepository.existsByName(name);
+		if(existName) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
+	public void verifyNameUnique(String name, String nameCurrent) {
+		Boolean existName = this.demographyRepository.existsByName(name);
+		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
+		if(existName && diferentNameCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+		
 }

@@ -1,11 +1,11 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.response;
 
-public class GenreDataDTO {
+public class CategoryResponseDTO {
 
 	private Integer id;
 	private String name;
 	
-	public GenreDataDTO() {
+	public CategoryResponseDTO() {
 		
 	}
 
@@ -24,5 +24,5 @@ public class GenreDataDTO {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
 }

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.data.CountryDataDTO;
 import com.mangagod.dto.pagination.CountryAllPageableDataDTO;
 import com.mangagod.dto.request.CountryRequestDTO;
+import com.mangagod.dto.response.CountryResponseDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.CountryService;
 import com.mangagod.util.AppConstants;
@@ -48,7 +48,7 @@ public class CountryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{country_id}")
 	public ResponseEntity<MainResponse> getCountryById(@PathVariable (name = "country_id") int countryId){
-		CountryDataDTO dataDTO = this.countryService.getById(countryId);
+		CountryResponseDTO dataDTO = this.countryService.getById(countryId);
 		MainResponse mainResponse = new MainResponse(true, "Obteniendo pais por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -57,7 +57,7 @@ public class CountryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createCountry(@Valid @RequestBody CountryRequestDTO requestDTO){
-		CountryDataDTO dataDTO = this.countryService.create(requestDTO); 
+		CountryResponseDTO dataDTO = this.countryService.create(requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El pais ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -67,7 +67,7 @@ public class CountryController {
 	@PutMapping("/{country_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "country_id") int countryId, 
 													  @Valid @RequestBody CountryRequestDTO requestDTO ){
-		CountryDataDTO dataDTO = this.countryService.update(countryId, requestDTO); 
+		CountryResponseDTO dataDTO = this.countryService.update(countryId, requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El pais ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -76,7 +76,7 @@ public class CountryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{country_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "country_id") int countryId){
-		CountryDataDTO dataDTO = this.countryService.delete(countryId);
+		CountryResponseDTO dataDTO = this.countryService.delete(countryId);
 		MainResponse mainResponse = new MainResponse(true, "El pais ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

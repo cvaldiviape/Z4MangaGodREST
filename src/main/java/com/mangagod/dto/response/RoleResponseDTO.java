@@ -1,12 +1,12 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.response;
 
-public class RoleDataDTO {
+public class RoleResponseDTO {
 
 	private Integer id;
 	private String name;
 	private String description;
 	
-	public RoleDataDTO() {
+	public RoleResponseDTO() {
 		
 	}
 

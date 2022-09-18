@@ -10,9 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.GenreDataDTO;
+
 import com.mangagod.dto.pagination.GenreAllPageableDataDTO;
 import com.mangagod.dto.request.GenreRequestDTO;
+import com.mangagod.dto.response.GenreResponseDTO;
 import com.mangagod.entity.GenreEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -41,7 +42,7 @@ public class GenreServiceImpl implements GenreService{
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<GenreEntity> genresPageable = this.genreRepository.findAll(pageable);	
 		List<GenreEntity> genresEntity = genresPageable.getContent();
-		List<GenreDataDTO> genresDTO = genresEntity.stream().map((x) -> this.genreMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<GenreResponseDTO> genresDTO = genresEntity.stream().map((x) -> this.genreMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		GenreAllPageableDataDTO pageableDataDTO = new GenreAllPageableDataDTO();
 		pageableDataDTO.setGenres(genresDTO);
@@ -55,51 +56,56 @@ public class GenreServiceImpl implements GenreService{
 	}
 
 	@Override
-	public GenreDataDTO getById(Integer id) {
+	public GenreResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		GenreEntity entity = this.genreRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Género", "id", id));
-		GenreDataDTO dataDTO = this.genreMapper.mapEntityToDataDTO(entity);
-		return dataDTO;
+		GenreEntity entity =  this.getGenreById(id);
+		return this.genreMapper.mapEntityToResponseDTO(entity);
 	}
 
 	@Override
-	public GenreDataDTO create(GenreRequestDTO requestDTO) {
+	public GenreResponseDTO create(GenreRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		Boolean existNname = this.genreRepository.existsByName(requestDTO.getName());
-		if(existNname) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName());
 		GenreEntity entity = this.genreMapper.mapRequestToEntity(requestDTO);
-		
-		GenreDataDTO dataCreated = this.genreMapper.mapEntityToDataDTO(this.genreRepository.save(entity));			
-		return dataCreated;
+		return this.genreMapper.mapEntityToResponseDTO(this.genreRepository.save(entity));			
 	}
 
 	@Override
-	public GenreDataDTO update(Integer id, GenreRequestDTO requestDTO) {
+	public GenreResponseDTO update(Integer id, GenreRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		GenreEntity dataCurrent = this.genreRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Género", "id", id));
-		Boolean existsNname = this.genreRepository.existsByName(requestDTO.getName());
-		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsNname && diferentNameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		GenreEntity dataCurrent =  this.getGenreById(id);
+		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName());
-		
-		GenreDataDTO dataUpdated = this.genreMapper.mapEntityToDataDTO(this.genreRepository.save(dataCurrent));	
-		return dataUpdated;
+		return this.genreMapper.mapEntityToResponseDTO(this.genreRepository.save(dataCurrent));	
 	}
 
 	@Override
-	public GenreDataDTO delete(Integer id) {
+	public GenreResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		GenreEntity entity = this.genreRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Género", "id", id));
+		GenreEntity entity = this.getGenreById(id);
 		this.genreRepository.delete(entity);
-		GenreDataDTO dataDeleted = this.genreMapper.mapEntityToDataDTO(entity);
-		return dataDeleted;
+		return this.genreMapper.mapEntityToResponseDTO(entity);
 	}
-
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public GenreEntity getGenreById(Integer id) {
+		return this.genreRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Género", "id", id));
+	}
+	
+	public void verifyNameUnique(String name) {
+		Boolean existName = this.genreRepository.existsByName(name);
+		if(existName) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
+	public void verifyNameUnique(String name, String nameCurrent) {
+		Boolean existName = this.genreRepository.existsByName(name);
+		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
+		if(existName && diferentNameCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
 }

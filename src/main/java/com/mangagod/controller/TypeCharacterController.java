@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.mangagod.dto.data.TypeCharacterDataDTO;
+
 import com.mangagod.dto.pagination.TypeCharacterAllPageableDataDTO;
 import com.mangagod.dto.request.TypeCharacterRequestDTO;
 import com.mangagod.dto.response.MainResponse;
+import com.mangagod.dto.response.TypeCharacterResponseDTO;
 import com.mangagod.service.TypeCharacterService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +48,7 @@ public class TypeCharacterController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{type_character_id}")
 	public ResponseEntity<MainResponse> getTypeCharacterById(@PathVariable (name = "type_character_id") int typeCharacterId){
-		TypeCharacterDataDTO dataDTO = this.typeCharacterService.getById(typeCharacterId);
+		TypeCharacterResponseDTO dataDTO = this.typeCharacterService.getById(typeCharacterId);
 		MainResponse mainResponse = new MainResponse(true, "Obteniendo tipo de personaje por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -56,7 +57,7 @@ public class TypeCharacterController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createTypeCharacter(@Valid @RequestBody TypeCharacterRequestDTO requestDTO){
-		TypeCharacterDataDTO dataDTO = this.typeCharacterService.create(requestDTO); 
+		TypeCharacterResponseDTO dataDTO = this.typeCharacterService.create(requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El tipo de personaje ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -66,7 +67,7 @@ public class TypeCharacterController {
 	@PutMapping("/{type_character_id}")
 	public ResponseEntity<MainResponse> updateTypeCharacter(@PathVariable (name = "type_character_id") int typeCharacterId, 
 													        @Valid @RequestBody TypeCharacterRequestDTO requestDTO ){
-		TypeCharacterDataDTO dataDTO = this.typeCharacterService.update(typeCharacterId, requestDTO); 
+		TypeCharacterResponseDTO dataDTO = this.typeCharacterService.update(typeCharacterId, requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El pais ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -75,7 +76,7 @@ public class TypeCharacterController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{type_character_id}")
 	public ResponseEntity<MainResponse> deleteTypeCharacter(@PathVariable (name = "type_character_id") int typeCharacterId){
-		TypeCharacterDataDTO dataDTO = this.typeCharacterService.delete(typeCharacterId);
+		TypeCharacterResponseDTO dataDTO = this.typeCharacterService.delete(typeCharacterId);
 		MainResponse mainResponse = new MainResponse(true, "El tipo de personaje ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}		

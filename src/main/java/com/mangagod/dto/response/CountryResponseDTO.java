@@ -1,11 +1,11 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.response;
 
-public class CategoryDataDTO {
+public class CountryResponseDTO {
 
 	private Integer id;
 	private String name;
 	
-	public CategoryDataDTO() {
+	public CountryResponseDTO() {
 		
 	}
 

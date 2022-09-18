@@ -12,11 +12,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.MangakaDataDTO;
-import com.mangagod.dto.data.StoriesJobsDataDTO;
+
 import com.mangagod.dto.pagination.MangakaAllPageableDataDTO;
 import com.mangagod.dto.request.MangakaRequestDTO;
 import com.mangagod.dto.request.StoryJobRequestDTO;
+import com.mangagod.dto.response.MangakaResponseDTO;
+import com.mangagod.dto.response.StoriesJobsResponseDTO;
 import com.mangagod.entity.JobEntity;
 import com.mangagod.entity.MangakaEntity;
 import com.mangagod.entity.StoryEntity;
@@ -58,7 +59,7 @@ public class MangakaServiceImpl implements MangakaService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<MangakaEntity> mangakasPageable = this.mangakaRepository.findAll(pageable);	
 		List<MangakaEntity> mangakasEntity = mangakasPageable.getContent();
-		List<MangakaDataDTO> mangakassDTO = mangakasEntity.stream().map((x) -> this.mangakaMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<MangakaResponseDTO> mangakassDTO = mangakasEntity.stream().map((x) -> this.mangakaMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		MangakaAllPageableDataDTO pageableDataDTO = new MangakaAllPageableDataDTO();
 		pageableDataDTO.setMangakas(mangakassDTO);
@@ -72,19 +73,19 @@ public class MangakaServiceImpl implements MangakaService {
 	}
 
 	@Override
-	public MangakaDataDTO getById(Integer id) {
+	public MangakaResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
 		MangakaEntity entity = this.getMangakaById(id);
-		MangakaDataDTO dataDTO = this.mangakaMapper.mapEntityToDataDTO(entity);
+		MangakaResponseDTO dataDTO = this.mangakaMapper.mapEntityToResponseDTO(entity);
 		
-		Set<StoriesJobsDataDTO> listStoriesJobsDataDTO = this.getListStoriesJobsDataDTO(entity.getStoriesMangakas());
+		Set<StoriesJobsResponseDTO> listStoriesJobsDataDTO = this.getListStoriesJobsDataDTO(entity.getStoriesMangakas());
 		dataDTO.setStoriesJobs(listStoriesJobsDataDTO);
 		
 		return dataDTO;
 	}
 
 	@Override
-	public MangakaDataDTO create(MangakaRequestDTO requestDTO) {
+	public MangakaResponseDTO create(MangakaRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		MangakaEntity mangakaEntity = this.mangakaMapper.mapRequestToEntity(requestDTO);
 		
@@ -112,12 +113,12 @@ public class MangakaServiceImpl implements MangakaService {
 		MangakaEntity mangakaCreated = this.mangakaRepository.save(mangakaEntity);
 		
 		// seteando response "storyCreated"	
-		MangakaDataDTO dataCreated = this.mangakaMapper.mapEntityToDataDTO(mangakaCreated);
+		MangakaResponseDTO dataCreated = this.mangakaMapper.mapEntityToResponseDTO(mangakaCreated);
 		
 		// seteando responte lista "stories_jobs"
-		Set<StoriesJobsDataDTO> listStoriesJobsDataDTO = new HashSet<>();
+		Set<StoriesJobsResponseDTO> listStoriesJobsDataDTO = new HashSet<>();
 		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
-			StoriesJobsDataDTO sjDataDTO = new StoriesJobsDataDTO();
+			StoriesJobsResponseDTO sjDataDTO = new StoriesJobsResponseDTO();
 			sjDataDTO.setStoryId(smEntity.getStory().getId());
 			sjDataDTO.setNameStory(smEntity.getStory().getTitle());
 			sjDataDTO.setJobId(smEntity.getJob().getId());
@@ -130,7 +131,7 @@ public class MangakaServiceImpl implements MangakaService {
 	}
 
 	@Override
-	public MangakaDataDTO update(Integer id, MangakaRequestDTO requestDTO) {
+	public MangakaResponseDTO update(Integer id, MangakaRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		
 		// eliminando relaciones anterioes con "stories"
@@ -168,12 +169,12 @@ public class MangakaServiceImpl implements MangakaService {
 		MangakaEntity mangakaUpdated = this.mangakaRepository.save(dataCurrent);
 		
 		// seteando response "storyCreated"	
-		MangakaDataDTO dataUpdated = this.mangakaMapper.mapEntityToDataDTO(mangakaUpdated);
+		MangakaResponseDTO dataUpdated = this.mangakaMapper.mapEntityToResponseDTO(mangakaUpdated);
 		
 		// seteando responte lista "stories_jobs"
-		Set<StoriesJobsDataDTO> listStoriesJobsDataDTO = new HashSet<>();
+		Set<StoriesJobsResponseDTO> listStoriesJobsDataDTO = new HashSet<>();
 		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
-			StoriesJobsDataDTO sjDataDTO = new StoriesJobsDataDTO();
+			StoriesJobsResponseDTO sjDataDTO = new StoriesJobsResponseDTO();
 			sjDataDTO.setStoryId(smEntity.getStory().getId());
 			sjDataDTO.setNameStory(smEntity.getStory().getTitle());
 			sjDataDTO.setJobId(smEntity.getJob().getId());
@@ -186,7 +187,7 @@ public class MangakaServiceImpl implements MangakaService {
 	}
 
 	@Override
-	public MangakaDataDTO delete(Integer id) {
+	public MangakaResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
 		
 		// eliminando relaciones con "stories_mangakas"
@@ -196,7 +197,7 @@ public class MangakaServiceImpl implements MangakaService {
 		// eliminando mangaka.
 		this.mangakaRepository.delete(entity);
 		// response
-		return this.mangakaMapper.mapEntityToDataDTO(entity);	
+		return this.mangakaMapper.mapEntityToResponseDTO(entity);	
 	}
 
 	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
@@ -230,11 +231,11 @@ public class MangakaServiceImpl implements MangakaService {
 		}
 	}
 
-	public Set<StoriesJobsDataDTO> getListStoriesJobsDataDTO(Set<StoryMangakaEntity> storiesMangakas){
-		Set<StoriesJobsDataDTO> storiesJobsDataDTOs = new HashSet<>();
+	public Set<StoriesJobsResponseDTO> getListStoriesJobsDataDTO(Set<StoryMangakaEntity> storiesMangakas){
+		Set<StoriesJobsResponseDTO> storiesJobsDataDTOs = new HashSet<>();
 		
 		for (StoryMangakaEntity smEntity : storiesMangakas) {
-			StoriesJobsDataDTO  mjDataDTO = new StoriesJobsDataDTO();
+			StoriesJobsResponseDTO  mjDataDTO = new StoriesJobsResponseDTO();
 			mjDataDTO.setStoryId(smEntity.getStory().getId());
 			mjDataDTO.setNameStory(smEntity.getStory().getTitle());
 			mjDataDTO.setJobId(smEntity.getJob().getId());

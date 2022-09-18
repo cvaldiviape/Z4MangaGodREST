@@ -2,22 +2,22 @@ package com.mangagod.dto.pagination;
 
 import java.util.List;
 
-import com.mangagod.dto.data.GenreDataDTO;
 import com.mangagod.dto.pagination.base.PageableDataDTOImpl;
+import com.mangagod.dto.response.GenreResponseDTO;
 
 public class GenreAllPageableDataDTO extends PageableDataDTOImpl {
 
-	private List<GenreDataDTO> genres;
+	private List<GenreResponseDTO> genres;
 	
 	public GenreAllPageableDataDTO() {
 		
 	}
 
-	public List<GenreDataDTO> getGenres() {
+	public List<GenreResponseDTO> getGenres() {
 		return genres;
 	}
 
-	public void setGenres(List<GenreDataDTO> genres) {
+	public void setGenres(List<GenreResponseDTO> genres) {
 		this.genres = genres;
 	}
 	

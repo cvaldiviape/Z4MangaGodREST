@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mangagod.dto.data.UserAuthDataDTO;
+import com.mangagod.dto.response.UserAuthResponseDTO;
 import com.mangagod.entity.UserEntity;
 
 @Component
@@ -14,9 +14,8 @@ public class AuthMapper {
 	private ModelMapper modelMapper;
 	
 	// ---------------------------------------------------------- modelMapper --------------------------------------------------------- //
-	public UserAuthDataDTO mapUserEntityToUserAuthDataDTO(UserEntity userEntity) {
-		UserAuthDataDTO userAuthDataDTO = this.modelMapper.map(userEntity, UserAuthDataDTO.class);
-		return userAuthDataDTO;
+	public UserAuthResponseDTO mapEntityToResponse(UserEntity entity) {
+		return this.modelMapper.map(entity, UserAuthResponseDTO.class);
 	}
 
 }

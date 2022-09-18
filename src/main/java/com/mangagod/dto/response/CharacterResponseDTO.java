@@ -1,15 +1,15 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.response;
 
-public class CharacterDataDTO {
+public class CharacterResponseDTO {
 
 	private Integer id;
 	private String name;
 	private String description;
 	private String urlImage;
-	private StoryDataDTO story;
-	private TypeCharacterDataDTO type;
+	private StoryResponseDTO story;
+	private TypeCharacterResponseDTO type;
 	
-	public CharacterDataDTO() {
+	public CharacterResponseDTO() {
 		
 	}
 
@@ -45,19 +45,19 @@ public class CharacterDataDTO {
 		this.urlImage = urlImage;
 	}
 
-	public StoryDataDTO getStory() {
+	public StoryResponseDTO getStory() {
 		return story;
 	}
 
-	public void setStory(StoryDataDTO story) {
+	public void setStory(StoryResponseDTO story) {
 		this.story = story;
 	}
 
-	public TypeCharacterDataDTO getType() {
+	public TypeCharacterResponseDTO getType() {
 		return type;
 	}
 
-	public void setType(TypeCharacterDataDTO type) {
+	public void setType(TypeCharacterResponseDTO type) {
 		this.type = type;
 	}
 	

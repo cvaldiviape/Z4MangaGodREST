@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.mangagod.dto.data.AuthDataDTO;
-import com.mangagod.dto.data.RoleDataDTO;
-import com.mangagod.dto.data.TokenDataDTO;
-import com.mangagod.dto.data.UserAuthDataDTO;
 import com.mangagod.dto.request.AuthRequestDTO;
 import com.mangagod.dto.request.TokenRequestDTO;
+import com.mangagod.dto.response.AuthResponseDTO;
+import com.mangagod.dto.response.RoleResponseDTO;
+import com.mangagod.dto.response.TokenResponseDTO;
+import com.mangagod.dto.response.UserAuthResponseDTO;
 import com.mangagod.entity.RoleEntity;
 import com.mangagod.entity.UserEntity;
 import com.mangagod.exception.MangaGodAppException;
@@ -40,31 +40,20 @@ public class AuthServiceImpl implements AuthService {
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public AuthDataDTO login(AuthRequestDTO authRequestDTO) {
+	public AuthResponseDTO login(AuthRequestDTO authRequestDTO) {
 		// TODO Auto-generated method stub
 		String usernameOrEmail = authRequestDTO.getUsernameOrEmail();
 		Integer roleId = authRequestDTO.getRoleId();
 
-		String token = this.jwtTokenProvider.getToken(authRequestDTO)
-				.orElseThrow(() -> new MangaGodAppException(HttpStatus.INTERNAL_SERVER_ERROR, "Bad credentials"));
-		UserEntity userEntity = this.userRepository.findByUsernameOrEmailAndRoleId(roleId, usernameOrEmail)
-				.orElseThrow(() -> new MangaGodAppException(HttpStatus.INTERNAL_SERVER_ERROR, "Bad credentials"));
-		RoleEntity roleEntity = this.roleRepository.findById(roleId)
-				.orElseThrow(() -> new ResourceNotFoundException("Role", "id", roleId));
+		String token = this.auth(authRequestDTO);
+		UserEntity userEntity = this.getUserIfExistWithRole(roleId, usernameOrEmail);
+		RoleEntity roleEntity = this.getRoleById(roleId);
 		
-		UserAuthDataDTO userAuthDataDTO = this.authMapper.mapUserEntityToUserAuthDataDTO(userEntity);
-		RoleDataDTO roleDataDTO = this.roleMapper.mapEntityToDataDTO(roleEntity);
-		TokenDataDTO tokenDataDTO = new TokenDataDTO();
-		tokenDataDTO.setTokenAccess(token);
-		tokenDataDTO.setTokenType(this.appSettingProperties.JWT_TYPE);
-		tokenDataDTO.setTokenExpiredIn(this.appSettingProperties.JWT_EXPIRATION_IN_MLS);
-
-		AuthDataDTO authDataDto = new AuthDataDTO();
-		authDataDto.setUser(userAuthDataDTO);
-		authDataDto.setRole(roleDataDTO);
-		authDataDto.setToken(tokenDataDTO);
+		UserAuthResponseDTO userAuthResponseDTO = this.authMapper.mapEntityToResponse(userEntity);
+		RoleResponseDTO roleResponseDTO = this.roleMapper.mapEntityToResponseDTO(roleEntity);
+		TokenResponseDTO tokenResponseDTO = new TokenResponseDTO(token, this.appSettingProperties.JWT_TYPE, this.appSettingProperties.JWT_EXPIRATION_IN_MLS);
 		
-		return authDataDto;
+		return new AuthResponseDTO(userAuthResponseDTO, roleResponseDTO, tokenResponseDTO);
 	}
 
 	@Override
@@ -73,5 +62,21 @@ public class AuthServiceImpl implements AuthService {
 				.orElseThrow(() -> new MangaGodAppException(HttpStatus.INTERNAL_SERVER_ERROR, "Bad credentials"));
 		return tokenRefreshed;
 	}
-
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
+	public RoleEntity getRoleById(Integer id) {
+		return this.roleRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Role", "id", id));
+	}
+	
+	public String auth(AuthRequestDTO authRequestDTO) {
+		return this.jwtTokenProvider.getToken(authRequestDTO)
+				.orElseThrow(() -> new MangaGodAppException(HttpStatus.INTERNAL_SERVER_ERROR, "Bad credentials"));
+	}
+	
+	public UserEntity getUserIfExistWithRole(Integer roleId, String usernameOrEmail) {
+		return this.userRepository.findByUsernameOrEmailAndRoleId(roleId, usernameOrEmail)
+				.orElseThrow(() -> new MangaGodAppException(HttpStatus.INTERNAL_SERVER_ERROR, "Bad credentials"));
+	}
+	
 }

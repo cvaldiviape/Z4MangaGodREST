@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.mangagod.dto.data.CategoryDataDTO;
+
 import com.mangagod.dto.pagination.CategoryAllPageableDataDTO;
 import com.mangagod.dto.request.CategoryRequestDTO;
+import com.mangagod.dto.response.CategoryResponseDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.CategoryService;
 import com.mangagod.util.AppConstants;
@@ -47,7 +48,7 @@ public class CategoryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{category_id}")
 	public ResponseEntity<MainResponse> getCategoryById(@PathVariable (name = "category_id") int categoryId){
-		CategoryDataDTO dataDTO = this.categoryService.getById(categoryId);
+		CategoryResponseDTO dataDTO = this.categoryService.getById(categoryId);
 		MainResponse mainResponse = new MainResponse(true, "Obteniendo categoria por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -56,7 +57,7 @@ public class CategoryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createCategory(@Valid @RequestBody CategoryRequestDTO requestDTO){
-		CategoryDataDTO dataDTO = this.categoryService.create(requestDTO); 
+		CategoryResponseDTO dataDTO = this.categoryService.create(requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "La categoria ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -66,7 +67,7 @@ public class CategoryController {
 	@PutMapping("/{category_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "category_id") int categoryId, 
 													  @Valid @RequestBody CategoryRequestDTO requestDTO ){
-		CategoryDataDTO dataDTO = this.categoryService.update(categoryId, requestDTO); 
+		CategoryResponseDTO dataDTO = this.categoryService.update(categoryId, requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "La categoria ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -75,7 +76,7 @@ public class CategoryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{category_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "category_id") int categoryId){
-		CategoryDataDTO dataDTO = this.categoryService.delete(categoryId);
+		CategoryResponseDTO dataDTO = this.categoryService.delete(categoryId);
 		MainResponse mainResponse = new MainResponse(true, "La categoria ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

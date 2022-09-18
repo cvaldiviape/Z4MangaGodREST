@@ -1,8 +1,8 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.response;
 
 import java.util.Set;
 
-public class StoryDataDTO {
+public class StoryResponseDTO {
 
 	private Integer Id;
 	private String title;
@@ -12,13 +12,13 @@ public class StoryDataDTO {
 	private String urlImage;
 	private Boolean adaptationAnime;
 	private Double price;
-	private CountryDataDTO country;
-	private DemographyDataDTO demography;
-	private CategoryDataDTO category;
-	private Set<GenreDataDTO> genres;
-	private Set<MangakasJobsDataDTO> mangakasJobs;
+	private CountryResponseDTO country;
+	private DemographyResponseDTO demography;
+	private CategoryResponseDTO category;
+	private Set<GenreResponseDTO> genres;
+	private Set<MangakasJobsResponseDTO> mangakasJobs;
 	
-    public StoryDataDTO() {
+    public StoryResponseDTO() {
     	
     }
     
@@ -86,43 +86,43 @@ public class StoryDataDTO {
 		this.price = price;
 	}
 	
-	public CountryDataDTO getCountry() {
+	public CountryResponseDTO getCountry() {
 		return country;
 	}
 	
-	public void setCountry(CountryDataDTO country) {
+	public void setCountry(CountryResponseDTO country) {
 		this.country = country;
 	}
 	
-	public DemographyDataDTO getDemography() {
+	public DemographyResponseDTO getDemography() {
 		return demography;
 	}
 	
-	public void setDemography(DemographyDataDTO demography) {
+	public void setDemography(DemographyResponseDTO demography) {
 		this.demography = demography;
 	}
 	
-	public CategoryDataDTO getCategory() {
+	public CategoryResponseDTO getCategory() {
 		return category;
 	}
 	
-	public void setCategory(CategoryDataDTO category) {
+	public void setCategory(CategoryResponseDTO category) {
 		this.category = category;
 	}
 	
-	public Set<GenreDataDTO> getGenres() {
+	public Set<GenreResponseDTO> getGenres() {
 		return genres;
 	}
 	
-	public void setGenres(Set<GenreDataDTO> genres) {
+	public void setGenres(Set<GenreResponseDTO> genres) {
 		this.genres = genres;
 	}
 
-	public Set<MangakasJobsDataDTO> getMangakasJobs() {
+	public Set<MangakasJobsResponseDTO> getMangakasJobs() {
 		return mangakasJobs;
 	}
 
-	public void setMangakasJobs(Set<MangakasJobsDataDTO> mangakasJobs) {
+	public void setMangakasJobs(Set<MangakasJobsResponseDTO> mangakasJobs) {
 		this.mangakasJobs = mangakasJobs;
 	}
 

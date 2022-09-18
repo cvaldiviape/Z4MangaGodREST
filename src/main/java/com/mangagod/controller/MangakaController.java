@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.mangagod.dto.data.MangakaDataDTO;
+
 import com.mangagod.dto.pagination.MangakaAllPageableDataDTO;
 import com.mangagod.dto.request.MangakaRequestDTO;
 import com.mangagod.dto.response.MainResponse;
+import com.mangagod.dto.response.MangakaResponseDTO;
 import com.mangagod.service.MangakaService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.Api;
@@ -49,7 +50,7 @@ public class MangakaController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{mangaka_id}")
 	public ResponseEntity<MainResponse> getMangakaById(@PathVariable (name = "mangaka_id") int mangakaId){
-		MangakaDataDTO dataDTO = this.mangakaService.getById(mangakaId);
+		MangakaResponseDTO dataDTO = this.mangakaService.getById(mangakaId);
 		MainResponse mainResponse = new MainResponse(true, "Obteniendo mangaka por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -58,7 +59,7 @@ public class MangakaController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createMangaka(@Valid @RequestBody MangakaRequestDTO requestDTO){
-		MangakaDataDTO dataDTO = this.mangakaService.create(requestDTO); 
+		MangakaResponseDTO dataDTO = this.mangakaService.create(requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El mangaka ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -68,7 +69,7 @@ public class MangakaController {
 	@PutMapping("/{mangaka_id}")
 	public ResponseEntity<MainResponse> updateMangaka(@PathVariable (name = "mangaka_id") int mangakaId, 
 			                                          @Valid @RequestBody MangakaRequestDTO requestDTO ){
-		MangakaDataDTO dataDTO = this.mangakaService.update(mangakaId, requestDTO); 
+		MangakaResponseDTO dataDTO = this.mangakaService.update(mangakaId, requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El mangaka ha sido actualizada exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -77,7 +78,7 @@ public class MangakaController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{mangaka_id}")
 	public ResponseEntity<MainResponse> deleteMangaka(@PathVariable (name = "mangaka_id") int mangakaId){
-		MangakaDataDTO dataDTO = this.mangakaService.delete(mangakaId);
+		MangakaResponseDTO dataDTO = this.mangakaService.delete(mangakaId);
 		MainResponse mainResponse = new MainResponse(true, "El mangaka ha sido eliminada exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

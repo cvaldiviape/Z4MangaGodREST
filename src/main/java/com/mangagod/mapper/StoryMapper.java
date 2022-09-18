@@ -4,8 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.mangagod.dto.data.StoryDataDTO;
+
 import com.mangagod.dto.request.StoryRequestDTO;
+import com.mangagod.dto.response.StoryResponseDTO;
 import com.mangagod.entity.StoryEntity;
 
 @Component
@@ -15,15 +16,13 @@ public class StoryMapper {
 	private ModelMapper modelMapper;
 	
 	// ---------------------------------------------------------- modelMapper --------------------------------------------------------- //
-	public StoryDataDTO mapEntityToDataDTO(StoryEntity entity) {
-		StoryDataDTO dataDTO = this.modelMapper.map(entity, StoryDataDTO.class);
-		return dataDTO;
+	public StoryResponseDTO mapEntityToResponseDTO(StoryEntity entity) {
+		return this.modelMapper.map(entity, StoryResponseDTO.class);
 	}
 	
 	public StoryEntity mapRequestToEntity(StoryRequestDTO requestDTO) {
 		this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		StoryEntity entity = this.modelMapper.map(requestDTO, StoryEntity.class);
-		return entity;
+		return this.modelMapper.map(requestDTO, StoryEntity.class);
 	}
 	
 }

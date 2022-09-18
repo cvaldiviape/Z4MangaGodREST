@@ -11,9 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mangagod.dto.data.CharacterDataDTO;
 import com.mangagod.dto.pagination.CharacterAllPageableDataDTO;
 import com.mangagod.dto.request.CharacterRequestDTO;
+import com.mangagod.dto.response.CharacterResponseDTO;
 import com.mangagod.entity.CharacterEntity;
 import com.mangagod.entity.StoryEntity;
 import com.mangagod.entity.TypeCharacterEntity;
@@ -50,7 +50,7 @@ public class CharacterServiceImpl implements CharacterService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<CharacterEntity> charactersPageable = this.characterRepository.findAll(pageable);	
 		List<CharacterEntity> charactersEntity = charactersPageable.getContent();
-		List<CharacterDataDTO> charactersDTO = charactersEntity.stream().map((x) -> this.characterMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<CharacterResponseDTO> charactersDTO = charactersEntity.stream().map((x) -> this.characterMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		CharacterAllPageableDataDTO pageableDataDTO = new CharacterAllPageableDataDTO();
 		pageableDataDTO.setCharacters(charactersDTO);
@@ -64,68 +64,83 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public CharacterDataDTO getById(Integer id) {
+	public CharacterResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		CharacterEntity entity = this.characterRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Personaje", "id", id));
-		CharacterDataDTO dataDTO = this.characterMapper.mapEntityToDataDTO(entity);
+		CharacterEntity entity =this.getCharacterById(id);
+		CharacterResponseDTO dataDTO = this.characterMapper.mapEntityToResponseDTO(entity);
 		return dataDTO;
 	}
 
 	@Override
-	public CharacterDataDTO create(CharacterRequestDTO requestDTO) {
+	public CharacterResponseDTO create(CharacterRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		StoryEntity storyEntity = this.storyRepository.findById(requestDTO.getStoryId())
-				.orElseThrow(() -> new ResourceNotFoundException("Historieta", "id", requestDTO.getStoryId()));
-		TypeCharacterEntity typeCharacterEntity = this.typeCharacterRepository.findById(requestDTO.getTypeId())
-				.orElseThrow(() -> new ResourceNotFoundException("Tipo de personaje", "id", requestDTO.getTypeId()));
+		StoryEntity storyEntity = this.getStoryById(requestDTO.getStoryId());
+		TypeCharacterEntity typeCharacterEntity = this.getTypeCharacterById(requestDTO.getTypeId());
 		
-		Boolean existName = this.characterRepository.existsByName(requestDTO.getName());
-		if(existName) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName());
 			
 		CharacterEntity entity = this.characterMapper.mapRequestToEntity(requestDTO);
 		entity.setStory(storyEntity);
 		entity.setType(typeCharacterEntity);
 		
-		CharacterDataDTO dataCreated = this.characterMapper.mapEntityToDataDTO(this.characterRepository.save(entity));			
-		return dataCreated;
+		return this.characterMapper.mapEntityToResponseDTO(this.characterRepository.save(entity));			
 	}
 
 	@Override
-	public CharacterDataDTO update(Integer id, CharacterRequestDTO requestDTO) {
+	public CharacterResponseDTO update(Integer id, CharacterRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		CharacterEntity dataCurrent = this.characterRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Personaje", "id", id));
-		StoryEntity storyEntity = this.storyRepository.findById(requestDTO.getStoryId())
-				.orElseThrow(() -> new ResourceNotFoundException("Historieta", "id", requestDTO.getStoryId()));
-		TypeCharacterEntity typeCharacterEntity = this.typeCharacterRepository.findById(requestDTO.getTypeId())
-				.orElseThrow(() -> new ResourceNotFoundException("Tipo de personaje", "id", requestDTO.getTypeId()));
+		CharacterEntity dataCurrent = this.getCharacterById(id);
+		StoryEntity storyEntity = this.getStoryById(requestDTO.getStoryId());
+		TypeCharacterEntity typeCharacterEntity = this.getTypeCharacterById(requestDTO.getTypeId());
 		
-		Boolean existsName = this.characterRepository.existsByName(requestDTO.getName());
-		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentNameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
+		
 		dataCurrent.setName(requestDTO.getName());
 		dataCurrent.setDescription(requestDTO.getDescription());
 		dataCurrent.setUrlImage(requestDTO.getUrlImage());
 		dataCurrent.setStory(storyEntity);
 		dataCurrent.setType(typeCharacterEntity);
 		
-		CharacterDataDTO dataUpdated = this.characterMapper.mapEntityToDataDTO(this.characterRepository.save(dataCurrent));	
-		return dataUpdated;
+		return this.characterMapper.mapEntityToResponseDTO(this.characterRepository.save(dataCurrent));	
 	}
 
 	@Override
-	public CharacterDataDTO delete(Integer id) {
+	public CharacterResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		CharacterEntity entity = this.characterRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Personaje", "id", id));
+		CharacterEntity entity = this.getCharacterById(id);
 		this.characterRepository.delete(entity);
-		CharacterDataDTO dataDeleted = this.characterMapper.mapEntityToDataDTO(entity);
-		return dataDeleted;
+		return this.characterMapper.mapEntityToResponseDTO(entity);
 	}
-
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public CharacterEntity getCharacterById(Integer id) {
+		return this.characterRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Personaje", "id", id));
+	}
+	
+	public TypeCharacterEntity getTypeCharacterById(Integer id) {
+		return this.typeCharacterRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Tipo de personaje", "id", id));
+	}
+	
+	public StoryEntity getStoryById(Integer id) {
+		return this.storyRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Historieta", "id", id));
+	}
+	
+	public void verifyNameUnique(String name) {
+		Boolean existName = this.characterRepository.existsByName(name);
+		if(existName) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
+	public void verifyNameUnique(String name, String nameCurrent) {
+		Boolean existName = this.characterRepository.existsByName(name);
+		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
+		if(existName && diferentNameCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
 }

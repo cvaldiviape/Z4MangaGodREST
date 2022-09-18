@@ -1,22 +1,23 @@
 package com.mangagod.dto.pagination;
 
 import java.util.List;
-import com.mangagod.dto.data.CharacterDataDTO;
+
 import com.mangagod.dto.pagination.base.PageableDataDTOImpl;
+import com.mangagod.dto.response.CharacterResponseDTO;
 
 public class CharacterAllPageableDataDTO extends PageableDataDTOImpl {
 
-	private List<CharacterDataDTO> characters;
+	private List<CharacterResponseDTO> characters;
 	
 	public CharacterAllPageableDataDTO() {
 		
 	}
 
-	public List<CharacterDataDTO> getCharacters() {
+	public List<CharacterResponseDTO> getCharacters() {
 		return characters;
 	}
 
-	public void setCharacters(List<CharacterDataDTO> characters) {
+	public void setCharacters(List<CharacterResponseDTO> characters) {
 		this.characters = characters;
 	}
 	

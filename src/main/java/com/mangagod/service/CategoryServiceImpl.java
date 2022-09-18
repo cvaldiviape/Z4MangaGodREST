@@ -10,9 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.CategoryDataDTO;
+
 import com.mangagod.dto.pagination.CategoryAllPageableDataDTO;
 import com.mangagod.dto.request.CategoryRequestDTO;
+import com.mangagod.dto.response.CategoryResponseDTO;
 import com.mangagod.entity.CategoryEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -41,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<CategoryEntity> categoriesPageable = this.categoryRepository.findAll(pageable);	
 		List<CategoryEntity> categoriesEntity = categoriesPageable.getContent();
-		List<CategoryDataDTO> categoriesDTO = categoriesEntity.stream().map((x) -> this.categoryMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<CategoryResponseDTO> categoriesDTO = categoriesEntity.stream().map((x) -> this.categoryMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		CategoryAllPageableDataDTO pageableDataDTO = new CategoryAllPageableDataDTO();
 		pageableDataDTO.setCategories(categoriesDTO);
@@ -55,51 +56,56 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryDataDTO getById(Integer id) {
+	public CategoryResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		CategoryEntity entity = this.categoryRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));
-		CategoryDataDTO dataDTO = this.categoryMapper.mapEntityToDataDTO(entity);
-		return dataDTO;
+		CategoryEntity entity = this.getCategoryById(id);
+		return this.categoryMapper.mapEntityToResponseDTO(entity);
 	}
 
 	@Override
-	public CategoryDataDTO create(CategoryRequestDTO requestDTO) {
+	public CategoryResponseDTO create(CategoryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		Boolean existNname = this.categoryRepository.existsByName(requestDTO.getName());
-		if(existNname) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName());
 		CategoryEntity entity = this.categoryMapper.mapRequestToEntity(requestDTO);
-		
-		CategoryDataDTO dataCreated = this.categoryMapper.mapEntityToDataDTO(this.categoryRepository.save(entity));			
-		return dataCreated;
+		return  this.categoryMapper.mapEntityToResponseDTO(this.categoryRepository.save(entity));			
 	}
 
 	@Override
-	public CategoryDataDTO update(Integer id, CategoryRequestDTO requestDTO) {
+	public CategoryResponseDTO update(Integer id, CategoryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		CategoryEntity dataCurrent = this.categoryRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));
-		Boolean existsName = this.categoryRepository.existsByName(requestDTO.getName());
-		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentNameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		CategoryEntity dataCurrent = this.getCategoryById(id);
+		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName());
-		
-		CategoryDataDTO dataUpdated = this.categoryMapper.mapEntityToDataDTO(this.categoryRepository.save(dataCurrent));	
-		return dataUpdated;
+		return this.categoryMapper.mapEntityToResponseDTO(this.categoryRepository.save(dataCurrent));	
 	}
 
 	@Override
-	public CategoryDataDTO delete(Integer id) {
+	public CategoryResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		CategoryEntity entity = this.categoryRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Category", "id", id));
+		CategoryEntity entity = this.getCategoryById(id);
 		this.categoryRepository.delete(entity);
-		CategoryDataDTO dataDeleted = this.categoryMapper.mapEntityToDataDTO(entity);
-		return dataDeleted;
+		return this.categoryMapper.mapEntityToResponseDTO(entity);
 	}
-
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public CategoryEntity getCategoryById(Integer id) {
+		return this.categoryRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));
+	}
+	
+	public void verifyNameUnique(String name) {
+		Boolean existName = this.categoryRepository.existsByName(name);
+		if(existName) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
+	public void verifyNameUnique(String name, String nameCurrent) {
+		Boolean existName = this.categoryRepository.existsByName(name);
+		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
+		if(existName && diferentNameCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
 }

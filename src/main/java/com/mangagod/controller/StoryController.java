@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.mangagod.dto.data.StoryDataDTO;
+
 import com.mangagod.dto.pagination.StoryAllPageableDataDTO;
 import com.mangagod.dto.request.StoryRequestDTO;
 import com.mangagod.dto.response.MainResponse;
+import com.mangagod.dto.response.StoryResponseDTO;
 import com.mangagod.service.StoryService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +49,7 @@ public class StoryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{story_id}")
 	public ResponseEntity<MainResponse> getStoryById(@PathVariable (name = "story_id") int storyId){
-		StoryDataDTO dataDTO = this.storyService.getById(storyId);
+		StoryResponseDTO dataDTO = this.storyService.getById(storyId);
 		MainResponse mainResponse = new MainResponse(true, "Obteniendo historieta por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -57,7 +58,7 @@ public class StoryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createStory(@Valid @RequestBody StoryRequestDTO requestDTO){
-		StoryDataDTO dataDTO = this.storyService.create(requestDTO); 
+		StoryResponseDTO dataDTO = this.storyService.create(requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "La historieta ha sido creada exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -67,7 +68,7 @@ public class StoryController {
 	@PutMapping("/{story_id}")
 	public ResponseEntity<MainResponse> updateStory(@PathVariable (name = "story_id") int storyId, 
 												    @Valid @RequestBody StoryRequestDTO requestDTO ){
-		StoryDataDTO dataDTO = this.storyService.update(storyId, requestDTO); 
+		StoryResponseDTO dataDTO = this.storyService.update(storyId, requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "La historieta ha sido actualizada exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -76,7 +77,7 @@ public class StoryController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{story_id}")
 	public ResponseEntity<MainResponse> deleteStory(@PathVariable (name = "story_id") int storyId){
-		StoryDataDTO dataDTO = this.storyService.delete(storyId);
+		StoryResponseDTO dataDTO = this.storyService.delete(storyId);
 		MainResponse mainResponse = new MainResponse(true, "La historieta ha sido eliminada exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

@@ -42,8 +42,8 @@ public class StoryRequestDTO {
 	@NotNull(message = "El campo 'genreIds' es obligatorio.")
 	@NotEmpty(message = "El campo 'genreIds' debe contene al menos 1 elemento.")
 	private Set<Integer> genreIds;
-	@NotNull(message = "El campo 'mangakaJobIds' no debe ser nulo.")
-	@NotEmpty(message = "El campo 'mangakaJobIds' debe contene al menos 1 elemento.")
+//	@NotNull(message = "El campo 'mangakaJobIds' no debe ser nulo.")
+//	@NotEmpty(message = "El campo 'mangakaJobIds' debe contene al menos 1 elemento.")
 	private Set<MangakaJobRequestDTO> mangakaJobIds;
 	
     public StoryRequestDTO() {

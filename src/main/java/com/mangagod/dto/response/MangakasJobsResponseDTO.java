@@ -1,13 +1,13 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.response;
 
-public class MangakasJobsDataDTO {
+public class MangakasJobsResponseDTO {
 
 	private Integer mangakaId;
 	private String nameMangaka;
 	private Integer jobId;
 	private String nameJob;
 	
-	public MangakasJobsDataDTO() {
+	public MangakasJobsResponseDTO() {
 		
 	}
 

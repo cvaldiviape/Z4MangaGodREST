@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.data.UserDataDTO;
 import com.mangagod.dto.pagination.UserAllPageableDataDTO;
 import com.mangagod.dto.request.UserCreateRequestDTO;
 import com.mangagod.dto.request.UserUpdateRequestDTO;
 import com.mangagod.dto.response.MainResponse;
+import com.mangagod.dto.response.UserResponseDTO;
 import com.mangagod.service.UserService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -49,7 +49,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{user_id}")
 	public ResponseEntity<MainResponse> getUserById(@PathVariable (name = "user_id") int userId){
-		UserDataDTO dataDTO = this.userService.getById(userId);
+		UserResponseDTO dataDTO = this.userService.getById(userId);
 		MainResponse mainResponse = new MainResponse(true, "Obteniendo usuario por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -58,7 +58,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createUser(@Valid @RequestBody UserCreateRequestDTO requestDTO){
-		UserDataDTO dataDTO = this.userService.create(requestDTO); 
+		UserResponseDTO dataDTO = this.userService.create(requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}
@@ -68,7 +68,7 @@ public class UserController {
 	@PutMapping("/{user_id}")
 	public ResponseEntity<MainResponse> updateUser(@PathVariable (name = "user_id") int userId, 
 			                                       @Valid @RequestBody UserUpdateRequestDTO requestDTO ){
-		UserDataDTO dataDTO = this.userService.update(userId, requestDTO); 
+		UserResponseDTO dataDTO = this.userService.update(userId, requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}
@@ -77,7 +77,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{user_id}")
 	public ResponseEntity<MainResponse> deleteUser(@PathVariable (name = "user_id") int userId){
-		UserDataDTO dataDTO = this.userService.delete(userId);
+		UserResponseDTO dataDTO = this.userService.delete(userId);
 		MainResponse mainResponse = new MainResponse(true, "El usuario ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);	
 	}

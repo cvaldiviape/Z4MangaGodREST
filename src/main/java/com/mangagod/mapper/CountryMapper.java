@@ -4,8 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.mangagod.dto.data.CountryDataDTO;
 import com.mangagod.dto.request.CountryRequestDTO;
+import com.mangagod.dto.response.CountryResponseDTO;
 import com.mangagod.entity.CountryEntity;
 
 @Component
@@ -15,14 +15,12 @@ public class CountryMapper {
 	private ModelMapper modelMapper;
 	
 	// ---------------------------------------------------------- modelMapper --------------------------------------------------------- //
-	public CountryDataDTO mapEntityToDataDTO(CountryEntity entity) {
-		CountryDataDTO dataDTO = this.modelMapper.map(entity, CountryDataDTO.class);
-		return dataDTO;
+	public CountryResponseDTO mapEntityToResponseDTO(CountryEntity entity) {
+		return this.modelMapper.map(entity, CountryResponseDTO.class);
 	}
 	
 	public CountryEntity mapRequestToEntity(CountryRequestDTO requestDTO) {
-		CountryEntity entity = this.modelMapper.map(requestDTO, CountryEntity.class);
-		return entity;
+		return this.modelMapper.map(requestDTO, CountryEntity.class);
 	}
 		
 }

@@ -3,7 +3,6 @@ package com.mangagod.dto.request;
 import java.time.LocalDate;
 import java.util.Set;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
@@ -28,8 +27,8 @@ public class MangakaRequestDTO {
 	@Past
 	@DateTimeFormat(pattern = "dd/MM/yyyy") // not working, REV
 	private LocalDate birthDate;
-	@NotNull(message = "El campo 'storyJobIds' no debe ser nulo.")
-	@NotEmpty(message = "El campo 'storyJobIds' debe contene al menos 1 elemento.")
+//	@NotNull(message = "El campo 'storyJobIds' no debe ser nulo.")
+//	@NotEmpty(message = "El campo 'storyJobIds' debe contene al menos 1 elemento.")
 	private Set<StoryJobRequestDTO> storyJobIds;
 	
 	public MangakaRequestDTO() {

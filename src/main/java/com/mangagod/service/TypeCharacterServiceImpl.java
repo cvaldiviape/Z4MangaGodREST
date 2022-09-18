@@ -10,9 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.TypeCharacterDataDTO;
+
 import com.mangagod.dto.pagination.TypeCharacterAllPageableDataDTO;
 import com.mangagod.dto.request.TypeCharacterRequestDTO;
+import com.mangagod.dto.response.TypeCharacterResponseDTO;
 import com.mangagod.entity.TypeCharacterEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -41,7 +42,7 @@ public class TypeCharacterServiceImpl implements TypeCharacterService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<TypeCharacterEntity> typeCharactersPageable = this.typeCharacterRepository.findAll(pageable);	
 		List<TypeCharacterEntity> typeCharactersEntity = typeCharactersPageable.getContent();
-		List<TypeCharacterDataDTO> typeCharacteresDTO = typeCharactersEntity.stream().map((x) -> this.typeCharacterMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<TypeCharacterResponseDTO> typeCharacteresDTO = typeCharactersEntity.stream().map((x) -> this.typeCharacterMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		TypeCharacterAllPageableDataDTO pageableDataDTO = new TypeCharacterAllPageableDataDTO();
 		pageableDataDTO.setTypeCharacters(typeCharacteresDTO);
@@ -55,51 +56,60 @@ public class TypeCharacterServiceImpl implements TypeCharacterService {
 	}
 
 	@Override
-	public TypeCharacterDataDTO getById(Integer id) {
+	public TypeCharacterResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		TypeCharacterEntity entity = this.typeCharacterRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Tipo de personaje", "id", id));
-		TypeCharacterDataDTO dataDTO = this.typeCharacterMapper.mapEntityToDataDTO(entity);
+		TypeCharacterEntity entity = this.getTypeCharacterById(id);
+		TypeCharacterResponseDTO dataDTO = this.typeCharacterMapper.mapEntityToResponseDTO(entity);
 		return dataDTO;
 	}
 
 	@Override
-	public TypeCharacterDataDTO create(TypeCharacterRequestDTO requestDTO) {
+	public TypeCharacterResponseDTO create(TypeCharacterRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		Boolean existNname = this.typeCharacterRepository.existsByName(requestDTO.getName());
-		if(existNname) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName());
 		TypeCharacterEntity entity = this.typeCharacterMapper.mapRequestToEntity(requestDTO);
-		
-		TypeCharacterDataDTO dataCreated = this.typeCharacterMapper.mapEntityToDataDTO(this.typeCharacterRepository.save(entity));			
+		TypeCharacterResponseDTO dataCreated = this.typeCharacterMapper.mapEntityToResponseDTO(this.typeCharacterRepository.save(entity));			
 		return dataCreated;
 	}
 
 	@Override
-	public TypeCharacterDataDTO update(Integer id, TypeCharacterRequestDTO requestDTO) {
+	public TypeCharacterResponseDTO update(Integer id, TypeCharacterRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		TypeCharacterEntity dataCurrent = this.typeCharacterRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Tipo de personaje", "id", id));
-		Boolean existsName = this.typeCharacterRepository.existsByName(requestDTO.getName());
-		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentNameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		TypeCharacterEntity dataCurrent = this.getTypeCharacterById(id);
+		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName().trim());
-		
-		TypeCharacterDataDTO dataUpdated = this.typeCharacterMapper.mapEntityToDataDTO(this.typeCharacterRepository.save(dataCurrent));	
+		TypeCharacterResponseDTO dataUpdated = this.typeCharacterMapper.mapEntityToResponseDTO(this.typeCharacterRepository.save(dataCurrent));	
 		return dataUpdated;
 	}
 
 	@Override
-	public TypeCharacterDataDTO delete(Integer id) {
+	public TypeCharacterResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		TypeCharacterEntity entity = this.typeCharacterRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Tipo de personaje", "id", id));
+		TypeCharacterEntity entity = this.getTypeCharacterById(id);
 		this.typeCharacterRepository.delete(entity);
-		TypeCharacterDataDTO dataDeleted = this.typeCharacterMapper.mapEntityToDataDTO(entity);
+		TypeCharacterResponseDTO dataDeleted = this.typeCharacterMapper.mapEntityToResponseDTO(entity);
 		return dataDeleted;
 	}
-
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public TypeCharacterEntity getTypeCharacterById(Integer id) {
+		return this.typeCharacterRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Tipo de personaje", "id", id));
+	}
+	
+	public void verifyNameUnique(String name) {
+		Boolean existName = this.typeCharacterRepository.existsByName(name);
+		if(existName) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
+	public void verifyNameUnique(String name, String nameCurrent) {
+		Boolean existName = this.typeCharacterRepository.existsByName(name);
+		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
+		if(existName && diferentNameCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+		
 }

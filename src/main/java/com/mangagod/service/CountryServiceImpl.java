@@ -10,9 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.CountryDataDTO;
+
 import com.mangagod.dto.pagination.CountryAllPageableDataDTO;
 import com.mangagod.dto.request.CountryRequestDTO;
+import com.mangagod.dto.response.CountryResponseDTO;
 import com.mangagod.entity.CountryEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -41,7 +42,7 @@ public class CountryServiceImpl implements CountryService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<CountryEntity> countriesPageable = this.countryRepository.findAll(pageable);	
 		List<CountryEntity> countriesEntity = countriesPageable.getContent();
-		List<CountryDataDTO> countriesDTO = countriesEntity.stream().map((x) -> this.countryMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<CountryResponseDTO> countriesDTO = countriesEntity.stream().map((x) -> this.countryMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		CountryAllPageableDataDTO pageableDataDTO = new CountryAllPageableDataDTO();
 		pageableDataDTO.setCountries(countriesDTO);
@@ -55,51 +56,59 @@ public class CountryServiceImpl implements CountryService {
 	}
 	
 	@Override
-	public CountryDataDTO getById(Integer id) {
+	public CountryResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		CountryEntity entity = this.countryRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
-		CountryDataDTO dataDTO = this.countryMapper.mapEntityToDataDTO(entity);
-		return dataDTO;
+		CountryEntity entity = this.getCountryById(id);
+		return this.countryMapper.mapEntityToResponseDTO(entity);
 	}
 
 	@Override
-	public CountryDataDTO create(CountryRequestDTO requestDTO) {
+	public CountryResponseDTO create(CountryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		Boolean existNname = this.countryRepository.existsByName(requestDTO.getName());
-		if(existNname) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName());
 		CountryEntity entity = this.countryMapper.mapRequestToEntity(requestDTO);
-		
-		CountryDataDTO dataCreated = this.countryMapper.mapEntityToDataDTO(this.countryRepository.save(entity));			
-		return dataCreated;
+		return this.countryMapper.mapEntityToResponseDTO(this.countryRepository.save(entity));			
 	}
 
 	@Override
-	public CountryDataDTO update(Integer id, CountryRequestDTO requestDTO) {
+	public CountryResponseDTO update(Integer id, CountryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		CountryEntity dataCurrent = this.countryRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
-		Boolean existsName = this.countryRepository.existsByName(requestDTO.getName());
-		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentNameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		CountryEntity dataCurrent = this.getCountryById(id);
+		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName());
 		
-		CountryDataDTO dataUpdated = this.countryMapper.mapEntityToDataDTO(this.countryRepository.save(dataCurrent));	
-		return dataUpdated;
+		return this.countryMapper.mapEntityToResponseDTO(this.countryRepository.save(dataCurrent));	
 	}
 
 	@Override
-	public CountryDataDTO delete(Integer id) {
+	public CountryResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		CountryEntity entity = this.countryRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
+		CountryEntity entity =this.getCountryById(id);
 		this.countryRepository.delete(entity);
-		CountryDataDTO dataDeleted = this.countryMapper.mapEntityToDataDTO(entity);
-		return dataDeleted;
+		return this.countryMapper.mapEntityToResponseDTO(entity);
+	}
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public CountryEntity getCountryById(Integer id) {
+		return this.countryRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
+	}
+		
+	
+	public void verifyNameUnique(String name) {
+		Boolean existName = this.countryRepository.existsByName(name);
+		if(existName) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
+	
+	public void verifyNameUnique(String name, String nameCurrent) {
+		Boolean existName = this.countryRepository.existsByName(name);
+		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
+		if(existName && diferentNameCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
 	}
 	
 }

@@ -1,19 +1,19 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.response;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 import com.mangagod.util.enums.Sex;
 
-public class MangakaDataDTO {
+public class MangakaResponseDTO {
 
 	private Integer id;
 	private String name;
 	private Sex sex;
 	private LocalDate birthDate;
-	private Set<StoriesJobsDataDTO> storiesJobs;
+	private Set<StoriesJobsResponseDTO> storiesJobs;
 	
-	public MangakaDataDTO() {
+	public MangakaResponseDTO() {
 		
 	}
 
@@ -49,11 +49,11 @@ public class MangakaDataDTO {
 		this.birthDate = birthDate;
 	}
 
-	public Set<StoriesJobsDataDTO> getStoriesJobs() {
+	public Set<StoriesJobsResponseDTO> getStoriesJobs() {
 		return storiesJobs;
 	}
 
-	public void setStoriesJobs(Set<StoriesJobsDataDTO> storiesJobs) {
+	public void setStoriesJobs(Set<StoriesJobsResponseDTO> storiesJobs) {
 		this.storiesJobs = storiesJobs;
 	}
 		

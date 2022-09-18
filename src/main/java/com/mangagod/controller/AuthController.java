@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.data.AuthDataDTO;
 import com.mangagod.dto.request.AuthRequestDTO;
 import com.mangagod.dto.request.TokenRequestDTO;
+import com.mangagod.dto.response.AuthResponseDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.AuthService;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +29,7 @@ public class AuthController {
 	@ApiOperation("Esta operación se encarga de la autenticación del usuario.")
 	@PostMapping("/login")
 	public ResponseEntity<MainResponse> login(@Valid @RequestBody AuthRequestDTO authRequestDTO){
-		AuthDataDTO authDataDTO = this.authService.login(authRequestDTO);
+		AuthResponseDTO authDataDTO = this.authService.login(authRequestDTO);
 		MainResponse mainResponse = new MainResponse(true, "El usuario se ha autenticado exitosamente!", authDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

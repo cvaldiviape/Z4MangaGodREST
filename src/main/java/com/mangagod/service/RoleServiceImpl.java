@@ -10,9 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.RoleDataDTO;
+
 import com.mangagod.dto.pagination.RoleAllPageableDataDTO;
 import com.mangagod.dto.request.RoleRequestDTO;
+import com.mangagod.dto.response.RoleResponseDTO;
 import com.mangagod.entity.RoleEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -41,7 +42,7 @@ public class RoleServiceImpl implements RoleService{
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<RoleEntity> rolesPageable = this.roleRepository.findAll(pageable);
 		List<RoleEntity> rolesEntity = rolesPageable.getContent();
-		List<RoleDataDTO> rolesDto = rolesEntity.stream().map((x) -> this.roleMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<RoleResponseDTO> rolesDto = rolesEntity.stream().map((x) -> this.roleMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		RoleAllPageableDataDTO pageableDataDTO = new RoleAllPageableDataDTO();
 		pageableDataDTO.setRoles(rolesDto);
@@ -55,56 +56,63 @@ public class RoleServiceImpl implements RoleService{
 	}
 
 	@Override
-	public RoleDataDTO getById(Integer id) {
+	public RoleResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		RoleEntity entity = this.roleRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Rol", "id", id));
-		RoleDataDTO dataDTO = this.roleMapper.mapEntityToDataDTO(entity);
+		RoleEntity entity = this.getRoleById(id);
+		RoleResponseDTO dataDTO = this.roleMapper.mapEntityToResponseDTO(entity);
 		return dataDTO;
 	}
 
 	@Override
-	public RoleDataDTO create(RoleRequestDTO requestDTO) {
+	public RoleResponseDTO create(RoleRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		requestDTO.setName("ROLE_" + requestDTO.getName().toUpperCase());
-		
-		Boolean existsName = this.roleRepository.existsByName(requestDTO.getName());
-		if(existsName) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName());
 		RoleEntity entity = this.roleMapper.mapRequestToEntity(requestDTO);
-		
-		RoleDataDTO dataCreated = this.roleMapper.mapEntityToDataDTO(this.roleRepository.save(entity));			
+		RoleResponseDTO dataCreated = this.roleMapper.mapEntityToResponseDTO(this.roleRepository.save(entity));			
 		return dataCreated;
 	}
 
 	@Override
-	public RoleDataDTO update(Integer id, RoleRequestDTO requestDTO) {
+	public RoleResponseDTO update(Integer id, RoleRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		requestDTO.setName("ROLE_" + requestDTO.getName().toUpperCase());
-		
-		RoleEntity dataCurrent = this.roleRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Rol", "id", id));
-		Boolean existsName = this.roleRepository.existsByName(requestDTO.getName());
-		Boolean diferentNnameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsName && diferentNnameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		RoleEntity dataCurrent = this.getRoleById(id);
+		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName());
 		dataCurrent.setDescription(requestDTO.getDescription());
-		
-		RoleDataDTO dataUpdated = this.roleMapper.mapEntityToDataDTO(this.roleRepository.save(dataCurrent));	
+		RoleResponseDTO dataUpdated = this.roleMapper.mapEntityToResponseDTO(this.roleRepository.save(dataCurrent));	
 		return dataUpdated;
 	}
 
 	@Override
-	public RoleDataDTO delete(Integer id) {
+	public RoleResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		RoleEntity entity = this.roleRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Rol", "id", id));
+		RoleEntity entity = this.getRoleById(id);
 		this.roleRepository.delete(entity);
-		RoleDataDTO dataDeleted = this.roleMapper.mapEntityToDataDTO(entity);
+		RoleResponseDTO dataDeleted = this.roleMapper.mapEntityToResponseDTO(entity);
 		return dataDeleted;
+	}
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public RoleEntity getRoleById(Integer id) {
+		return this.roleRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Rol", "id", id));
+	}
+	
+	public void verifyNameUnique(String name) {
+		Boolean existName = this.roleRepository.existsByName(name);
+		if(existName) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
+	public void verifyNameUnique(String name, String nameCurrent) {
+		Boolean existName = this.roleRepository.existsByName(name);
+		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
+		if(existName && diferentNameCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
 	}
 
 }

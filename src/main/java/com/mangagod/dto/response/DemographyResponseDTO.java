@@ -1,11 +1,11 @@
-package com.mangagod.dto.data;
+package com.mangagod.dto.response;
 
-public class TypeCharacterDataDTO {
+public class DemographyResponseDTO {
 
 	private Integer id;
 	private String name;
 	
-	public TypeCharacterDataDTO() {
+	public DemographyResponseDTO() {
 		
 	}
 

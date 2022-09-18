@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.mangagod.dto.data.CharacterDataDTO;
+
 import com.mangagod.dto.pagination.CharacterAllPageableDataDTO;
 import com.mangagod.dto.request.CharacterRequestDTO;
+import com.mangagod.dto.response.CharacterResponseDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.CharacterService;
 import com.mangagod.util.AppConstants;
@@ -47,7 +48,7 @@ public class CharacterController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{character_id}")
 	public ResponseEntity<MainResponse> getCharacterById(@PathVariable (name = "character_id") int characterId){
-		CharacterDataDTO dataDTO = this.characterService.getById(characterId);
+		CharacterResponseDTO dataDTO = this.characterService.getById(characterId);
 		MainResponse mainResponse = new MainResponse(true, "Obteniendo personaje por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -56,7 +57,7 @@ public class CharacterController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createCharacter(@Valid @RequestBody CharacterRequestDTO requestDTO){
-		CharacterDataDTO dataDTO = this.characterService.create(requestDTO); 
+		CharacterResponseDTO dataDTO = this.characterService.create(requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El personaje ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -66,7 +67,7 @@ public class CharacterController {
 	@PutMapping("/{character_id}")
 	public ResponseEntity<MainResponse> updateCountry(@PathVariable (name = "character_id") int characterId, 
 													  @Valid @RequestBody CharacterRequestDTO requestDTO ){
-		CharacterDataDTO dataDTO = this.characterService.update(characterId, requestDTO); 
+		CharacterResponseDTO dataDTO = this.characterService.update(characterId, requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "El personaje ha sido actualizado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -75,7 +76,7 @@ public class CharacterController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{character_id}")
 	public ResponseEntity<MainResponse> deleteCountry(@PathVariable (name = "character_id") int characterId){
-		CharacterDataDTO dataDTO = this.characterService.delete(characterId);
+		CharacterResponseDTO dataDTO = this.characterService.delete(characterId);
 		MainResponse mainResponse = new MainResponse(true, "El personaje ha sido eliminado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

@@ -12,11 +12,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.MangakasJobsDataDTO;
-import com.mangagod.dto.data.StoryDataDTO;
+
 import com.mangagod.dto.pagination.StoryAllPageableDataDTO;
 import com.mangagod.dto.request.MangakaJobRequestDTO;
 import com.mangagod.dto.request.StoryRequestDTO;
+import com.mangagod.dto.response.MangakasJobsResponseDTO;
+import com.mangagod.dto.response.StoryResponseDTO;
 import com.mangagod.entity.CategoryEntity;
 import com.mangagod.entity.CountryEntity;
 import com.mangagod.entity.DemographyEntity;
@@ -72,7 +73,7 @@ public class StoryServiceImpl implements StoryService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<StoryEntity> storiesPageable = this.storyRepository.findAll(pageable);
 		List<StoryEntity> storiesEntity = storiesPageable.getContent();
-		List<StoryDataDTO> storiesDTO = storiesEntity.stream().map((x) -> this.storyMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<StoryResponseDTO> storiesDTO = storiesEntity.stream().map((x) -> this.storyMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		StoryAllPageableDataDTO pageableDataDTO = new StoryAllPageableDataDTO();
 		pageableDataDTO.setStories(storiesDTO);
@@ -86,19 +87,19 @@ public class StoryServiceImpl implements StoryService {
 	}
 
 	@Override
-	public StoryDataDTO getById(Integer id) {
+	public StoryResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
 		StoryEntity entity = this.getStoryById(id);
-		StoryDataDTO dataDTO = this.storyMapper.mapEntityToDataDTO(entity);
+		StoryResponseDTO dataDTO = this.storyMapper.mapEntityToResponseDTO(entity);
 		
-		Set<MangakasJobsDataDTO> listMangakasJobsDataDTO = this.getListMangakasJobsDataDTO(entity.getStoriesMangakas());
+		Set<MangakasJobsResponseDTO> listMangakasJobsDataDTO = this.getListMangakasJobsDataDTO(entity.getStoriesMangakas());
 		dataDTO.setMangakasJobs(listMangakasJobsDataDTO);
 		
 		return dataDTO;
 	}
 
 	@Override
-	public StoryDataDTO create(StoryRequestDTO requestDTO) {
+	public StoryResponseDTO create(StoryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
 		StoryEntity storyEntity = this.storyMapper.mapRequestToEntity(requestDTO);
 		
@@ -134,12 +135,12 @@ public class StoryServiceImpl implements StoryService {
 		StoryEntity storyCreated = this.storyRepository.save(storyEntity);
 		
 		// seteando response "storyCreated"	
-		StoryDataDTO dataCreated = this.storyMapper.mapEntityToDataDTO(storyCreated);
+		StoryResponseDTO dataCreated = this.storyMapper.mapEntityToResponseDTO(storyCreated);
 		
 		// seteando responte lista "mangakas_jobs"
-		Set<MangakasJobsDataDTO> mangakasJobsDataDTO = new HashSet<>();
+		Set<MangakasJobsResponseDTO> mangakasJobsDataDTO = new HashSet<>();
 		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
-			MangakasJobsDataDTO mjDataDTO = new MangakasJobsDataDTO();
+			MangakasJobsResponseDTO mjDataDTO = new MangakasJobsResponseDTO();
 			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
 			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
 			mjDataDTO.setJobId(smEntity.getJob().getId());
@@ -152,7 +153,7 @@ public class StoryServiceImpl implements StoryService {
 	}
 
 	@Override
-	public StoryDataDTO update(Integer id, StoryRequestDTO requestDTO) {	
+	public StoryResponseDTO update(Integer id, StoryRequestDTO requestDTO) {	
 		// TODO Auto-generated method stub
 		
 		// eliminando relaciones anterioes con "mangakas"
@@ -204,12 +205,12 @@ public class StoryServiceImpl implements StoryService {
 		StoryEntity storyUpdated = this.storyRepository.save(dataCurrent);	
 		
 		// response "storyUpdate"	
-		StoryDataDTO dataUpdated = this.storyMapper.mapEntityToDataDTO(storyUpdated);
+		StoryResponseDTO dataUpdated = this.storyMapper.mapEntityToResponseDTO(storyUpdated);
 		
 		// seteando responte lista "mangakas_jobs".
-		Set<MangakasJobsDataDTO> listMangakasJobsDataDTO = new HashSet<>();
+		Set<MangakasJobsResponseDTO> listMangakasJobsDataDTO = new HashSet<>();
 		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
-			MangakasJobsDataDTO mjDataDTO = new MangakasJobsDataDTO();
+			MangakasJobsResponseDTO mjDataDTO = new MangakasJobsResponseDTO();
 			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
 			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
 			mjDataDTO.setJobId(smEntity.getJob().getId());
@@ -222,7 +223,7 @@ public class StoryServiceImpl implements StoryService {
 	}
 	
 	@Override
-	public StoryDataDTO delete(Integer id) {
+	public StoryResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
 		
 		// eliminando relaciones con "stories_mangakas"
@@ -232,7 +233,7 @@ public class StoryServiceImpl implements StoryService {
 		// eliminando "story"
 		this.storyRepository.delete(entity);
 		// response
-		return this.storyMapper.mapEntityToDataDTO(entity);
+		return this.storyMapper.mapEntityToResponseDTO(entity);
 	}
 
 	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
@@ -291,11 +292,11 @@ public class StoryServiceImpl implements StoryService {
 		}
 	}
 	
-	public Set<MangakasJobsDataDTO> getListMangakasJobsDataDTO(Set<StoryMangakaEntity> storiesMangakas){
-		Set<MangakasJobsDataDTO> mangakasJobsDataDTOs = new HashSet<>();
+	public Set<MangakasJobsResponseDTO> getListMangakasJobsDataDTO(Set<StoryMangakaEntity> storiesMangakas){
+		Set<MangakasJobsResponseDTO> mangakasJobsDataDTOs = new HashSet<>();
 		
 		for (StoryMangakaEntity smEntity : storiesMangakas) {
-			MangakasJobsDataDTO  mjDataDTO = new MangakasJobsDataDTO();
+			MangakasJobsResponseDTO  mjDataDTO = new MangakasJobsResponseDTO();
 			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
 			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
 			mjDataDTO.setJobId(smEntity.getJob().getId());

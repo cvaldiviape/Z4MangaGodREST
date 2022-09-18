@@ -10,9 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.data.JobDataDTO;
+
 import com.mangagod.dto.pagination.JobAllPageableDataDTO;
 import com.mangagod.dto.request.JobRequestDTO;
+import com.mangagod.dto.response.JobResponseDTO;
 import com.mangagod.entity.JobEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -43,7 +44,7 @@ public class JobServiceImpl implements JobService {
 		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
 		Page<JobEntity> jobsPageable = this.jobRepository.findAll(pageable);	
 		List<JobEntity> jobsEntity = jobsPageable.getContent();
-		List<JobDataDTO> jobsDTO = jobsEntity.stream().map((x) -> this.jobMapper.mapEntityToDataDTO(x)).collect(Collectors.toList());	
+		List<JobResponseDTO> jobsDTO = jobsEntity.stream().map((x) -> this.jobMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
 		JobAllPageableDataDTO pageableDataDTO = new JobAllPageableDataDTO();
 		pageableDataDTO.setGenres(jobsDTO);
@@ -57,51 +58,56 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public JobDataDTO getById(Integer id) {
+	public JobResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		JobEntity entity = this.jobRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Ocupación", "id", id));
-		JobDataDTO dataDTO = this.jobMapper.mapEntityToDataDTO(entity);
-		return dataDTO;
+		JobEntity entity = this.getJobById(id);
+		return this.jobMapper.mapEntityToResponseDTO(entity);
 	}
 
 	@Override
-	public JobDataDTO create(JobRequestDTO requestDTO) {
+	public JobResponseDTO create(JobRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		Boolean existNname = this.jobRepository.existsByName(requestDTO.getName());
-		if(existNname) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		this.verifyNameUnique(requestDTO.getName());
 		JobEntity entity = this.jobMapper.mapRequestToEntity(requestDTO);
-		
-		JobDataDTO dataCreated = this.jobMapper.mapEntityToDataDTO(this.jobRepository.save(entity));			
-		return dataCreated;
+		return this.jobMapper.mapEntityToResponseDTO(this.jobRepository.save(entity));			
 	}
 
 	@Override
-	public JobDataDTO update(Integer id, JobRequestDTO requestDTO) {
+	public JobResponseDTO update(Integer id, JobRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
-		JobEntity dataCurrent = this.jobRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Ocupación", "id", id));
-		Boolean existsNname = this.jobRepository.existsByName(requestDTO.getName());
-		Boolean diferentNameCurrent = (!requestDTO.getName().equalsIgnoreCase(dataCurrent.getName()));
-		if(existsNname && diferentNameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El nombre " + requestDTO.getName() + " ya existe.");
-		}
+		JobEntity dataCurrent = this.getJobById(id);
+		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName());
-		
-		JobDataDTO dataUpdated = this.jobMapper.mapEntityToDataDTO(this.jobRepository.save(dataCurrent));	
-		return dataUpdated;
+		return this.jobMapper.mapEntityToResponseDTO(this.jobRepository.save(dataCurrent));	
 	}
 
 	@Override
-	public JobDataDTO delete(Integer id) {
+	public JobResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		JobEntity entity = this.jobRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Ocupación", "id", id));
+		JobEntity entity = this.getJobById(id);
 		this.jobRepository.delete(entity);
-		JobDataDTO dataDeleted = this.jobMapper.mapEntityToDataDTO(entity);
-		return dataDeleted;
+		return this.jobMapper.mapEntityToResponseDTO(entity);
 	}
-
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	public JobEntity getJobById(Integer id) {
+		return this.jobRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));
+	}
+	
+	public void verifyNameUnique(String name) {
+		Boolean existName = this.jobRepository.existsByName(name);
+		if(existName) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
+	public void verifyNameUnique(String name, String nameCurrent) {
+		Boolean existName = this.jobRepository.existsByName(name);
+		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
+		if(existName && diferentNameCurrent) {
+			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
+		}
+	}
+	
 }

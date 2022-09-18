@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.mangagod.dto.data.JobDataDTO;
+
 import com.mangagod.dto.pagination.JobAllPageableDataDTO;
 import com.mangagod.dto.request.JobRequestDTO;
+import com.mangagod.dto.response.JobResponseDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.service.JobService;
 import com.mangagod.util.AppConstants;
@@ -47,7 +48,7 @@ public class JobController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@GetMapping("/{job_id}")
 	public ResponseEntity<MainResponse> getJobById(@PathVariable (name = "job_id") int jobId){
-		JobDataDTO dataDTO = this.jobService.getById(jobId);
+		JobResponseDTO dataDTO = this.jobService.getById(jobId);
 		MainResponse mainResponse = new MainResponse(true, "Obteniendo ocupación por ID.", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -56,7 +57,7 @@ public class JobController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@PostMapping
 	public ResponseEntity<MainResponse> createJob(@Valid @RequestBody JobRequestDTO requestDTO){
-		JobDataDTO dataDTO = this.jobService.create(requestDTO); 
+		JobResponseDTO dataDTO = this.jobService.create(requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "La ocupación ha sido creado exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -66,7 +67,7 @@ public class JobController {
 	@PutMapping("/{job_id}")
 	public ResponseEntity<MainResponse> updateJob(@PathVariable (name = "job_id") int jobId, 
 			                                      @Valid @RequestBody JobRequestDTO requestDTO ){
-		JobDataDTO dataDTO = this.jobService.update(jobId, requestDTO); 
+		JobResponseDTO dataDTO = this.jobService.update(jobId, requestDTO); 
 		MainResponse mainResponse = new MainResponse(true, "La ocupación ha sido actualizada exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
@@ -75,7 +76,7 @@ public class JobController {
 	@PreAuthorize("hasRole('ADMIN')") 
 	@DeleteMapping("/{job_id}")
 	public ResponseEntity<MainResponse> deleteJob(@PathVariable (name = "job_id") int jobId){
-		JobDataDTO dataDTO = this.jobService.delete(jobId);
+		JobResponseDTO dataDTO = this.jobService.delete(jobId);
 		MainResponse mainResponse = new MainResponse(true, "La ocupación ha sido eliminada exitosamente!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
