@@ -32,7 +32,7 @@ public class StoryEntity extends BaseEntity {
 	@Column(name = "title", nullable = false, unique = true)
 	private String title;
 	@Column(name = "year", nullable = false)
-	private String year;
+	private Short year;
 	@Column(name = "synopsis", nullable = false)
 	private String synopsis;
 	@Column(name = "state", nullable = false)

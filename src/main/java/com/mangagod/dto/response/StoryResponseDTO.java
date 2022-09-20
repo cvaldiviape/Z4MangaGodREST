@@ -16,7 +16,7 @@ public class StoryResponseDTO {
 
 	private Integer Id;
 	private String title;
-	private String year;
+	private Short year;
 	private String synopsis;
 	private Boolean state;
 	private String urlImage;

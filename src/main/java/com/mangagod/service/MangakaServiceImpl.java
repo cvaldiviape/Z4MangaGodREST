@@ -55,9 +55,9 @@ public class MangakaServiceImpl implements MangakaService {
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<MangakaEntity> mangakasPageable = this.mangakaRepository.findAll(pageable);	
 		List<MangakaEntity> mangakasEntity = mangakasPageable.getContent();
-		List<MangakaViewResponseDTO> mangakassDTO = mangakasEntity.stream().map((x) -> this.mangakaMapper.mapEntityToViewResponseDTO(x)).collect(Collectors.toList());		
+		List<MangakaViewResponseDTO> mangakasDTO = mangakasEntity.stream().map((x) -> this.mangakaMapper.mapEntityToViewResponseDTO(x)).collect(Collectors.toList());		
 		return MangakasPageResponseDTO.builder()
-				.mangakas(mangakassDTO)
+				.mangakas(mangakasDTO)
 				.numberPage(mangakasPageable.getNumber())
 				.sizePage(mangakasPageable.getSize())
 				.totalElements(mangakasPageable.getTotalElements())

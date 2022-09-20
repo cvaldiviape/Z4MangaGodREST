@@ -1,6 +1,8 @@
 package com.mangagod.dto.request;
 
 import java.util.Set;
+
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -26,8 +28,9 @@ public class StoryRequestDTO {
 	@Pattern(regexp= "^[a-zA-ZÀ-ÿ0-9¿?,.!¡:\\-\\#$\\(\\)]+(\\s?[a-zA-ZÀ-ÿ0-9¿?,.!¡:\\-\\#$\\(\\)]+?)+$", message = "El campo 'title' no admite caracteres extraños.")
 	private String title;
 	@NotNull(message = "El campo 'year' no debe ser nulo.")
-	@NotBlank(message = "El campo 'year' es obligatorio.")
-	private String year;
+	@Min(value = 1900, message = "Año mínimo aceptado es 1900.")
+	@Max(value = 2050, message = "Año máximo aceptado es 2050.")
+	private Short year;
 	@NotNull(message = "El campo 'synopsis' no debe ser nulo.")
 	@NotBlank(message = "El campo 'synopsis' es obligatorio.")
 	@Pattern(regexp= "^[a-zA-ZÀ-ÿ0-9¿?,.!¡:\\-\\#$\\(\\)]+(\\s?[a-zA-ZÀ-ÿ0-9¿?,.!¡:\\-\\#$\\(\\)]+?)+$", message = "El campo 'synopsis' no admite caracteres extraños.")
