@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.pagination.RoleAllPageableDataDTO;
 import com.mangagod.dto.request.RoleRequestDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.dto.response.RoleResponseDTO;
+import com.mangagod.dto.response.page.RolesPageResponseDTO;
 import com.mangagod.service.RoleService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class RoleController {
       											    @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
       											    @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
       											    @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
-		RoleAllPageableDataDTO roleAllPageableDataDTO = this.roleService.getAll(numberPage, sizePage, sortBy, sortDir);
+		RolesPageResponseDTO roleAllPageableDataDTO = this.roleService.getAll(numberPage, sizePage, sortBy, sortDir);
 		MainResponse mainResponse = new MainResponse(true, "Lista de roles.", roleAllPageableDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

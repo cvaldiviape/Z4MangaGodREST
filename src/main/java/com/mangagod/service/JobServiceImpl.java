@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.JobAllPageableDataDTO;
+
 import com.mangagod.dto.request.JobRequestDTO;
 import com.mangagod.dto.response.JobResponseDTO;
+import com.mangagod.dto.response.page.JobsPageResponseDTO;
 import com.mangagod.entity.JobEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -32,13 +33,13 @@ public class JobServiceImpl implements JobService {
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public JobAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public JobsPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<JobEntity> jobsPageable = this.jobRepository.findAll(pageable);	
 		List<JobEntity> jobsEntity = jobsPageable.getContent();
 		List<JobResponseDTO> jobsDTO = jobsEntity.stream().map((x) -> this.jobMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		return JobAllPageableDataDTO.builder()
+		return JobsPageResponseDTO.builder()
 				.jobs(jobsDTO)
 				.numberPage(jobsPageable.getNumber())
 				.sizePage(jobsPageable.getSize())

@@ -1,4 +1,4 @@
-package com.mangagod.dto.pagination.base;
+package com.mangagod.dto.response.page.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class PageableDataDTOImpl implements PageableDataDTO {
+public class PageBase {
 	
 	private Integer numberPage;
 	private Integer sizePage;

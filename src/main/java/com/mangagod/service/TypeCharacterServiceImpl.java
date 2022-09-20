@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.TypeCharacterAllPageableDataDTO;
+
 import com.mangagod.dto.request.TypeCharacterRequestDTO;
 import com.mangagod.dto.response.TypeCharacterResponseDTO;
+import com.mangagod.dto.response.page.TypeCharactersPageResponseDTO;
 import com.mangagod.entity.TypeCharacterEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -32,14 +33,14 @@ public class TypeCharacterServiceImpl implements TypeCharacterService {
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public TypeCharacterAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public TypeCharactersPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<TypeCharacterEntity> typeCharactersPageable = this.typeCharacterRepository.findAll(pageable);	
 		List<TypeCharacterEntity> typeCharactersEntity = typeCharactersPageable.getContent();
 		List<TypeCharacterResponseDTO> typeCharacteresDTO = typeCharactersEntity.stream().map((x) -> this.typeCharacterMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 			
-		return TypeCharacterAllPageableDataDTO.builder()
+		return TypeCharactersPageResponseDTO.builder()
 				.typeCharacters(typeCharacteresDTO)
 				.numberPage(typeCharactersPageable.getNumber())
 				.sizePage(typeCharactersPageable.getSize())

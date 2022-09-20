@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.DemographyAllPageableDataDTO;
+
 import com.mangagod.dto.request.DemographyRequestDTO;
 import com.mangagod.dto.response.DemographyResponseDTO;
+import com.mangagod.dto.response.page.DemographiesPageResponseDTO;
 import com.mangagod.entity.DemographyEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -32,13 +33,13 @@ public class DemographyServiceImpl implements DemographyService{
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public DemographyAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public DemographiesPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<DemographyEntity> demographiesPageable = this.demographyRepository.findAll(pageable);	
 		List<DemographyEntity> demographiesEntity = demographiesPageable.getContent();
 		List<DemographyResponseDTO> demographiesDTO = demographiesEntity.stream().map((x) -> this.demographyMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		return DemographyAllPageableDataDTO.builder()
+		return DemographiesPageResponseDTO.builder()
 				.demogrhapies(demographiesDTO)
 				.numberPage(demographiesPageable.getNumber())
 				.sizePage(demographiesPageable.getSize())

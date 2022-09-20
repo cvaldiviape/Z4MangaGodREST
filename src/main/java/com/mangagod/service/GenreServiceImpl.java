@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.GenreAllPageableDataDTO;
+
 import com.mangagod.dto.request.GenreRequestDTO;
 import com.mangagod.dto.response.GenreResponseDTO;
+import com.mangagod.dto.response.page.GenresPageResponseDTO;
 import com.mangagod.entity.GenreEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -32,13 +33,13 @@ public class GenreServiceImpl implements GenreService{
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public GenreAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public GenresPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<GenreEntity> genresPageable = this.genreRepository.findAll(pageable);	
 		List<GenreEntity> genresEntity = genresPageable.getContent();
 		List<GenreResponseDTO> genresDTO = genresEntity.stream().map((x) -> this.genreMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		return GenreAllPageableDataDTO.builder()
+		return GenresPageResponseDTO.builder()
 				.genres(genresDTO)
 				.numberPage(genresPageable.getNumber())
 				.sizePage(genresPageable.getSize())

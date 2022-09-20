@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.pagination.GenreAllPageableDataDTO;
 import com.mangagod.dto.request.GenreRequestDTO;
 import com.mangagod.dto.response.GenreResponseDTO;
 import com.mangagod.dto.response.MainResponse;
+import com.mangagod.dto.response.page.GenresPageResponseDTO;
 import com.mangagod.service.GenreService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +40,7 @@ public class GenreController {
 	      											 @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
 	      											 @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
 	      											 @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
-		GenreAllPageableDataDTO genreAllPageableDataDTO = this.genreService.getAll(numberPage, sizePage, sortBy, sortDir);
+		GenresPageResponseDTO genreAllPageableDataDTO = this.genreService.getAll(numberPage, sizePage, sortBy, sortDir);
 		MainResponse mainResponse = new MainResponse(true, "Lista de géneros.", genreAllPageableDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

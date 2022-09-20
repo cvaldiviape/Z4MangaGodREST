@@ -9,11 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.MangakaAllPageableDataDTO;
+
 import com.mangagod.dto.request.MangakaRequestDTO;
 import com.mangagod.dto.request.StoryJobRequestDTO;
 import com.mangagod.dto.response.MangakaResponseDTO;
 import com.mangagod.dto.response.StoriesJobsResponseDTO;
+import com.mangagod.dto.response.page.MangakasPageResponseDTO;
+import com.mangagod.dto.response.view.MangakaViewResponseDTO;
 import com.mangagod.entity.JobEntity;
 import com.mangagod.entity.MangakaEntity;
 import com.mangagod.entity.StoryEntity;
@@ -48,13 +50,13 @@ public class MangakaServiceImpl implements MangakaService {
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public MangakaAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public MangakasPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<MangakaEntity> mangakasPageable = this.mangakaRepository.findAll(pageable);	
 		List<MangakaEntity> mangakasEntity = mangakasPageable.getContent();
-		List<MangakaResponseDTO> mangakassDTO = mangakasEntity.stream().map((x) -> this.mangakaMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());		
-		return MangakaAllPageableDataDTO.builder()
+		List<MangakaViewResponseDTO> mangakassDTO = mangakasEntity.stream().map((x) -> this.mangakaMapper.mapEntityToViewResponseDTO(x)).collect(Collectors.toList());		
+		return MangakasPageResponseDTO.builder()
 				.mangakas(mangakassDTO)
 				.numberPage(mangakasPageable.getNumber())
 				.sizePage(mangakasPageable.getSize())

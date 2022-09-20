@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.RoleAllPageableDataDTO;
+
 import com.mangagod.dto.request.RoleRequestDTO;
 import com.mangagod.dto.response.RoleResponseDTO;
+import com.mangagod.dto.response.page.RolesPageResponseDTO;
 import com.mangagod.entity.RoleEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -32,14 +33,14 @@ public class RoleServiceImpl implements RoleService{
 
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public RoleAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public RolesPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<RoleEntity> rolesPageable = this.roleRepository.findAll(pageable);
 		List<RoleEntity> rolesEntity = rolesPageable.getContent();
 		List<RoleResponseDTO> rolesDto = rolesEntity.stream().map((x) -> this.roleMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
-		return RoleAllPageableDataDTO.builder()
+		return RolesPageResponseDTO.builder()
 				.roles(rolesDto)
 				.numberPage(rolesPageable.getNumber())
 				.sizePage(rolesPageable.getSize())

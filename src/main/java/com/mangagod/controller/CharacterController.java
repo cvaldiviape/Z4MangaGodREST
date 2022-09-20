@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.pagination.CharacterAllPageableDataDTO;
 import com.mangagod.dto.request.CharacterRequestDTO;
 import com.mangagod.dto.response.CharacterResponseDTO;
 import com.mangagod.dto.response.MainResponse;
+import com.mangagod.dto.response.page.CharactersPageResponseDTO;
 import com.mangagod.service.CharacterService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class CharacterController {
 	      											     @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
 	      											     @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
 	      											     @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
-		CharacterAllPageableDataDTO characterAllPageableDataDTO = this.characterService.getAll(numberPage, sizePage, sortBy, sortDir);
+		CharactersPageResponseDTO characterAllPageableDataDTO = this.characterService.getAll(numberPage, sizePage, sortBy, sortDir);
 		MainResponse mainResponse = new MainResponse(true, "Lista de personajes.", characterAllPageableDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

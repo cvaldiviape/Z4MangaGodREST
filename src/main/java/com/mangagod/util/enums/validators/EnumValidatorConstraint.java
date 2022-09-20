@@ -1,4 +1,4 @@
-package com.mangagod.util.validators;
+package com.mangagod.util.enums.validators;
 
 import java.util.Set;
 import java.util.stream.Collectors;

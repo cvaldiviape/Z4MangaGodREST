@@ -1,4 +1,4 @@
-package com.mangagod.util.validators;
+package com.mangagod.util.enums.validators;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

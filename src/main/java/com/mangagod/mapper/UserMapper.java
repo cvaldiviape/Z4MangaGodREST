@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.mangagod.dto.request.UserCreateRequestDTO;
 import com.mangagod.dto.response.UserResponseDTO;
+import com.mangagod.dto.response.view.UserViewResponseDTO;
 import com.mangagod.entity.UserEntity;
 
 @Component
@@ -17,6 +18,10 @@ public class UserMapper {
 	// ---------------------------------------------------------- modelMapper --------------------------------------------------------- //
 	public UserResponseDTO mapEntityToResponseDTO(UserEntity userEntity) {
 		return this.modelMapper.map(userEntity, UserResponseDTO.class);
+	}
+	
+	public UserViewResponseDTO mapEntityToViewResponseDTO(UserEntity userEntity) {
+		return this.modelMapper.map(userEntity, UserViewResponseDTO.class);
 	}
 	
 	public UserEntity mapRequestToEntity(UserCreateRequestDTO requestDTO) {

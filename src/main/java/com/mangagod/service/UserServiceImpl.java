@@ -11,10 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.UserAllPageableDataDTO;
+
 import com.mangagod.dto.request.UserCreateRequestDTO;
 import com.mangagod.dto.request.UserUpdateRequestDTO;
 import com.mangagod.dto.response.UserResponseDTO;
+import com.mangagod.dto.response.page.UsersPageResponseDTO;
+import com.mangagod.dto.response.view.UserViewResponseDTO;
 import com.mangagod.entity.RoleEntity;
 import com.mangagod.entity.UserEntity;
 import com.mangagod.exception.MangaGodAppException;
@@ -42,14 +44,14 @@ public class UserServiceImpl implements UserService {
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public UserAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public UsersPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<UserEntity> usersPageable = this.userRepository.findAll(pageable);
 		List<UserEntity> usersEntity = usersPageable.getContent();
-		List<UserResponseDTO> usersDto = usersEntity.stream().map((x) -> this.userMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
+		List<UserViewResponseDTO> usersDto = usersEntity.stream().map((x) -> this.userMapper.mapEntityToViewResponseDTO(x)).collect(Collectors.toList());	
 		
-		return UserAllPageableDataDTO.builder()
+		return UsersPageResponseDTO.builder()
 				.users(usersDto)
 				.numberPage(usersPageable.getNumber())
 				.sizePage(usersPageable.getSize())

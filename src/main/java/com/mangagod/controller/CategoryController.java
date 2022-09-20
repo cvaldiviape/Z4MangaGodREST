@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.pagination.CategoryAllPageableDataDTO;
 import com.mangagod.dto.request.CategoryRequestDTO;
 import com.mangagod.dto.response.CategoryResponseDTO;
 import com.mangagod.dto.response.MainResponse;
+import com.mangagod.dto.response.page.CategoriesPageResponseDTO;
 import com.mangagod.service.CategoryService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class CategoryController {
 	      											     @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
 	      											     @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
 	      											     @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
-		CategoryAllPageableDataDTO countryAllPageableDataDTO = this.categoryService.getAll(numberPage, sizePage, sortBy, sortDir);
+		CategoriesPageResponseDTO countryAllPageableDataDTO = this.categoryService.getAll(numberPage, sizePage, sortBy, sortDir);
 		MainResponse mainResponse = new MainResponse(true, "Lista de categorias.", countryAllPageableDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

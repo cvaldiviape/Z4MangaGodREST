@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.CharacterAllPageableDataDTO;
+
 import com.mangagod.dto.request.CharacterRequestDTO;
 import com.mangagod.dto.response.CharacterResponseDTO;
+import com.mangagod.dto.response.page.CharactersPageResponseDTO;
 import com.mangagod.entity.CharacterEntity;
 import com.mangagod.entity.StoryEntity;
 import com.mangagod.entity.TypeCharacterEntity;
@@ -40,13 +41,13 @@ public class CharacterServiceImpl implements CharacterService {
 		
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public CharacterAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public CharactersPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<CharacterEntity> charactersPageable = this.characterRepository.findAll(pageable);	
 		List<CharacterEntity> charactersEntity = charactersPageable.getContent();
 		List<CharacterResponseDTO> charactersDTO = charactersEntity.stream().map((x) -> this.characterMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		return CharacterAllPageableDataDTO.builder()
+		return CharactersPageResponseDTO.builder()
 				.characters(charactersDTO)
 				.numberPage(charactersPageable.getNumber())
 				.sizePage(charactersPageable.getSize())

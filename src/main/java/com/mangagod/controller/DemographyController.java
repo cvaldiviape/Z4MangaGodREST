@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.pagination.DemographyAllPageableDataDTO;
 import com.mangagod.dto.request.DemographyRequestDTO;
 import com.mangagod.dto.response.DemographyResponseDTO;
 import com.mangagod.dto.response.MainResponse;
+import com.mangagod.dto.response.page.DemographiesPageResponseDTO;
 import com.mangagod.service.DemographyService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class DemographyController {
 	      											       @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
 	      											       @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
 	      											       @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
-		DemographyAllPageableDataDTO demographyAllPageableDataDTO = this.demographyService.getAll(numberPage, sizePage, sortBy, sortDir);
+		DemographiesPageResponseDTO demographyAllPageableDataDTO = this.demographyService.getAll(numberPage, sizePage, sortBy, sortDir);
 		MainResponse mainResponse = new MainResponse(true, "Lista de datos demograficos.", demographyAllPageableDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

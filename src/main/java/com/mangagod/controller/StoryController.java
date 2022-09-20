@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.pagination.StoryAllPageableDataDTO;
 import com.mangagod.dto.request.StoryRequestDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.dto.response.StoryResponseDTO;
+import com.mangagod.dto.response.page.StoriesPageResponseDTO;
 import com.mangagod.service.StoryService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +40,7 @@ public class StoryController {
 	      											  @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
 	      											  @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
 	      											  @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
-		StoryAllPageableDataDTO storyAllPageableDataDTO = this.storyService.getAll(numberPage, sizePage, sortBy, sortDir);
+		StoriesPageResponseDTO storyAllPageableDataDTO = this.storyService.getAll(numberPage, sizePage, sortBy, sortDir);
 		MainResponse mainResponse = new MainResponse(true, "Lista de historietas.", storyAllPageableDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

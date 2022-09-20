@@ -1,4 +1,4 @@
-package com.mangagod.util.validators;
+package com.mangagod.util.enums.validators;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -9,8 +9,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.mangagod.util.enums.Sex;
-//import com.mangagod.util.validators.EnumNamePattern;
-import com.mangagod.util.validators.EnumValidator;
+import com.mangagod.util.enums.validators.EnumValidator;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

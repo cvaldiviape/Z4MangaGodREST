@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mangagod.dto.pagination.MangakaAllPageableDataDTO;
 import com.mangagod.dto.request.MangakaRequestDTO;
 import com.mangagod.dto.response.MainResponse;
 import com.mangagod.dto.response.MangakaResponseDTO;
+import com.mangagod.dto.response.page.MangakasPageResponseDTO;
 import com.mangagod.service.MangakaService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.Api;
@@ -41,7 +41,7 @@ public class MangakaController {
 	      											   @RequestParam(value = "sizePage", defaultValue = AppConstants.SIZE_PAGE_DEFAULT, required = false) int sizePage,
 	      											   @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_DEFAULT, required = false) String sortBy,
 	      											   @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR_DEFAULT, required = false) String sortDir){
-		MangakaAllPageableDataDTO genreAllPageableDataDTO = this.mangakaService.getAll(numberPage, sizePage, sortBy, sortDir);
+		MangakasPageResponseDTO genreAllPageableDataDTO = this.mangakaService.getAll(numberPage, sizePage, sortBy, sortDir);
 		MainResponse mainResponse = new MainResponse(true, "Lista de mangakas.", genreAllPageableDataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}

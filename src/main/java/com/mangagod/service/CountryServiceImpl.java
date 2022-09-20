@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.CountryAllPageableDataDTO;
+
 import com.mangagod.dto.request.CountryRequestDTO;
 import com.mangagod.dto.response.CountryResponseDTO;
+import com.mangagod.dto.response.page.CountriesPageResponseDTO;
 import com.mangagod.entity.CountryEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -32,13 +33,13 @@ public class CountryServiceImpl implements CountryService {
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public CountryAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public CountriesPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<CountryEntity> countriesPageable = this.countryRepository.findAll(pageable);	
 		List<CountryEntity> countriesEntity = countriesPageable.getContent();
 		List<CountryResponseDTO> countriesDTO = countriesEntity.stream().map((x) -> this.countryMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		return CountryAllPageableDataDTO.builder()
+		return CountriesPageResponseDTO.builder()
 				.countries(countriesDTO)
 				.numberPage(countriesPageable.getNumber())
 				.sizePage(countriesPageable.getSize())

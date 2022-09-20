@@ -8,9 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.mangagod.dto.pagination.CategoryAllPageableDataDTO;
+
 import com.mangagod.dto.request.CategoryRequestDTO;
 import com.mangagod.dto.response.CategoryResponseDTO;
+import com.mangagod.dto.response.page.CategoriesPageResponseDTO;
 import com.mangagod.entity.CategoryEntity;
 import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
@@ -32,13 +33,13 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
-	public CategoryAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
+	public CategoriesPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
 		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<CategoryEntity> categoriesPageable = this.categoryRepository.findAll(pageable);	
 		List<CategoryEntity> categoriesEntity = categoriesPageable.getContent();
 		List<CategoryResponseDTO> categoriesDTO = categoriesEntity.stream().map((x) -> this.categoryMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		return CategoryAllPageableDataDTO.builder()
+		return CategoriesPageResponseDTO.builder()
 				.categories(categoriesDTO)
 				.numberPage(categoriesPageable.getNumber())
 				.sizePage(categoriesPageable.getSize())
