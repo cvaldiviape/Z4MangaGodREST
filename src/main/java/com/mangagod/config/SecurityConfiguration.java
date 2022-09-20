@@ -19,11 +19,11 @@ import com.mangagod.security.JwtAuthenticationEntryPoint;
 import com.mangagod.security.JwtAuthenticationFilter;
 
 @SuppressWarnings("deprecation")
-@Configuration // se encarga de registrar BEANs
-@EnableWebSecurity // se emplea para crear una clase de configuracion personalizada
+@Configuration // se encarga de registrar BEANs.
+@EnableWebSecurity // se emplea para crear una clase de configuracion personalizada.
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "WebSecurityConfigurerAdapter" contiene funciones que hashean 
-																          // las contraseñas, pero en este caso vamos a sobreescribirlas
+																          // las contraseñas, pero en este caso vamos a sobreescribirlas.
 	
 	@Autowired
     @Qualifier("delegatedAuthenticationEntryPoint")
@@ -37,8 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 			.cors()
 			.and()
 			.csrf()
-			.disable() // desabilitamos por que spring ya cuenta con uno propio
-			//.requestMatchers()
+			.disable() // desabilitamos por que spring ya cuenta con uno propio.
 			.authorizeRequests()
 			.antMatchers(
 					//HttpMethod.POST,
@@ -46,7 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 					//,"/user/**", "/role/**"
 			)
 			.permitAll()
-			//.and()
 			.antMatchers(
 					"/v2/api-docs/**",
 					"/swagger-ui/**",
