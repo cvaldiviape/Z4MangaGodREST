@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.pagination.CountryAllPageableDataDTO;
 import com.mangagod.dto.request.CountryRequestDTO;
 import com.mangagod.dto.response.CountryResponseDTO;
@@ -19,6 +16,7 @@ import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.CountryMapper;
 import com.mangagod.repository.CountryRepository;
+import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
@@ -29,30 +27,25 @@ public class CountryServiceImpl implements CountryService {
 	private CountryRepository countryRepository;
 	@Autowired
 	private CountryMapper countryMapper;
+	@Autowired
+	private AppHelpers appHelpers;
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
 	public CountryAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
-		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
-				? Sort.by(sortBy).ascending() 
-				: Sort.by(sortBy).descending();
-	
-		// agregando paginación
-		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
+		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<CountryEntity> countriesPageable = this.countryRepository.findAll(pageable);	
 		List<CountryEntity> countriesEntity = countriesPageable.getContent();
 		List<CountryResponseDTO> countriesDTO = countriesEntity.stream().map((x) -> this.countryMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		
-		CountryAllPageableDataDTO pageableDataDTO = new CountryAllPageableDataDTO();
-		pageableDataDTO.setCountries(countriesDTO);
-		pageableDataDTO.setNumberPage(countriesPageable.getNumber());
-		pageableDataDTO.setSizePage(countriesPageable.getSize());
-		pageableDataDTO.setTotalElements(countriesPageable.getTotalElements());
-		pageableDataDTO.setTotalPages(countriesPageable.getTotalPages());
-		pageableDataDTO.setIsLastPage(countriesPageable.isLast());
-		
-		return pageableDataDTO;
+		return CountryAllPageableDataDTO.builder()
+				.countries(countriesDTO)
+				.numberPage(countriesPageable.getNumber())
+				.sizePage(countriesPageable.getSize())
+				.totalElements(countriesPageable.getTotalElements())
+				.totalPages(countriesPageable.getTotalPages())
+				.isLastPage(countriesPageable.isLast())
+				.build();
 	}
 	
 	@Override
@@ -76,7 +69,6 @@ public class CountryServiceImpl implements CountryService {
 		CountryEntity dataCurrent = this.getCountryById(id);
 		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName());
-		
 		return this.countryMapper.mapEntityToResponseDTO(this.countryRepository.save(dataCurrent));	
 	}
 
@@ -88,7 +80,7 @@ public class CountryServiceImpl implements CountryService {
 		return this.countryMapper.mapEntityToResponseDTO(entity);
 	}
 	
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public CountryEntity getCountryById(Integer id) {
 		return this.countryRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));

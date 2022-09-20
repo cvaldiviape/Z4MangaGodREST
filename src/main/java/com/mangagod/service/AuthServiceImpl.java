@@ -3,7 +3,6 @@ package com.mangagod.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import com.mangagod.dto.request.AuthRequestDTO;
 import com.mangagod.dto.request.TokenRequestDTO;
 import com.mangagod.dto.response.AuthResponseDTO;
@@ -52,8 +51,12 @@ public class AuthServiceImpl implements AuthService {
 		UserAuthResponseDTO userAuthResponseDTO = this.authMapper.mapEntityToResponse(userEntity);
 		RoleResponseDTO roleResponseDTO = this.roleMapper.mapEntityToResponseDTO(roleEntity);
 		TokenResponseDTO tokenResponseDTO = new TokenResponseDTO(token, this.appSettingProperties.JWT_TYPE, this.appSettingProperties.JWT_EXPIRATION_IN_MLS);
-		
-		return new AuthResponseDTO(userAuthResponseDTO, roleResponseDTO, tokenResponseDTO);
+	
+		return AuthResponseDTO.builder()
+				.user(userAuthResponseDTO)
+				.role(roleResponseDTO)
+				.token(tokenResponseDTO)
+				.build();			
 	}
 
 	@Override

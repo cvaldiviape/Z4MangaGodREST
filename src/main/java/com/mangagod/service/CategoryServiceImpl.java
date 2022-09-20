@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.pagination.CategoryAllPageableDataDTO;
 import com.mangagod.dto.request.CategoryRequestDTO;
 import com.mangagod.dto.response.CategoryResponseDTO;
@@ -19,6 +16,7 @@ import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.CategoryMapper;
 import com.mangagod.repository.CategoryRepository;
+import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
@@ -29,30 +27,25 @@ public class CategoryServiceImpl implements CategoryService {
 	private CategoryRepository categoryRepository;
 	@Autowired
 	private CategoryMapper categoryMapper;
-		
+	@Autowired
+	private AppHelpers appHelpers;	
+	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
 	public CategoryAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
-		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
-				? Sort.by(sortBy).ascending() 
-				: Sort.by(sortBy).descending();
-	
-		// agregando paginación
-		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
+		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<CategoryEntity> categoriesPageable = this.categoryRepository.findAll(pageable);	
 		List<CategoryEntity> categoriesEntity = categoriesPageable.getContent();
 		List<CategoryResponseDTO> categoriesDTO = categoriesEntity.stream().map((x) -> this.categoryMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		
-		CategoryAllPageableDataDTO pageableDataDTO = new CategoryAllPageableDataDTO();
-		pageableDataDTO.setCategories(categoriesDTO);
-		pageableDataDTO.setNumberPage(categoriesPageable.getNumber());
-		pageableDataDTO.setSizePage(categoriesPageable.getSize());
-		pageableDataDTO.setTotalElements(categoriesPageable.getTotalElements());
-		pageableDataDTO.setTotalPages(categoriesPageable.getTotalPages());
-		pageableDataDTO.setIsLastPage(categoriesPageable.isLast());
-		
-		return pageableDataDTO;
+		return CategoryAllPageableDataDTO.builder()
+				.categories(categoriesDTO)
+				.numberPage(categoriesPageable.getNumber())
+				.sizePage(categoriesPageable.getSize())
+				.totalElements(categoriesPageable.getTotalElements())
+				.totalPages(categoriesPageable.getTotalPages())
+				.isLastPage(categoriesPageable.isLast())
+				.build();
 	}
 
 	@Override
@@ -87,7 +80,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return this.categoryMapper.mapEntityToResponseDTO(entity);
 	}
 	
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public CategoryEntity getCategoryById(Integer id) {
 		return this.categoryRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));

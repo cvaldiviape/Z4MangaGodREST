@@ -8,11 +8,22 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import com.mangagod.util.ids.StoryMangakaId;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "stories_mangakas") 
 public class StoryMangakaEntity {
 
+	@Builder.Default
 	@EmbeddedId
 	private StoryMangakaId id = new StoryMangakaId();
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -26,48 +37,5 @@ public class StoryMangakaEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "job_id")
 	private JobEntity job;
-	
-	public StoryMangakaEntity() {
-		
-	}
-
-
-	public StoryMangakaId getId() {
-		return id;
-	}
-
-
-	public void setId(StoryMangakaId id) {
-		this.id = id;
-	}
-
-
-	public StoryEntity getStory() {
-		return story;
-	}
-
-
-	public void setStory(StoryEntity story) {
-		this.story = story;
-	}
-
-
-	public MangakaEntity getMangaka() {
-		return mangaka;
-	}
-
-
-	public void setMangaka(MangakaEntity mangaka) {
-		this.mangaka = mangaka;
-	}
-
-
-	public JobEntity getJob() {
-		return job;
-	}
-
-	public void setJob(JobEntity job) {
-		this.job = job;
-	}
 	
 }

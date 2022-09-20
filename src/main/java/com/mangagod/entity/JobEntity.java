@@ -9,33 +9,26 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.mangagod.entity.base.BaseEntity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "jobs")
 public class JobEntity  extends BaseEntity {
 
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;
+	@Builder.Default
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "job")
 	private Set<StoryMangakaEntity> storiesMangakas = new HashSet<>();
-	
-	public JobEntity() {
-		
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Set<StoryMangakaEntity> getStoriesMangakas() {
-		return storiesMangakas;
-	}
-
-	public void setStoriesMangakas(Set<StoryMangakaEntity> storiesMangakas) {
-		this.storiesMangakas = storiesMangakas;
-	}
 	
 }

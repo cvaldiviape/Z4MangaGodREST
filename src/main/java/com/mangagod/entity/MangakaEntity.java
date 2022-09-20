@@ -14,6 +14,18 @@ import javax.persistence.Table;
 import com.mangagod.entity.base.BaseEntity;
 import com.mangagod.util.enums.Sex;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "mangakas")
 public class MangakaEntity extends BaseEntity {
@@ -25,43 +37,8 @@ public class MangakaEntity extends BaseEntity {
 	private Sex sex;
 	@Column(name = "birth_date")
 	private LocalDate birthDate;
+	@Builder.Default
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "mangaka", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<StoryMangakaEntity> storiesMangakas = new HashSet<>();
-	
-	public MangakaEntity() {
-		
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public Sex getSex() {
-		return sex;
-	}
-
-	public void setSex(Sex sex) {
-		this.sex = sex;
-	}
-
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
-
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
-	}
-
-	public Set<StoryMangakaEntity> getStoriesMangakas() {
-		return storiesMangakas;
-	}
-
-	public void setStoriesMangakas(Set<StoryMangakaEntity> storiesMangakas) {
-		this.storiesMangakas = storiesMangakas;
-	}
 	
 }

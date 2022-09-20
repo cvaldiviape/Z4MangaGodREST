@@ -3,6 +3,8 @@ package com.mangagod.exception;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,27 +23,30 @@ import com.mangagod.util.AppHelpers;
 @ControllerAdvice // indico que esta clase manejara excepciones
 public class GlobalHandlerException extends ResponseEntityExceptionHandler { // que herede "ResponseEntityExceptionHandler" para el manejo de excepciones en la validacion de campos
 	
+	@Autowired
+	private AppHelpers appHelpers;
+	
 	// ---------------------------------------- CUSTOM EXCEPTIONS ---------------------------------------- //
 	// Cada Exception que se lanze en la apliacion, previamente pasara por alguna de estas funciones
 	// segun el tipo de exception, ello gracias que que definimos el annotation "@ControllerAdvice".
 	
 	@ExceptionHandler(ResourceNotFoundException.class) // indico que esta funcion recibira excepciones de tipo "ResourceNotFoundException"
 	public ResponseEntity<ErrorDetailResponseDTO> managerResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest){
-		String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
+		String dateTime = this.appHelpers.convertLocalDateTimeToString(LocalDateTime.now());
 		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(MangaGodAppException.class) // indico que esta funcion recibira excepciones de tipo "MangaGodAppException"
 	public ResponseEntity<ErrorDetailResponseDTO> managerMangaGodAppException(MangaGodAppException exception, WebRequest webRequest){
-		String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
+		String dateTime = this.appHelpers.convertLocalDateTimeToString(LocalDateTime.now());
 		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(Exception.class) // indico que esta funcion recibira excepciones de tipo "Exception"
 	public ResponseEntity<ErrorDetailResponseDTO> managerException(Exception exception, WebRequest webRequest){
-		String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
+		String dateTime = this.appHelpers.convertLocalDateTimeToString(LocalDateTime.now());
 		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -49,7 +54,7 @@ public class GlobalHandlerException extends ResponseEntityExceptionHandler { // 
 	@ExceptionHandler({ AuthenticationException.class })
     @ResponseBody
     public ResponseEntity<ErrorDetailResponseDTO> managerAuthenticationException(AuthenticationException exception, WebRequest webRequest) {
-        String dateTime = AppHelpers.convertLocalDateTimeToString(LocalDateTime.now());
+        String dateTime = this.appHelpers.convertLocalDateTimeToString(LocalDateTime.now());
 		ErrorDetailResponseDTO errorDetailResponseDTO = new ErrorDetailResponseDTO(dateTime, exception.getMessage(), webRequest.getDescription(false));
 		return new ResponseEntity<ErrorDetailResponseDTO>(errorDetailResponseDTO, HttpStatus.UNAUTHORIZED);
 		// https://www.baeldung.com/spring-security-exceptionhandler

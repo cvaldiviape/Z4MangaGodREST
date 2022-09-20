@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.pagination.RoleAllPageableDataDTO;
 import com.mangagod.dto.request.RoleRequestDTO;
 import com.mangagod.dto.response.RoleResponseDTO;
@@ -19,6 +16,7 @@ import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.RoleMapper;
 import com.mangagod.repository.RoleRepository;
+import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
@@ -29,38 +27,33 @@ public class RoleServiceImpl implements RoleService{
 	private RoleRepository roleRepository;
 	@Autowired
 	private RoleMapper roleMapper;
+	@Autowired
+	private AppHelpers appHelpers;
 
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
 	public RoleAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
-		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
-				? Sort.by(sortBy).ascending() 
-				: Sort.by(sortBy).descending();
-	
-		// agregando paginación
-		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
+		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<RoleEntity> rolesPageable = this.roleRepository.findAll(pageable);
 		List<RoleEntity> rolesEntity = rolesPageable.getContent();
 		List<RoleResponseDTO> rolesDto = rolesEntity.stream().map((x) -> this.roleMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
-		RoleAllPageableDataDTO pageableDataDTO = new RoleAllPageableDataDTO();
-		pageableDataDTO.setRoles(rolesDto);
-		pageableDataDTO.setNumberPage(rolesPageable.getNumber());
-		pageableDataDTO.setSizePage(rolesPageable.getSize());
-		pageableDataDTO.setTotalElements(rolesPageable.getTotalElements());
-		pageableDataDTO.setTotalPages(rolesPageable.getTotalPages());
-		pageableDataDTO.setIsLastPage(rolesPageable.isLast());
-		
-		return pageableDataDTO;
+		return RoleAllPageableDataDTO.builder()
+				.roles(rolesDto)
+				.numberPage(rolesPageable.getNumber())
+				.sizePage(rolesPageable.getSize())
+				.totalElements(rolesPageable.getTotalElements())
+				.totalPages(rolesPageable.getTotalPages())
+				.isLastPage(rolesPageable.isLast())
+				.build();
 	}
 
 	@Override
 	public RoleResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
 		RoleEntity entity = this.getRoleById(id);
-		RoleResponseDTO dataDTO = this.roleMapper.mapEntityToResponseDTO(entity);
-		return dataDTO;
+		return this.roleMapper.mapEntityToResponseDTO(entity);
 	}
 
 	@Override
@@ -69,8 +62,7 @@ public class RoleServiceImpl implements RoleService{
 		requestDTO.setName("ROLE_" + requestDTO.getName().toUpperCase());
 		this.verifyNameUnique(requestDTO.getName());
 		RoleEntity entity = this.roleMapper.mapRequestToEntity(requestDTO);
-		RoleResponseDTO dataCreated = this.roleMapper.mapEntityToResponseDTO(this.roleRepository.save(entity));			
-		return dataCreated;
+		return this.roleMapper.mapEntityToResponseDTO(this.roleRepository.save(entity));			
 	}
 
 	@Override
@@ -81,8 +73,7 @@ public class RoleServiceImpl implements RoleService{
 		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
 		dataCurrent.setName(requestDTO.getName());
 		dataCurrent.setDescription(requestDTO.getDescription());
-		RoleResponseDTO dataUpdated = this.roleMapper.mapEntityToResponseDTO(this.roleRepository.save(dataCurrent));	
-		return dataUpdated;
+		return this.roleMapper.mapEntityToResponseDTO(this.roleRepository.save(dataCurrent));	
 	}
 
 	@Override
@@ -90,11 +81,10 @@ public class RoleServiceImpl implements RoleService{
 		// TODO Auto-generated method stub
 		RoleEntity entity = this.getRoleById(id);
 		this.roleRepository.delete(entity);
-		RoleResponseDTO dataDeleted = this.roleMapper.mapEntityToResponseDTO(entity);
-		return dataDeleted;
+		return this.roleMapper.mapEntityToResponseDTO(entity);
 	}
 	
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public RoleEntity getRoleById(Integer id) {
 		return this.roleRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Rol", "id", id));

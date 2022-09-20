@@ -5,7 +5,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class CharacterRequestDTO {
 
 	@NotNull(message = "El campo 'name' no debe ser nulo.")
@@ -27,48 +37,4 @@ public class CharacterRequestDTO {
 	@Min(value = 1, message = "El campo 'typeId' debe contener un número mayor a '0'")
 	private Integer typeId;
 
-	public CharacterRequestDTO() {
-		
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getUrlImage() {
-		return urlImage;
-	}
-
-	public void setUrlImage(String urlImage) {
-		this.urlImage = urlImage;
-	}
-
-	public Integer getStoryId() {
-		return storyId;
-	}
-
-	public void setStoryId(Integer storyId) {
-		this.storyId = storyId;
-	}
-
-	public Integer getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(Integer typeId) {
-		this.typeId = typeId;
-	}
-		
 }

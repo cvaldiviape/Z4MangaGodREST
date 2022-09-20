@@ -7,7 +7,17 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class UserCreateRequestDTO {
 	
 	@NotNull(message = "El campo 'name' es obligatorio.")
@@ -28,41 +38,5 @@ public class UserCreateRequestDTO {
 	@NotNull(message = "El campo 'roleIds' es obligatorio.")
 	@NotEmpty(message = "El campo 'roleIds' debe contene al menos 1 elemento.")
 	private Set<Integer> roleIds;
-	
-	public UserCreateRequestDTO() {
-		
-	}
-	
-	public String getUsername() {
-		return username;
-	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Set<Integer> getRoleIds() {
-		return roleIds;
-	}
-
-	public void setRoleIds(Set<Integer> roleIds) {
-		this.roleIds = roleIds;
-	}
-	
 }

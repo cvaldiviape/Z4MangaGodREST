@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.pagination.JobAllPageableDataDTO;
 import com.mangagod.dto.request.JobRequestDTO;
 import com.mangagod.dto.response.JobResponseDTO;
@@ -19,6 +16,7 @@ import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.JobMapper;
 import com.mangagod.repository.JobRepository;
+import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
@@ -29,32 +27,25 @@ public class JobServiceImpl implements JobService {
 	private JobRepository jobRepository;
 	@Autowired
 	private JobMapper jobMapper;
+	@Autowired
+	private AppHelpers appHelpers;
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
-		
-
 	@Override
 	public JobAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
-		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
-				? Sort.by(sortBy).ascending() 
-				: Sort.by(sortBy).descending();
-	
-		// agregando paginación
-		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
+		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<JobEntity> jobsPageable = this.jobRepository.findAll(pageable);	
 		List<JobEntity> jobsEntity = jobsPageable.getContent();
 		List<JobResponseDTO> jobsDTO = jobsEntity.stream().map((x) -> this.jobMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		
-		JobAllPageableDataDTO pageableDataDTO = new JobAllPageableDataDTO();
-		pageableDataDTO.setGenres(jobsDTO);
-		pageableDataDTO.setNumberPage(jobsPageable.getNumber());
-		pageableDataDTO.setSizePage(jobsPageable.getSize());
-		pageableDataDTO.setTotalElements(jobsPageable.getTotalElements());
-		pageableDataDTO.setTotalPages(jobsPageable.getTotalPages());
-		pageableDataDTO.setIsLastPage(jobsPageable.isLast());
-		
-		return pageableDataDTO;
+		return JobAllPageableDataDTO.builder()
+				.jobs(jobsDTO)
+				.numberPage(jobsPageable.getNumber())
+				.sizePage(jobsPageable.getSize())
+				.totalElements(jobsPageable.getTotalElements())
+				.totalPages(jobsPageable.getTotalPages())
+				.isLastPage(jobsPageable.isLast())
+				.build();
 	}
 
 	@Override
@@ -89,7 +80,7 @@ public class JobServiceImpl implements JobService {
 		return this.jobMapper.mapEntityToResponseDTO(entity);
 	}
 	
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public JobEntity getJobById(Integer id) {
 		return this.jobRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));

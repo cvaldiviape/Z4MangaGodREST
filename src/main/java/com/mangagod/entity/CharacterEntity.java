@@ -7,7 +7,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import com.mangagod.entity.base.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 @Entity
 @Table(name = "characters")
 public class CharacterEntity extends BaseEntity {
@@ -25,48 +35,4 @@ public class CharacterEntity extends BaseEntity {
 	@JoinColumn(name = "type_id")
 	private TypeCharacterEntity type;
 	
-	public CharacterEntity() {
-		
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getUrlImage() {
-		return urlImage;
-	}
-
-	public void setUrlImage(String urlImage) {
-		this.urlImage = urlImage;
-	}
-
-	public StoryEntity getStory() {
-		return story;
-	}
-
-	public void setStory(StoryEntity story) {
-		this.story = story;
-	}
-
-	public TypeCharacterEntity getType() {
-		return type;
-	}
-
-	public void setType(TypeCharacterEntity type) {
-		this.type = type;
-	}
-
 }

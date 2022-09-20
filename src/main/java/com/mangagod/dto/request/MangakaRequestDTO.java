@@ -12,7 +12,17 @@ import com.mangagod.util.enums.Sex;
 //import com.mangagod.util.validators.EnumNamePattern;
 import com.mangagod.util.validators.EnumValidator;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class MangakaRequestDTO {
 
 	@NotNull(message = "El campo 'name' es obligatorio.")
@@ -31,40 +41,4 @@ public class MangakaRequestDTO {
 //	@NotEmpty(message = "El campo 'storyJobIds' debe contene al menos 1 elemento.")
 	private Set<StoryJobRequestDTO> storyJobIds;
 	
-	public MangakaRequestDTO() {
-		
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-	
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
-
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
-	}
-
-	public Set<StoryJobRequestDTO> getStoryJobIds() {
-		return storyJobIds;
-	}
-
-	public void setStoryJobIds(Set<StoryJobRequestDTO> storyJobIds) {
-		this.storyJobIds = storyJobIds;
-	}
-
 }

@@ -1,24 +1,21 @@
 package com.mangagod.dto.pagination;
 
 import java.util.List;
-
 import com.mangagod.dto.pagination.base.PageableDataDTOImpl;
 import com.mangagod.dto.response.DemographyResponseDTO;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class DemographyAllPageableDataDTO extends PageableDataDTOImpl {
 
 	private List<DemographyResponseDTO> demogrhapies;
-	
-	public DemographyAllPageableDataDTO() {
-		
-	}
-
-	public List<DemographyResponseDTO> getDemogrhapies() {
-		return demogrhapies;
-	}
-
-	public void setDemogrhapies(List<DemographyResponseDTO> demogrhapies) {
-		this.demogrhapies = demogrhapies;
-	}
 
 }

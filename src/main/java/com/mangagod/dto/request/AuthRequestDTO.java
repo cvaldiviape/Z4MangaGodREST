@@ -3,7 +3,17 @@ package com.mangagod.dto.request;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class AuthRequestDTO {
 
 	@NotNull(message = "El campo 'usernameOrEmail' es obligatorio.")
@@ -15,33 +25,5 @@ public class AuthRequestDTO {
 	@NotNull(message = "El campo 'roleId' es obligatorio.")
 	@Min(value = 1, message = "El campo 'roleId' debe contener un número mayor a '0'")
 	private Integer roleId;
-
-	public AuthRequestDTO() {
-
-	}
-
-	public String getUsernameOrEmail() {
-		return usernameOrEmail;
-	}
-
-	public void setUsernameOrEmail(String usernameOrEmail) {
-		this.usernameOrEmail = usernameOrEmail;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Integer getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
-	}
 	
 }

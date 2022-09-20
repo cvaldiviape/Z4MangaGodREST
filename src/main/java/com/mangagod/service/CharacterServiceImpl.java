@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.pagination.CharacterAllPageableDataDTO;
 import com.mangagod.dto.request.CharacterRequestDTO;
 import com.mangagod.dto.response.CharacterResponseDTO;
@@ -23,6 +20,7 @@ import com.mangagod.mapper.CharacterMapper;
 import com.mangagod.repository.CharacterRepository;
 import com.mangagod.repository.StoryRepository;
 import com.mangagod.repository.TypeCharacterRepository;
+import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
@@ -37,38 +35,32 @@ public class CharacterServiceImpl implements CharacterService {
 	private TypeCharacterRepository typeCharacterRepository;	
 	@Autowired
 	private CharacterMapper characterMapper;
+	@Autowired
+	private AppHelpers appHelpers;
 		
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
 	public CharacterAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
-		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
-				? Sort.by(sortBy).ascending() 
-				: Sort.by(sortBy).descending();
-	
-		// agregando paginación
-		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
+		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<CharacterEntity> charactersPageable = this.characterRepository.findAll(pageable);	
 		List<CharacterEntity> charactersEntity = charactersPageable.getContent();
 		List<CharacterResponseDTO> charactersDTO = charactersEntity.stream().map((x) -> this.characterMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		
-		CharacterAllPageableDataDTO pageableDataDTO = new CharacterAllPageableDataDTO();
-		pageableDataDTO.setCharacters(charactersDTO);
-		pageableDataDTO.setNumberPage(charactersPageable.getNumber());
-		pageableDataDTO.setSizePage(charactersPageable.getSize());
-		pageableDataDTO.setTotalElements(charactersPageable.getTotalElements());
-		pageableDataDTO.setTotalPages(charactersPageable.getTotalPages());
-		pageableDataDTO.setIsLastPage(charactersPageable.isLast());
-		
-		return pageableDataDTO;
+		return CharacterAllPageableDataDTO.builder()
+				.characters(charactersDTO)
+				.numberPage(charactersPageable.getNumber())
+				.sizePage(charactersPageable.getSize())
+				.totalElements(charactersPageable.getTotalElements())
+				.totalPages(charactersPageable.getTotalPages())
+				.isLastPage(charactersPageable.isLast())
+				.build();
 	}
 
 	@Override
 	public CharacterResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
 		CharacterEntity entity =this.getCharacterById(id);
-		CharacterResponseDTO dataDTO = this.characterMapper.mapEntityToResponseDTO(entity);
-		return dataDTO;
+		return this.characterMapper.mapEntityToResponseDTO(entity);
 	}
 
 	@Override
@@ -76,13 +68,10 @@ public class CharacterServiceImpl implements CharacterService {
 		// TODO Auto-generated method stub
 		StoryEntity storyEntity = this.getStoryById(requestDTO.getStoryId());
 		TypeCharacterEntity typeCharacterEntity = this.getTypeCharacterById(requestDTO.getTypeId());
-		
 		this.verifyNameUnique(requestDTO.getName());
-			
 		CharacterEntity entity = this.characterMapper.mapRequestToEntity(requestDTO);
 		entity.setStory(storyEntity);
 		entity.setType(typeCharacterEntity);
-		
 		return this.characterMapper.mapEntityToResponseDTO(this.characterRepository.save(entity));			
 	}
 
@@ -92,15 +81,12 @@ public class CharacterServiceImpl implements CharacterService {
 		CharacterEntity dataCurrent = this.getCharacterById(id);
 		StoryEntity storyEntity = this.getStoryById(requestDTO.getStoryId());
 		TypeCharacterEntity typeCharacterEntity = this.getTypeCharacterById(requestDTO.getTypeId());
-		
 		this.verifyNameUnique(requestDTO.getName(), dataCurrent.getName());
-		
 		dataCurrent.setName(requestDTO.getName());
 		dataCurrent.setDescription(requestDTO.getDescription());
 		dataCurrent.setUrlImage(requestDTO.getUrlImage());
 		dataCurrent.setStory(storyEntity);
 		dataCurrent.setType(typeCharacterEntity);
-		
 		return this.characterMapper.mapEntityToResponseDTO(this.characterRepository.save(dataCurrent));	
 	}
 
@@ -112,7 +98,7 @@ public class CharacterServiceImpl implements CharacterService {
 		return this.characterMapper.mapEntityToResponseDTO(entity);
 	}
 	
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public CharacterEntity getCharacterById(Integer id) {
 		return this.characterRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Personaje", "id", id));

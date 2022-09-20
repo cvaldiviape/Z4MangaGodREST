@@ -6,14 +6,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.pagination.UserAllPageableDataDTO;
 import com.mangagod.dto.request.UserCreateRequestDTO;
 import com.mangagod.dto.request.UserUpdateRequestDTO;
@@ -25,6 +22,7 @@ import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.UserMapper;
 import com.mangagod.repository.RoleRepository;
 import com.mangagod.repository.UserRepository;
+import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
@@ -39,30 +37,26 @@ public class UserServiceImpl implements UserService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserMapper userMapper;
+	@Autowired
+	private AppHelpers appHelpers;
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
 	public UserAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
-		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
-				? Sort.by(sortBy).ascending() 
-				: Sort.by(sortBy).descending();
-	
-		// agregando paginación
-		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
+		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<UserEntity> usersPageable = this.userRepository.findAll(pageable);
 		List<UserEntity> usersEntity = usersPageable.getContent();
 		List<UserResponseDTO> usersDto = usersEntity.stream().map((x) -> this.userMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
-		UserAllPageableDataDTO pageableDataDTO = new UserAllPageableDataDTO();
-		pageableDataDTO.setUsers(usersDto);
-		pageableDataDTO.setNumberPage(usersPageable.getNumber());
-		pageableDataDTO.setSizePage(usersPageable.getSize());
-		pageableDataDTO.setTotalElements(usersPageable.getTotalElements());
-		pageableDataDTO.setTotalPages(usersPageable.getTotalPages());
-		pageableDataDTO.setIsLastPage(usersPageable.isLast());
-		
-		return pageableDataDTO;
+		return UserAllPageableDataDTO.builder()
+				.users(usersDto)
+				.numberPage(usersPageable.getNumber())
+				.sizePage(usersPageable.getSize())
+				.totalElements(usersPageable.getTotalElements())
+				.totalPages(usersPageable.getTotalPages())
+				.isLastPage(usersPageable.isLast())
+				.build();
 	}
 	
 	@Override
@@ -124,7 +118,7 @@ public class UserServiceImpl implements UserService {
 		return dataDeleted;
 	}
 	
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public UserEntity getUserById(Integer id) {
 		return this.userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Usuario", "id", id));

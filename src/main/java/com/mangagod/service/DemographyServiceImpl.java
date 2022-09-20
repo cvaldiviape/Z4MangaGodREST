@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.pagination.DemographyAllPageableDataDTO;
 import com.mangagod.dto.request.DemographyRequestDTO;
 import com.mangagod.dto.response.DemographyResponseDTO;
@@ -19,6 +16,7 @@ import com.mangagod.exception.MangaGodAppException;
 import com.mangagod.exception.ResourceNotFoundException;
 import com.mangagod.mapper.DemographyMapper;
 import com.mangagod.repository.DemographyRepository;
+import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
@@ -29,30 +27,25 @@ public class DemographyServiceImpl implements DemographyService{
 	private DemographyRepository demographyRepository;
 	@Autowired
 	private DemographyMapper demographyMapper;
+	@Autowired
+	private AppHelpers appHelpers;
 	
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
 	public DemographyAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
-		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
-				? Sort.by(sortBy).ascending() 
-				: Sort.by(sortBy).descending();
-	
-		// agregando paginación
-		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
+		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<DemographyEntity> demographiesPageable = this.demographyRepository.findAll(pageable);	
 		List<DemographyEntity> demographiesEntity = demographiesPageable.getContent();
 		List<DemographyResponseDTO> demographiesDTO = demographiesEntity.stream().map((x) -> this.demographyMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
-		
-		DemographyAllPageableDataDTO pageableDataDTO = new DemographyAllPageableDataDTO();
-		pageableDataDTO.setDemogrhapies(demographiesDTO);
-		pageableDataDTO.setNumberPage(demographiesPageable.getNumber());
-		pageableDataDTO.setSizePage(demographiesPageable.getSize());
-		pageableDataDTO.setTotalElements(demographiesPageable.getTotalElements());
-		pageableDataDTO.setTotalPages(demographiesPageable.getTotalPages());
-		pageableDataDTO.setIsLastPage(demographiesPageable.isLast());
-		
-		return pageableDataDTO;
+		return DemographyAllPageableDataDTO.builder()
+				.demogrhapies(demographiesDTO)
+				.numberPage(demographiesPageable.getNumber())
+				.sizePage(demographiesPageable.getSize())
+				.totalElements(demographiesPageable.getTotalElements())
+				.totalPages(demographiesPageable.getTotalPages())
+				.isLastPage(demographiesPageable.isLast())
+				.build();
 	}
 
 	@Override
@@ -87,7 +80,7 @@ public class DemographyServiceImpl implements DemographyService{
 		return this.demographyMapper.mapEntityToResponseDTO(entity);
 	}
 	
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public DemographyEntity getDemographyById(Integer id) {
 		return this.demographyRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Demogragía", "id", id));

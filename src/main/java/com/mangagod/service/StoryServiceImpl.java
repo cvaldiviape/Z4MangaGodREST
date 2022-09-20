@@ -6,13 +6,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.mangagod.dto.pagination.StoryAllPageableDataDTO;
 import com.mangagod.dto.request.MangakaJobRequestDTO;
 import com.mangagod.dto.request.StoryRequestDTO;
@@ -37,6 +34,7 @@ import com.mangagod.repository.JobRepository;
 import com.mangagod.repository.MangakaRepository;
 import com.mangagod.repository.StoryMangakaRepository;
 import com.mangagod.repository.StoryRepository;
+import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
@@ -61,191 +59,108 @@ public class StoryServiceImpl implements StoryService {
 	private JobRepository jobRepository;
 	@Autowired
 	private StoryMapper storyMapper;
+	@Autowired
+	private AppHelpers appHelpers;
 	
 	@Override
 	public StoryAllPageableDataDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
-		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) 
-				? Sort.by(sortBy).ascending() 
-				: Sort.by(sortBy).descending();
-	
-		// agregando paginación
-		Pageable pageable = PageRequest.of(numberPage, sizePage, sort);
+		Pageable pageable = this.appHelpers.getPageable(numberPage, sizePage, sortBy, sortDir);
 		Page<StoryEntity> storiesPageable = this.storyRepository.findAll(pageable);
 		List<StoryEntity> storiesEntity = storiesPageable.getContent();
 		List<StoryResponseDTO> storiesDTO = storiesEntity.stream().map((x) -> this.storyMapper.mapEntityToResponseDTO(x)).collect(Collectors.toList());	
 		
-		StoryAllPageableDataDTO pageableDataDTO = new StoryAllPageableDataDTO();
-		pageableDataDTO.setStories(storiesDTO);
-		pageableDataDTO.setNumberPage(storiesPageable.getNumber());
-		pageableDataDTO.setSizePage(storiesPageable.getSize());
-		pageableDataDTO.setTotalElements(storiesPageable.getTotalElements());
-		pageableDataDTO.setTotalPages(storiesPageable.getTotalPages());
-		pageableDataDTO.setIsLastPage(storiesPageable.isLast());
-		
-		return pageableDataDTO;
+		return StoryAllPageableDataDTO.builder()
+				.stories(storiesDTO)
+				.numberPage(storiesPageable.getNumber())
+				.sizePage(storiesPageable.getSize())
+				.totalElements(storiesPageable.getTotalElements())
+				.totalPages(storiesPageable.getTotalPages())
+				.isLastPage(storiesPageable.isLast())
+				.build();
 	}
 
 	@Override
 	public StoryResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
 		StoryEntity entity = this.getStoryById(id);
-		StoryResponseDTO dataDTO = this.storyMapper.mapEntityToResponseDTO(entity);
-		
-		Set<MangakasJobsResponseDTO> listMangakasJobsDataDTO = this.getListMangakasJobsDataDTO(entity.getStoriesMangakas());
-		dataDTO.setMangakasJobs(listMangakasJobsDataDTO);
-		
-		return dataDTO;
+		// seteando "response".
+		return this.getFullResponse(entity, entity.getStoriesMangakas());
 	}
 
 	@Override
 	public StoryResponseDTO create(StoryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
+		this.verifyTitleUnique(requestDTO.getTitle()); // verificando que el campo "title" sea unico.
+		// creando "story".
 		StoryEntity storyEntity = this.storyMapper.mapRequestToEntity(requestDTO);
-		
-		// seteando "country", "demography", "category" y "genres".
 		CountryEntity countryEntity = this.getCountryById(requestDTO.getCountryId());
 		DemographyEntity demographyEntity = this.getDemographyById(requestDTO.getDemographyId());
 		CategoryEntity categoryEntity = this.getCategoryById(requestDTO.getCategoryId());
 		Set<GenreEntity> genres = this.getListGenresbYIds(requestDTO.getGenreIds());
+		Set<StoryMangakaEntity> storyMangakaEntities = this.convertToListStoriesMangakasEntities(requestDTO.getMangakaJobIds(), storyEntity);
 		storyEntity.setCountry(countryEntity);
 		storyEntity.setDemography(demographyEntity);
 		storyEntity.setCategory(categoryEntity);
 		storyEntity.setGenres(genres);
-		
-		// verificando que el campo "title" sea unico.
-		this.verifyTitleUnique(requestDTO.getTitle());
-					
-		// creando "stories_mangakas".
-		Set<StoryMangakaEntity> storyMangakaEntities = new HashSet<>();
-		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
-			MangakaEntity mangakaEntity = this.getMangakaById(mj.getMangakaId());
-			JobEntity jobEntity = this.getJobById(mj.getJobId());
-			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
-			storyMangakaEntity.setStory(storyEntity);
-			storyMangakaEntity.setMangaka(mangakaEntity);
-			storyMangakaEntity.setJob(jobEntity);
-			storyMangakaEntities.add(storyMangakaEntity);
-		}
-		
-		// seteando "stories_mangakas"
 		storyEntity.setStoriesMangakas(storyMangakaEntities);
-		
-		// creando "story".
 		StoryEntity storyCreated = this.storyRepository.save(storyEntity);
-		
-		// seteando response "storyCreated"	
-		StoryResponseDTO dataCreated = this.storyMapper.mapEntityToResponseDTO(storyCreated);
-		
-		// seteando responte lista "mangakas_jobs"
-		Set<MangakasJobsResponseDTO> mangakasJobsDataDTO = new HashSet<>();
-		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
-			MangakasJobsResponseDTO mjDataDTO = new MangakasJobsResponseDTO();
-			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
-			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
-			mjDataDTO.setJobId(smEntity.getJob().getId());
-			mjDataDTO.setNameJob(smEntity.getJob().getName());
-			mangakasJobsDataDTO.add(mjDataDTO);
-		}
-		dataCreated.setMangakasJobs(mangakasJobsDataDTO);
-		
-		return 	dataCreated;
+		// seteando "response".
+		return this.getFullResponse(storyCreated, storyMangakaEntities);
 	}
 
 	@Override
 	public StoryResponseDTO update(Integer id, StoryRequestDTO requestDTO) {	
 		// TODO Auto-generated method stub
-		
-		// eliminando relaciones anterioes con "mangakas"
-		this.storyMangakaRepository.deleteByStoryId(id);
-				
-		// obteniendo "story" en base a su "Id"
-		StoryEntity dataCurrent = this.getStoryById(id);
-		
-		// seteando "country", "demography", "category" y "genres".
+		this.storyMangakaRepository.deleteByStoryId(id); // eliminando relaciones anterioes con "mangakas".
+		StoryEntity storyCurrent = this.getStoryById(id);
+		this.verifyTitleUnique(requestDTO.getTitle(), storyCurrent.getTitle()); // verificando que el campo "title" sea unico.
+		// actualizando "story".
+		storyCurrent.setTitle(requestDTO.getTitle());
+		storyCurrent.setYear(requestDTO.getYear());
+		storyCurrent.setSynopsis(requestDTO.getSynopsis());
+		storyCurrent.setState(requestDTO.getState());
+		storyCurrent.setUrlImage(requestDTO.getUrlImage());
+		storyCurrent.setAdaptationAnime(requestDTO.getAdaptationAnime());
+		storyCurrent.setPrice(requestDTO.getPrice());
 		CountryEntity countryEntity = this.getCountryById(requestDTO.getCountryId());
 		DemographyEntity demographyEntity = this.getDemographyById(requestDTO.getDemographyId());
 		CategoryEntity categoryEntity = this.getCategoryById(requestDTO.getCategoryId());
 		Set<GenreEntity> genres = this.getListGenresbYIds(requestDTO.getGenreIds());
-		dataCurrent.setCountry(countryEntity);
-		dataCurrent.setDemography(demographyEntity);
-		dataCurrent.setCategory(categoryEntity);
-		dataCurrent.setGenres(genres);
-		
-		// verificando que el campo "title" sea unico.
-		this.verifyTitleUnique(requestDTO.getTitle(), dataCurrent.getTitle());
-		
-		// seteando valores actualizados
-		dataCurrent.setTitle(requestDTO.getTitle());
-		dataCurrent.setYear(requestDTO.getYear());
-		dataCurrent.setSynopsis(requestDTO.getSynopsis());
-		dataCurrent.setState(requestDTO.getState());
-		dataCurrent.setUrlImage(requestDTO.getUrlImage());
-		dataCurrent.setAdaptationAnime(requestDTO.getAdaptationAnime());
-		dataCurrent.setPrice(requestDTO.getPrice());
-		
-		// actualizando "stories_mangakas".
-		Set<StoryMangakaEntity> storyMangakaEntities = new HashSet<>();
-		for (MangakaJobRequestDTO mj : requestDTO.getMangakaJobIds()) {
-			
-			MangakaEntity mangakaEntity = this.getMangakaById(mj.getMangakaId());
-			JobEntity jobEntity = this.getJobById(mj.getJobId());
-			
-			StoryMangakaEntity storyMangakaEntity = new StoryMangakaEntity();
-			storyMangakaEntity.setStory(dataCurrent);
-			storyMangakaEntity.setMangaka(mangakaEntity);
-			storyMangakaEntity.setJob(jobEntity);
-			storyMangakaEntities.add(storyMangakaEntity);
-		}
-		
-		// seteando "stories_mangakas"
-		dataCurrent.setStoriesMangakas(storyMangakaEntities);
-			
-		// actualizando "story".			
-		StoryEntity storyUpdated = this.storyRepository.save(dataCurrent);	
-		
-		// response "storyUpdate"	
-		StoryResponseDTO dataUpdated = this.storyMapper.mapEntityToResponseDTO(storyUpdated);
-		
-		// seteando responte lista "mangakas_jobs".
-		Set<MangakasJobsResponseDTO> listMangakasJobsDataDTO = new HashSet<>();
-		for (StoryMangakaEntity smEntity : storyMangakaEntities) {
-			MangakasJobsResponseDTO mjDataDTO = new MangakasJobsResponseDTO();
-			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
-			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
-			mjDataDTO.setJobId(smEntity.getJob().getId());
-			mjDataDTO.setNameJob(smEntity.getJob().getName());
-			listMangakasJobsDataDTO.add(mjDataDTO);
-		}
-		dataUpdated.setMangakasJobs(listMangakasJobsDataDTO);
-		
-		return dataUpdated;
+		Set<StoryMangakaEntity> storyMangakaEntities = this.convertToListStoriesMangakasEntities(requestDTO.getMangakaJobIds(), storyCurrent);
+		storyCurrent.setCountry(countryEntity);
+		storyCurrent.setDemography(demographyEntity);
+		storyCurrent.setCategory(categoryEntity);
+		storyCurrent.setGenres(genres);
+		storyCurrent.setStoriesMangakas(storyMangakaEntities);	
+		StoryEntity storyUpdated = this.storyRepository.save(storyCurrent);	
+		// seteando "response. 
+		return this.getFullResponse(storyUpdated, storyMangakaEntities);
 	}
 	
 	@Override
 	public StoryResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
-		
-		// eliminando relaciones con "stories_mangakas"
-		this.storyMangakaRepository.deleteByStoryId(id);
-		// obteniendo "story" para eliminarlo
+		this.storyMangakaRepository.deleteByStoryId(id); // eliminando relaciones con "stories_mangakas"
 		StoryEntity entity = this.getStoryById(id);
-		// eliminando "story"
 		this.storyRepository.delete(entity);
-		// response
+		// seteando "response. 
 		return this.storyMapper.mapEntityToResponseDTO(entity);
 	}
 
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- ((
+	
+	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public CountryEntity getCountryById(Integer id) {
 		return this.countryRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
 	}
 	
+	
 	public DemographyEntity getDemographyById(Integer id) {
 		return this.demographyRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Demografía", "id", id));
 	}
+	
 	
 	public CategoryEntity getCategoryById(Integer id) {
 		return this.categoryRepository.findById(id)
@@ -291,19 +206,34 @@ public class StoryServiceImpl implements StoryService {
 			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El título " + title + " ya existe.");
 		}
 	}
-	
-	public Set<MangakasJobsResponseDTO> getListMangakasJobsDataDTO(Set<StoryMangakaEntity> storiesMangakas){
-		Set<MangakasJobsResponseDTO> mangakasJobsDataDTOs = new HashSet<>();
-		
-		for (StoryMangakaEntity smEntity : storiesMangakas) {
-			MangakasJobsResponseDTO  mjDataDTO = new MangakasJobsResponseDTO();
-			mjDataDTO.setMangakaId(smEntity.getMangaka().getId());
-			mjDataDTO.setNameMangaka(smEntity.getMangaka().getName());
-			mjDataDTO.setJobId(smEntity.getJob().getId());
-			mjDataDTO.setNameJob(smEntity.getJob().getName());
-			mangakasJobsDataDTOs.add(mjDataDTO);
-		}
-		return mangakasJobsDataDTOs;
+
+	public Set<MangakasJobsResponseDTO> convertToListMangakasJobsResponseDTO(Set<StoryMangakaEntity> storiesMangakas){
+		return storiesMangakas.stream().map((x) -> {
+			return MangakasJobsResponseDTO.builder()
+					.mangakaId(x.getMangaka().getId())
+					.nameMangaka(x.getMangaka().getName())
+					.jobId(x.getJob().getId())
+					.nameJob(x.getJob().getName())
+					.build();
+		}).collect(Collectors.toSet());	
 	}
 	
+	public Set<StoryMangakaEntity> convertToListStoriesMangakasEntities(Set<MangakaJobRequestDTO> mangakaJobRequestDTOs, StoryEntity story){
+		return mangakaJobRequestDTOs.stream().map((x) -> {
+			MangakaEntity  mangaka = this.getMangakaById(x.getMangakaId());
+			JobEntity job = this.getJobById(x.getJobId());
+			return StoryMangakaEntity.builder()
+				.story(story)
+				.mangaka(mangaka)
+				.job(job)
+				.build();
+		}).collect(Collectors.toSet());	
+	}
+	
+	public StoryResponseDTO getFullResponse(StoryEntity story, Set<StoryMangakaEntity> storyMangakaEntities) {
+		StoryResponseDTO response = this.storyMapper.mapEntityToResponseDTO(story);
+		response.setMangakasJobs(this.convertToListMangakasJobsResponseDTO(storyMangakaEntities));
+		return response;
+	}
+
 }

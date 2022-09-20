@@ -2,9 +2,18 @@ package com.mangagod.dto.response;
 
 import java.time.LocalDate;
 import java.util.Set;
-
 import com.mangagod.util.enums.Sex;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class MangakaResponseDTO {
 
 	private Integer id;
@@ -13,48 +22,4 @@ public class MangakaResponseDTO {
 	private LocalDate birthDate;
 	private Set<StoriesJobsResponseDTO> storiesJobs;
 	
-	public MangakaResponseDTO() {
-		
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Sex getSex() {
-		return sex;
-	}
-
-	public void setSex(Sex sex) {
-		this.sex = sex;
-	}
-
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
-
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
-	}
-
-	public Set<StoriesJobsResponseDTO> getStoriesJobs() {
-		return storiesJobs;
-	}
-
-	public void setStoriesJobs(Set<StoriesJobsResponseDTO> storiesJobs) {
-		this.storiesJobs = storiesJobs;
-	}
-		
 }
