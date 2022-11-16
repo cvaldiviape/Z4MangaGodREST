@@ -1,6 +1,9 @@
 package com.mangagod.controller;
 
 import javax.validation.Valid;
+
+import com.mangagod.dto.request.search.StoryRequestSearchDTO;
+import com.mangagod.dto.response.criteria.StoryViewCriteriaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,8 @@ import com.mangagod.dto.response.page.StoriesPageResponseDTO;
 import com.mangagod.service.StoryService;
 import com.mangagod.util.AppConstants;
 import io.swagger.annotations.ApiOperation;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("story")
@@ -79,6 +84,15 @@ public class StoryController {
 	public ResponseEntity<MainResponse> deleteStory(@PathVariable (name = "story_id") int storyId){
 		StoryResponseDTO dataDTO = this.storyService.delete(storyId);
 		MainResponse mainResponse = new MainResponse(true, "La historieta ha sido eliminada exitosamente!", dataDTO);
+		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
+	}
+
+	@ApiOperation("Esta operación se encarga de listar a todas las historietas bajo ciertos criterios de busqueda.")
+	//@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/search")
+	public ResponseEntity<MainResponse> getAllBySearch(@RequestBody StoryRequestSearchDTO requestDTO){
+		List<StoryViewCriteriaResponse> dataDTO = this.storyService.findAllBySearch(requestDTO);
+		MainResponse mainResponse = new MainResponse(true, "Lista test!", dataDTO);
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
