@@ -3,7 +3,6 @@ package com.mangagod.controller;
 import javax.validation.Valid;
 
 import com.mangagod.dto.request.search.StoryRequestSearchDTO;
-import com.mangagod.dto.response.criteria.StoryViewCriteriaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -87,13 +86,6 @@ public class StoryController {
 		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
 	}
 
-	@ApiOperation("Esta operación se encarga de listar a todas las historietas bajo ciertos criterios de busqueda.")
-	//@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping("/search")
-	public ResponseEntity<MainResponse> getAllBySearch(@RequestBody StoryRequestSearchDTO requestDTO){
-		List<StoryViewCriteriaResponse> dataDTO = this.storyService.findAllBySearch(requestDTO);
-		MainResponse mainResponse = new MainResponse(true, "Lista test!", dataDTO);
-		return new ResponseEntity<MainResponse>(mainResponse, HttpStatus.OK);
-	}
+
 
 }

@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.mangagod.dto.request.search.StoryRequestSearchDTO;
-import com.mangagod.dto.response.criteria.StoryViewCriteriaResponse;
-import com.mangagod.repository.custom.StoryRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,8 +64,6 @@ public class StoryServiceImpl implements StoryService {
 	private StoryMapper storyMapper;
 	@Autowired
 	private AppHelpers appHelpers;
-	@Autowired
-	private StoryRepositoryCustom storyRepositoryCustom;
 
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
 	@Override
@@ -157,25 +152,17 @@ public class StoryServiceImpl implements StoryService {
 		return this.storyMapper.mapEntityToResponseDTO(entity);
 	}
 
-	@Override
-	public List<StoryViewCriteriaResponse> findAllBySearch(StoryRequestSearchDTO ordenVentaDto) {
-		// TODO: por hacer
-		List<StoryViewCriteriaResponse> dtoList = this.storyRepositoryCustom.findAllBySearch(ordenVentaDto);
-		return dtoList;
-	}
 	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
 	public CountryEntity getCountryById(Integer id) {
 		return this.countryRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Pais", "id", id));
 	}
-	
-	
+
 	public DemographyEntity getDemographyById(Integer id) {
 		return this.demographyRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Demografía", "id", id));
 	}
-	
-	
+
 	public CategoryEntity getCategoryById(Integer id) {
 		return this.categoryRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));

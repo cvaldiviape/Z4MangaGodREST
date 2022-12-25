@@ -29,5 +29,5 @@ public class StoryMapper {
 		this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		return this.modelMapper.map(requestDTO, StoryEntity.class);
 	}
-	
+
 }
