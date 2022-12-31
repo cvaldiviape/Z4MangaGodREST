@@ -2,6 +2,8 @@ package com.mangagod.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.mangagod.service.helpers.CategoryHelpers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +23,7 @@ import com.mangagod.util.AppHelpers;
 
 @Service
 @Transactional
-public class CategoryServiceImpl implements CategoryService {
+public class CategoryServiceImpl extends CategoryHelpers implements CategoryService {
 
 	// ----------------------------------------------------- dependency injection  ----------------------------------------------------- //
 	@Autowired
@@ -80,26 +82,5 @@ public class CategoryServiceImpl implements CategoryService {
 		this.categoryRepository.delete(entity);
 		return this.categoryMapper.mapEntityToResponseDTO(entity);
 	}
-	
-	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
-	public CategoryEntity getCategoryById(Integer id) {
-		return this.categoryRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));
-	}
-	
-	public void verifyNameUnique(String name) {
-		Boolean existName = this.categoryRepository.existsByName(name);
-		if(existName) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
-		}
-	}
-	
-	public void verifyNameUnique(String name, String nameCurrent) {
-		Boolean existName = this.categoryRepository.existsByName(name);
-		Boolean diferentNameCurrent = (!name.equalsIgnoreCase(nameCurrent));
-		if(existName && diferentNameCurrent) {
-			throw new MangaGodAppException(HttpStatus.BAD_REQUEST, "El name " + name + " ya existe.");
-		}
-	}
-	
+
 }

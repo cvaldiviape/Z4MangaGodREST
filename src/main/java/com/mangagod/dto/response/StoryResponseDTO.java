@@ -1,6 +1,8 @@
 package com.mangagod.dto.response;
 
 import java.util.Set;
+
+import com.mangagod.dto.criteria.response.StoryMangakasResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +29,5 @@ public class StoryResponseDTO {
 	private CategoryResponseDTO category;
 	private Set<GenreResponseDTO> genres;
 	private Set<MangakasJobsResponseDTO> mangakasJobs;
-	
+	private Set<StoryMangakasResponseDTO> storyMangakas;
 }

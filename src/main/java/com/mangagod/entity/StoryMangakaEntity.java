@@ -26,16 +26,24 @@ public class StoryMangakaEntity {
 	@Builder.Default
 	@EmbeddedId
 	private StoryMangakaId id = new StoryMangakaId();
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("storyId") // hace referencia al nombre de atributo en la clase "StoryMangakaId"
 	@JoinColumn(name = "story_id")
 	private StoryEntity story;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@MapsId("mangakaId") // hace referencia al nombre de atributo en la clase "StoryMangakaId"
 	@JoinColumn(name = "mangaka_id")
 	private MangakaEntity mangaka;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "job_id")
 	private JobEntity job;
-	
+
+	@Override
+	public String toString() {
+		return "StoryMangakaEntity{" +
+				"id=" + id +
+				", mangaka=" + mangaka +
+				", job=" + job +
+				'}';
+	}
 }
