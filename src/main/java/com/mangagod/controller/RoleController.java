@@ -54,7 +54,7 @@ public class RoleController {
 	}
 
 	@ApiOperation("Esta operación se encarga de crear un nuevo rol.")
-	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<MainResponse> createRole(@Valid @RequestBody RoleRequestDTO requestDTO){
 		RoleResponseDTO dataDTO = this.roleService.create(requestDTO); 

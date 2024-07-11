@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -38,22 +39,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { // "We
 			.and()
 			.csrf()
 			.disable() // desabilitamos por que spring ya cuenta con uno propio.
-			.authorizeRequests()
+			.authorizeRequests()  // indica que se configurarán las reglas de autorización para las solicitudes.
 			.antMatchers(
-					//HttpMethod.POST,
-					"/auth/**"
-					//,"/user/**", "/role/**"
+					HttpMethod.POST,
+					"/role", "/user"
 			)
 			.permitAll()
 			.antMatchers(
+					"/auth/**",
 					"/v2/api-docs/**",
 					"/swagger-ui/**",
 					"/swagger-resources/**",
-					"/configuration/**"		
+					"/configuration/**"
 			)
 			.permitAll()
-			.anyRequest()
-			.authenticated()
+			.anyRequest().authenticated() // Indica que cualquier otra solicitud que no coincida con los antMatchers especificados anteriormente requerirá autenticación.
 			.and()
             .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
             .and()
