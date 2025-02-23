@@ -2,7 +2,12 @@ package com.mangagod.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.mangagod.config.CacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,9 +34,10 @@ public class CategoryServiceImpl implements CategoryService {
 	@Autowired
 	private CategoryMapper categoryMapper;
 	@Autowired
-	private AppHelpers appHelpers;	
-	
+	private AppHelpers appHelpers;
+
 	// ----------------------------------------------------------- services ----------------------------------------------------------- //
+	@Cacheable(value = CacheConfiguration.CACHE_NAME)
 	@Override
 	public CategoriesPageResponseDTO getAll(Integer numberPage, Integer sizePage, String sortBy, String sortDir) {
 		// TODO Auto-generated method stub
@@ -49,10 +55,11 @@ public class CategoryServiceImpl implements CategoryService {
 				.build();
 	}
 
+	@Cacheable(cacheNames = CacheConfiguration.CACHE_NAME, unless = "#result == null") // unless = "#result == null" -> esto indica que no desea cachear cuando en caso retorne un null este metodo.
 	@Override
 	public CategoryResponseDTO getById(Integer id) {
 		// TODO Auto-generated method stub
-		CategoryEntity entity = this.getCategoryById(id);
+		CategoryEntity entity = this.getCategory(id); // llamando a "getCategory()" solo para verificar que esta golpeando a la DB.
 		return this.categoryMapper.mapEntityToResponseDTO(entity);
 	}
 
@@ -64,6 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return  this.categoryMapper.mapEntityToResponseDTO(this.categoryRepository.save(entity));			
 	}
 
+	@CachePut(cacheNames = CacheConfiguration.CACHE_NAME, key = "#id", unless = "#result == null")
 	@Override
 	public CategoryResponseDTO update(Integer id, CategoryRequestDTO requestDTO) {
 		// TODO Auto-generated method stub
@@ -73,6 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
 		return this.categoryMapper.mapEntityToResponseDTO(this.categoryRepository.save(dataCurrent));	
 	}
 
+	@CacheEvict(cacheNames = CacheConfiguration.CACHE_NAME, key = "#id")
 	@Override
 	public CategoryResponseDTO delete(Integer id) {
 		// TODO Auto-generated method stub
@@ -82,6 +91,11 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 	
 	// ----------------------------------------------------------- utils ----------------------------------------------------------- //
+	public CategoryEntity getCategory(Integer id) {
+		return this.categoryRepository.findCategory(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));
+	}
+
 	public CategoryEntity getCategoryById(Integer id) {
 		return this.categoryRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Categoria", "id", id));

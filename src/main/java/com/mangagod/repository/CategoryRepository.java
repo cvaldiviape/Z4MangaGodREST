@@ -9,5 +9,10 @@ public interface CategoryRepository extends BaseRepository<CategoryEntity,Intege
 	public Optional<CategoryEntity> findByName(String name);
 	
 	public Boolean existsByName(String name);
+
+	default public Optional<CategoryEntity> findCategory(Integer id)  {
+		System.out.println("Call repository to get id=" + id);
+		return this.findById(id);
+	}
 	
 }

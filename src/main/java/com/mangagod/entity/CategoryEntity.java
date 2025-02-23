@@ -1,5 +1,6 @@
 package com.mangagod.entity;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -23,7 +24,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table(name = "categories") 
-public class CategoryEntity extends BaseEntity {
+public class CategoryEntity extends BaseEntity implements Serializable {
+
+	private static final long serialVersionUID = -8277318435297709390L;
 
 	@Column(name = "name", nullable = false, unique = true)
 	private String name;

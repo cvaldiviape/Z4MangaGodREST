@@ -10,15 +10,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class CategoryRequestDTO {
+public class CategoryRequestDTO implements Serializable {
 
 	@NotNull(message = "El campo 'name' es obligatorio.")
-	@NotBlank(message = "El campo 'name' es obligatorio.")
 	@Size(max = 50, message = "El campo 'name' debe contener un maximo de 50 caracteres.")
 	@Pattern(regexp= "^[a-zA-ZÀ-ÿ]+(\s?[a-zA-ZÀ-ÿ]+?)+$", message = "El campo 'name' solo admite letras." )
 	private String name;
